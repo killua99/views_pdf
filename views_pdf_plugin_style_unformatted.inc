@@ -3,48 +3,42 @@
 
 class views_pdf_plugin_style_unformatted extends views_plugin_style
 {
-	function render() {
-		if ($this->uses_row_plugin() && empty($this->row_plugin)) {
-			vpr('views_plugin_style_default: Missing row plugin');
-			return;
-		}
-		
-		// Group the rows according to the grouping field, if specified.
-		//$sets = $this->render_grouping($this->view->result, $this->options['grouping']);
+  function render() {
+    if ($this->uses_row_plugin() && empty($this->row_plugin)) {
+      vpr('views_plugin_style_default: Missing row plugin');
+      return;
+    }
 
-		// Render each group separately and concatenate.  Plugins may override this
-		// method if they wish some other way of handling grouping.
-		$output = '';
-		/*foreach ($sets as $title => $records) {
+    $output = '';
 
-			// Header of style 
-			
-			if ($this->uses_row_plugin()) {
-				$this->row_plugin->render($records);
-			}
-			
-			// Print content as it is with the html function
-			else {
-			
-			}
+    $this->view->numberOfRecords = count($this->view->result);
+    if ($this->uses_row_plugin()) {
+      $this->row_plugin->render($this->view->result);
+    }
 
-			// Footer of style	
+    return $output;
+  }
+  
+  /**
+   * Attach this view to another display as a feed.
+   *
+   * Provide basic functionality for all export style views like attaching a
+   * feed image link.
+   */
+  function attach_to($display_id, $path, $title) {
+    $display = $this->view->display[$display_id]->handler;
+    $url_options = array();
+    $input = $this->view->get_exposed_input();
+    if ($input) {
+      $url_options['query'] = $input;
+    }
 
-		}*/
-		
-		//echo 'style-render';
-		//echo '<br />';
-		//print_r($this->view->result);
-		
-		/*foreach($this->view->result as $records) {*/
-		$this->view->numberOfRecords = count($this->view->result);
-			if ($this->uses_row_plugin()) {
-				$this->row_plugin->render($this->view->result);
-			}		
-		//}
+    $url = url($this->view->get_url(NULL, $path), $url_options);
 
-		//unset($this->view->row_index);
-		return $output;
-	}
+    if (empty($this->view->feed_icon)) {
+      $this->view->feed_icon = '';
+    }
+    $this->view->feed_icon .= theme('views_pdf_icon', $url, $title);
+  }
 
 }
