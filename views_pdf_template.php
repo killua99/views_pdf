@@ -1,14 +1,21 @@
 <?php
 
 /**
+ * @file 
+ * PDF Class to generate PDFs with native PHP. This class based on FPDF and FPDI.
+ * 
  * A direct include of this class is not realy possible. The basic functions of drupal must be 
  * present.
  * 
  */
 
-require_once variable_get('views_pdf_tcpdf_path', 'lib/tcpdf/tcpdf.php');
-require_once variable_get('views_pdf_fpdi_bridge_path', 'lib/fpdi/fpdi2tcpdf_bridge.php');
-require_once variable_get('views_pdf_fpdi_path', 'lib/fpdi/fpdi.php');
+
+/**
+ * Get the depending classes.
+ */
+require_once views_pdf_get_library('tcpdf') . '/tcpdf.php';
+require_once views_pdf_get_library('fpdi') .  '/fpdi2tcpdf_bridge.php';
+require_once views_pdf_get_library('fpdi') . '/fpdi.php';
 
 
 /**
@@ -151,14 +158,14 @@ class PdfTemplate extends FPDI
    * Converts a hex color into an array with RGB colors.
    */
   public function convertHexColorToArray($hex) {
-    if(strlen($hex) == 6) {
+    if (strlen($hex) == 6) {
       $r = substr($hex, 0, 2);
       $g = substr($hex, 2, 2);
       $b = substr($hex, 4, 2);
       return array(hexdec($r), hexdec($g), hexdec($b));
     
     }
-    elseif(strlen($hex) == 3) {
+    elseif (strlen($hex) == 3) {
       $r = substr($hex, 0, 1);
       $g = substr($hex, 1, 1);
       $b = substr($hex, 2, 1);
@@ -168,14 +175,34 @@ class PdfTemplate extends FPDI
     else {
       return array();
     }
-    
+  }
+  
+  /**
+   * Parse color input into an array.
+   *
+   * @param string $color Color entered by the user
+   * @return array color as an array
+   */
+  public function parseColor($color) {
+    $color = trim($color, ', ');
+    $components = explode(',', $color);
+    if (count($components) == 1) {
+      return $this->convertHexColorToArray($color);
+    }
+    else {
+      // Remove white spaces from comonents:
+      foreach ($components as $id => $component) {
+        $components[$id] = trim($component);
+      }
+      return $components;
+    }
   }
   
   /**
    * Sets the current header and footer of the page.
    */
   public function setHeaderFooter($row, $options, $view) {
-    if($this->getPage() > 0 && !isset($this->headerFooterData[$this->getPage()])) {
+    if ($this->getPage() > 0 && !isset($this->headerFooterData[$this->getPage()])) {
       $this->headerFooterData[$this->getPage()] = & $row;
     }
     $this->headerFooterOptions = $options;
@@ -189,18 +216,18 @@ class PdfTemplate extends FPDI
   public function Close() {
     // Print the Header & Footer 
     $row = array();
-    for($page = 1; $page <= $this->getNumPages(); $page++) {
+    for ($page = 1; $page <= $this->getNumPages(); $page++) {
       $this->setPage($page);
       
-      if(isset($this->headerFooterData[$page])) {
+      if (isset($this->headerFooterData[$page])) {
         $row = $this->headerFooterData[$page];
       }
       
-      if(isset($this->headerFooterOptions['formats']) && is_array($this->headerFooterOptions['formats']))
+      if (isset($this->headerFooterOptions['formats']) && is_array($this->headerFooterOptions['formats']))
       {
-        foreach($this->headerFooterOptions['formats'] as $id => $options) {
+        foreach ($this->headerFooterOptions['formats'] as $id => $options) {
         
-          if($options['position']['object'] == 'header_footer') {
+          if ($options['position']['object'] == 'header_footer') {
             $fieldOptions = $options;
             $fieldOptions['position']['object'] = 'page';
             $this->InFooter = true;
@@ -234,22 +261,26 @@ class PdfTemplate extends FPDI
   public function drawContent($row, $options, &$view = NULL, $key = NULL) {
     
     // Check if there is a page, if not add it:
-    if($this->getPage() == 0 or $this->addNewPageBeforeNextContent == true) {
+    if ($this->getPage() == 0 or $this->addNewPageBeforeNextContent == true) {
       $this->addNewPageBeforeNextContent = false;
       $this->addPage();
     }
     $pageDim = $this->getPageDimensions();
     
-    if(empty($options['position']['object'])) {
+    
+    
+    if (empty($options['position']['object'])) {
       $options['position']['object'] = 'page';
     }
     
     // Determin the x and y coordinates
-    if($options['position']['object'] == 'last_position') {
+    if ($options['position']['object'] == 'last_position') {
       $x = $this->x+$options['position']['x'];
       $y = $this->y+$options['position']['y'];
     }
-    elseif($options['position']['object'] == 'page') {
+    elseif ($options['position']['object'] == 'page') {
+      
+      
       
       switch($options['position']['corner']) {
         default:
@@ -276,8 +307,8 @@ class PdfTemplate extends FPDI
           break;
       }
     }
-    elseif($options['position']['object'] == 'self' or preg_match('/field\_(.*)/', $options['position']['object'], $rs)) {
-      if($options['position']['object'] == 'self') {
+    elseif ($options['position']['object'] == 'self' or preg_match('/field\_(.*)/', $options['position']['object'], $rs)) {
+      if ($options['position']['object'] == 'self') {
         $relative_to_element = $key;
       }
       else {
@@ -285,9 +316,9 @@ class PdfTemplate extends FPDI
       }
       
       
-      if(isset($this->elements[$relative_to_element])){
+      if (isset($this->elements[$relative_to_element])){
         
-        switch($options['position']['corner']) {
+        switch ($options['position']['corner']) {
           default:
           case 'top_left':
             $x = $options['position']['x'] + $this->elements[$relative_to_element]['x'];
@@ -323,7 +354,7 @@ class PdfTemplate extends FPDI
     // No position match
     else {
       // Render and then return
-      if(is_object($view) && $key != NULL ) {
+      if (is_object($view) && $key != NULL ) {
         $content = $view->field[$key]->theme($row);
       }
 
@@ -334,20 +365,20 @@ class PdfTemplate extends FPDI
     $this->SetY($y);
     
     // Render the content if it is not already:
-    if(is_object($view) && $key != NULL ) {
+    if (is_object($view) && $key != NULL ) {
       $content = $view->field[$key]->theme($row);
     }
     else {
       $content = $row;
     }
-    if(!empty($view->field[$key]->options['exclude'])) {
+    if (!empty($view->field[$key]->options['exclude'])) {
       return '';
     }
     
-    $font_size = empty($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
+    $font_size = !isset($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
     $font_family = ($options['text']['font_family'] == 'default' || empty($options['text']['font_family'])) ? $this->defaultFontFamily : $options['text']['font_family'];
     $font_style = is_array($options['text']['font_style']) ? $options['text']['font_style'] : $this->defaultFontStyle;
-    $textColor = !empty($options['text']['color']) ? $this->convertHexColorToArray($options['text']['color']) : $this->convertHexColorToArray($this->defaultFontColor);
+    $textColor = isset($options['text']['color']) ? $this->parseColor($options['text']['color']) : $this->parseColor($this->defaultFontColor);
     
     
     $w = $options['position']['width'];
@@ -402,15 +433,15 @@ class PdfTemplate extends FPDI
     $pageDim = $this->getPageDimensions();
     
     // Set draw point to the indicated position:
-    if(isset($options['position']['x']) && !empty($options['position']['x'])) {
+    if (isset($options['position']['x']) && !empty($options['position']['x'])) {
       //$this->SetX($options['position']['x']);
     }
     
-    if(isset($options['position']['y']) && !empty($options['position']['y'])) {
+    if (isset($options['position']['y']) && !empty($options['position']['y'])) {
       //$this->SetY($options['position']['y']);
     }
     
-    if(isset($options['position']['width']) && !empty($options['position']['width'])) {
+    if (isset($options['position']['width']) && !empty($options['position']['width'])) {
       $width = $options['position']['width'];
     }
     else {
@@ -420,15 +451,15 @@ class PdfTemplate extends FPDI
     $sumWidth = 0;
     $numerOfColumnsWithoutWidth = 0;
     // Set the definitiv width of a column
-    foreach($columns as $id => $columnName) {
-      if(isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
+    foreach ($columns as $id => $columnName) {
+      if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
         $sumWidth += $option['info'][$id]['position']['width'];
       }
       else {
         $numerOfColumnsWithoutWidth++;
       }
     }
-    if($numerOfColumnsWithoutWidth > 0) {
+    if ($numerOfColumnsWithoutWidth > 0) {
       $defaultColumnWidth = ($width - $sumWidth) / $numerOfColumnsWithoutWidth;
     }
     else {
@@ -440,13 +471,13 @@ class PdfTemplate extends FPDI
     $x = $this->x;
     
     $page = $this->getPage();
-    if($page == 0) {
+    if ($page == 0) {
       $this->addPage();
       $page = $this->getPage();
     }
     
     
-    foreach($columns as $id => $column) {
+    foreach ($columns as $id => $column) {
       
       if (!empty($column->options['exclude'])) {
         continue;
@@ -454,7 +485,7 @@ class PdfTemplate extends FPDI
 
       $headerOptions = $options['info'][$id]['header_style'];
       
-      if(isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
+      if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
         $headerOptions['position']['width'] = $option['info'][$id]['position']['width'];
       }
       else {
@@ -470,12 +501,12 @@ class PdfTemplate extends FPDI
       $x += $headerOptions['position']['width'];
     }
     
-    foreach($rows as $row) {
+    foreach ($rows as $row) {
       // Print header:
       $y = $this->y;
       $x = $this->x;
       $page = $this->getPage();
-      foreach($columns as $id => $column) {
+      foreach ($columns as $id => $column) {
       
         if (!empty($column->options['exclude'])) {
           // Render the element, but dont print any thing
@@ -485,7 +516,7 @@ class PdfTemplate extends FPDI
 
         $bodyOptions = $options['info'][$id]['body_style'];
       
-        if(isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
+        if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
           $bodyOptions['position']['width'] = $option['info'][$id]['position']['width'];
         }
         else {
@@ -516,18 +547,18 @@ class PdfTemplate extends FPDI
    * @return integer Number of added pages
    */
   public function addPdfDocument($path) {
-    if(empty($path) || !file_exists($path)) {
+    if (empty($path) || !file_exists($path)) {
       return 0;
     }
     
     $numberOfPages = $this->setSourceFile($path);
-    for($i = 1; $i <= $numberOfPages; $i++) {
+    for ($i = 1; $i <= $numberOfPages; $i++) {
       
       $dim = $this->getTemplateSize($i);
       $format[0] = $dim['w'];
       $format[1] = $dim['h'];
       
-      if($dim['w'] > $dim['h'])
+      if ($dim['w'] > $dim['h'])
       {
         $orientation = 'L';
       }
@@ -567,7 +598,7 @@ class PdfTemplate extends FPDI
     $this->rowContentPageNumber++;
     
     // Reset without any template
-    if((empty($path) || !file_exists($path)) && $reset == true) {
+    if ((empty($path) || !file_exists($path)) && $reset == true) {
       parent::addPage();
       $this->setPageFormat($this->defaultFormat, $this->defaultOrientation);
       return;
@@ -576,20 +607,20 @@ class PdfTemplate extends FPDI
     $files = $this->defaultPageTemplateFiles;
     
     // Reset with new template
-    if($reset) {
+    if ($reset) {
       $files = array();
     }
     
-    if($path != NULL) {
+    if ($path != NULL) {
       $files[] = array('path' => $path, 'numbering' => $numbering);
     }
     $format = false;
-    foreach($files as $file) {
-      if(!empty($file['path']) && file_exists($file['path'])) {
+    foreach ($files as $file) {
+      if (!empty($file['path']) && file_exists($file['path'])) {
         $path = realpath($file['path']);
 
         $numberOfPages = $this->setSourceFile($path);
-        if($file['numbering'] == 'row')  {
+        if ($file['numbering'] == 'row')  {
           $index = min($this->rowContentPageNumber, $numberOfPages);
         }
         else {
@@ -600,19 +631,16 @@ class PdfTemplate extends FPDI
         $page = $this->importPage($index);
     
         // ajust the page format (only for the first template)
-        if($format == false)
-        {
+        if ($format == false) {
           
           $dim = $this->getTemplateSize($index);
           $format[0] = $dim['w'];
           $format[1] = $dim['h'];
           //$this->setPageFormat($format);
-          if($dim['w'] > $dim['h'])
-          {
+          if ($dim['w'] > $dim['h']) {
             $orientation = 'L';
           }
-          else
-          {
+          else {
             $orientation = 'P';
           }
           $this->setPageFormat($format, $orientation);
@@ -625,7 +653,7 @@ class PdfTemplate extends FPDI
     }
     
     // if all paths were empty, ensure that at least the page is added
-    if($format == false) {
+    if ($format == false) {
       parent::addPage();
       $this->setPageFormat($this->defaultFormat, $this->defaultOrientation);
     }    
@@ -647,7 +675,7 @@ class PdfTemplate extends FPDI
     
     $templates = array();
     
-    foreach($templatesFiles as $file) {
+    foreach ($templatesFiles as $file) {
       $templates[$file->name] = $file->name;
     }
     
@@ -661,53 +689,47 @@ class PdfTemplate extends FPDI
    * This method returns the path to a specific template.
    */
   public static function getTemplatePath($template, $row = null, $view = null) {
-    if(empty($template)) {
+    if (empty($template)) {
       return '';
     }
     
-    if($row != null && $view != null && !preg_match('/\.pdf/', $template)) {
-      return $view->field[$template]->theme($row);
+    if ($row != null && $view != null && !preg_match('/\.pdf/', $template)) {
+      return drupal_realpath($row->field_data_field_file_node_values[0]['uri']);
     }
-  
-    $files_path = drupal_realpath('public://');
-    $template_dir = variable_get('views_pdf_template_path','views_pdf_templates');
-    $dir = $files_path.'/'.$template_dir;
     
-    return $dir . '/' . $template.'.pdf';
+    $template_dir = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
+    return drupal_realpath($template_dir . '/' . $template.'.pdf');
     
   }
-
 
   /**
    * This method returns a list of available fonts. 
    */
   public static function getAvailableFonts() {
-    if(self::$fontList != NULL) {
+    if (self::$fontList != NULL) {
       return self::$fontList;
     }
     
-    // Get all php files with the font list: K_PATH_FONTS
+    // Get all pdf files with the font list: K_PATH_FONTS
     $fonts = file_scan_directory(K_PATH_FONTS, '/.php$/', array('nomask' => '/(\.\.?|CVS)$/', 'recurse' => FALSE), 1);
     $cache = cache_get('views_pdf_cached_fonts');
-    
+
     if(is_object($cache)) {
       $cached_font_mapping = $cache->data;
     }
     
-    if(is_array($cached_font_mapping) ) {
+    if (is_array($cached_font_mapping) ) {
       $font_mapping = array_merge(self::$defaultFontList, $cached_font_mapping);
     }
     else {
       $font_mapping = self::$defaultFontList;
     }
     
-    foreach($fonts as $font) {
-      if(!isset($font_mapping[$font->name])) {
+    foreach ($fonts as $font) {
         $name = self::getFontNameByFileName($font->uri);
         if(isset($name)) {
           $font_mapping[$font->name] = $name;
         }
-      }
     }
     
     asort($font_mapping);
@@ -715,8 +737,8 @@ class PdfTemplate extends FPDI
     cache_set('views_pdf_cached_fonts', $font_mapping);
     
     // Remove all fonts without name
-    foreach($font_mapping as $key =>$font) {
-      if(empty($font)) {
+    foreach ($font_mapping as $key =>$font) {
+      if (empty($font)) {
         unset($font_mapping[$key]);
       }
         
@@ -731,13 +753,13 @@ class PdfTemplate extends FPDI
    * This method returns a cleaned up version of the font list.
    */
   public static function getAvailableFontsCleanList() {
-    if(self::$fontListClean != NULL) {
+    if (self::$fontListClean != NULL) {
       return self::$fontListClean;
     }
     
     $clean = self::getAvailableFonts();
 
-    foreach($clean as $key => $font) {
+    foreach ($clean as $key => $font) {
       
       // Unset bold, italic, italic/bold fonts
       unset($clean[ ($key.'b') ]);
@@ -762,7 +784,6 @@ class PdfTemplate extends FPDI
     else {
       return null;
     }
-   
   }
 }
 

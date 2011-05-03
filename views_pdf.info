@@ -4,7 +4,8 @@ dependencies[] = views
 package = Views
 core = 7.x
 
-files[] = views_pdf_plugin_display_pdf.inc
+
+files[] = views_pdf_plugin_display.inc
 files[] = views_pdf_plugin_style_table.inc
 files[] = views_pdf_plugin_style_unformatted.inc
 files[] = views_pdf_plugin_row_fields.inc

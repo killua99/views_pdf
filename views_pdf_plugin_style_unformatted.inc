@@ -1,8 +1,19 @@
 <?php
 
 
-class views_pdf_plugin_style_unformatted extends views_plugin_style
-{
+/**
+ * @file
+ * Unformatted PDF style
+ */
+
+
+/**
+ * This class holds all the funtionality used for the unformatted style plugin.
+ */
+class views_pdf_plugin_style_unformatted extends views_plugin_style {
+  /**
+   * Rendering function
+   */
   function render() {
     if ($this->uses_row_plugin() && empty($this->row_plugin)) {
       vpr('views_plugin_style_default: Missing row plugin');

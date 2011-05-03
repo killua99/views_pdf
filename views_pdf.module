@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @file
+ * PDF Views allows the creation of PDF's directly from a view. Without the 
+ * creation of HTML first.
+ */
+
 
 /**
  * Implementation of hook_views_api().
@@ -28,12 +34,15 @@ function views_pdf_theme() {
 /**
  * This method can be used to load the PDF library class.
  */
-function views_pdf_get_new_pdf_instance($orientation='P', $unit='mm', $format='A4', $unicode=true, $encoding='UTF-8', $diskcache=false) {
+function views_pdf_get_new_pdf_instance($orientation='P', $unit='mm', $format='A4', $unicode=TRUE, $encoding='UTF-8', $diskcache=FALSE) {
   _views_pdf_include_pdf_lib();
   return new PdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
 
 }
 
+/**
+ * Theme function for the PDF icon of appended PDFs.
+ */
 function theme_views_pdf_icon($url, $title) {
   $path = drupal_get_path('module', 'views_pdf') . '/images/pdf.png';
   if ($image = theme('image', $path, t('PDF content'), $title)) {
@@ -48,6 +57,23 @@ function views_pdf_get_font_list() {
   _views_pdf_include_pdf_lib();
   return PdfTemplate::getAvailableFontsCleanList();
 }
+
+
+/**
+ * This function returns the path to a given library.
+ * 
+ * @param $name Name of the Library
+ * 
+ */
+function views_pdf_get_library($name) {
+    if (function_exists('libraries_get_path')) {
+      return libraries_get_path($name);
+    }
+    else {
+      return 'sites/all/libraries/' . $name;
+    }
+}
+
 
 
 /**
@@ -116,7 +142,9 @@ function views_pdf_get_page_formats() {
 }
 
 
-
+/**
+ * Get the PDF class.
+ */
 function _views_pdf_include_pdf_lib() {
   $path = drupal_get_path('module', 'views_pdf');
   require_once $path . '/views_pdf_template.php';

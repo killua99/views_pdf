@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Theme function for enhence the views admin interface vor PDF options.
+ */
+
 
 /**
  * Theme function to style the table UI in the Table Style Settings pages in the

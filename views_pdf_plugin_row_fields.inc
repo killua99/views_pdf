@@ -1,7 +1,18 @@
 <?php
 
-class views_pdf_plugin_row_fields extends views_plugin_row 
-{
+/**
+ * @file
+ * PDF row fields plugin provides the the fields plugin for unformatted style.
+ */
+
+
+/**
+ * This class contains all the functionality of the field PDF style.
+ */ 
+class views_pdf_plugin_row_fields extends views_plugin_row {
+  /**
+   * Renders the views.
+   */
   function render($records) {
     $options = $this->option_definition();
     
@@ -19,10 +30,32 @@ class views_pdf_plugin_row_fields extends views_plugin_row
       // Due of limitations of field renderer, we invoke them
       // here and not in the field render function.
       foreach ($this->view->field as $id => $field) {
-	
-        $options = $this->options['formats'][$id];     
+        if (isset($this->options['formats'][$id])) {
+          $options = $this->options['formats'][$id];
+        }
+        else {
+          $options = array(
+            'position' => array(
+              'corner' => 'top_left',
+              'x' => 0,
+              'y' => 0,
+              'object' => '',
+              'width' => 0,
+              'height' => 0,
+            ),
+            'text' => array(
+              'font_family' => 'default',
+              'font_style' => '',
+            ),
+            'render' => array(
+              'eval_before' => '',
+              'eval_after' => '',
+            ),
+          );
+        }
+           
         $this->view->pdf->drawContent($row, $options, $this->view, $id);
-        if($options['position']['object'] == 'header_footer') {
+        if ($options['position']['object'] == 'header_footer') {
           // Set or update header / footer options
           $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
         }
@@ -38,7 +71,10 @@ class views_pdf_plugin_row_fields extends views_plugin_row
     }
     
   }
-
+  
+  /**
+   * Option definitions
+   */
   function option_definition() {
     $options = parent::option_definition();
 
@@ -52,8 +88,8 @@ class views_pdf_plugin_row_fields extends views_plugin_row
   }
 
   /**
-  * Provide a form for setting options.
-  */
+   * Provide a form for setting options.
+   */
   function options_form(&$form, &$form_state) {
   
 
@@ -72,12 +108,15 @@ class views_pdf_plugin_row_fields extends views_plugin_row
     $templates = array_merge(array(t(' -- None -- ')), views_pdf_get_pdf_templates());
     
     $file_fields = array();
+
     foreach ($this->display->handler->get_handlers('field') as $id => $handler) {
-      if($handler->content_field['type'] == 'filefield')
-      {
-        $file_fields[$id] = $options[$id];
+      $info = field_read_field($id);
+   
+      if (isset($info['type']) && $info['type'] == 'file') {
+        $file_fields[$id] = $info['field_name'];
       }
-    }    
+    } 
+    
     $row_templates = array_merge($templates, $file_fields);
     
     $relativeElements = array(
@@ -105,17 +144,17 @@ class views_pdf_plugin_row_fields extends views_plugin_row
       '#value' => t('Here you can define some style settings for each field.'),
     );
     
-    foreach($options as $field => $option) {
+    foreach ($options as $field => $option) {
       
-      if($fields[$field]['exclude'] == 1)
-      {
+      if (isset($fields[$field]['exclude']) && $fields[$field]['exclude'] == 1) {
         continue;
       }
+      
 
 
       $form['formats'][$field] = array(
         '#type' => 'fieldset',
-        '#title' => $option,
+        '#title' => check_plain($option),
         '#collapsed' => TRUE,
         '#collapsable' => TRUE,
       );
@@ -149,7 +188,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row
         '#default_value' => !empty($this->options['formats'][$field]['position']['corner']) ? $this->options['formats'][$field]['position']['corner'] : 'top_left',
       );
       
-      $relativeElements['field_'.$field] = t('Field: !field', array('!field' => $option));
+      $relativeElements['field_' . $field] = t('Field: !field', array('!field' => $option));
       
       
       $form['formats'][$field]['position']['x'] = array(
@@ -201,26 +240,27 @@ class views_pdf_plugin_row_fields extends views_plugin_row
         '#required' => TRUE,
         '#options' => $fonts,
         '#size' => 5,
-        '#default_value' => !empty($this->options['formats'][$field]['text']['font_family']) ? $this->options['formats'][$field]['text']['font_family'] : 'default',
+        '#default_value' => isset($this->options['formats'][$field]['text']['font_family']) ? $this->options['formats'][$field]['text']['font_family'] : 'default',
       );
       $form['formats'][$field]['text']['font_style'] = array(
         '#type' => 'checkboxes',
         '#title' => t('Font Style'),
         '#options' => $font_styles,
         '#size' => 10,
-        '#default_value' => $this->options['formats'][$field]['text']['font_style'] == NULL ? $this->display->handler->get_option('default_font_style') : $this->options['formats'][$field]['text']['font_style'],
+        '#default_value' => !isset($this->options['formats'][$field]['text']['font_style']) ? $this->display->handler->get_option('default_font_style') : $this->options['formats'][$field]['text']['font_style'],
       );
       $form['formats'][$field]['text']['align'] = array(
         '#type' => 'radios',
         '#title' => t('Alignment'),
         '#options' => $align,
-        '#default_value' => $this->options['formats'][$field]['text']['align'] == NULL ? $this->display->handler->get_option('default_text_align') : $this->options['formats'][$field]['text']['align'],
+        '#default_value' => !isset($this->options['formats'][$field]['text']['align']) ? $this->display->handler->get_option('default_text_align') : $this->options['formats'][$field]['text']['align'],
       );
       $form['formats'][$field]['text']['color'] = array(
         '#type' => 'textfield',
-        '#title' => t('Text Color (Hexadecimal)'),
-        '#size' => 10,
-        '#default_value' => $this->options['formats'][$field]['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['formats'][$field]['text']['color'],
+        '#title' => t('Text Color'),
+        '#description' => t('If a value is entered without a comma, it will be interpreted as a hexadecimal RGB color. Normal RGB can be used by separating the components by a comma. e.g 255,255,255 for white. A CMYK color can be entered in the same way as RGB. e.g. 0,100,0,0 for magenta.'),
+        '#size' => 20,
+        '#default_value' => !isset($this->options['formats'][$field]['text']['color']) ? $this->display->handler->get_option('default_text_color') : $this->options['formats'][$field]['text']['color'],
       );
       $form['formats'][$field]['render'] = array(
         '#type' => 'fieldset',
@@ -285,49 +325,50 @@ class views_pdf_plugin_row_fields extends views_plugin_row
 
   }
   
+  /**
+   * Stores the options
+   */
   function options_submit(&$form, &$form_state) {
     $default = $this->display->handler->get_option('default_font_style');
-    foreach($form_state['values']['row_options']['formats'] as $id => $field) {
+    foreach ($form_state['values']['row_options']['formats'] as $id => $field) {
       
       // Reset to default, if the elements are equal to the default settings
-      if(count(array_diff($default, $field['text']['font_style'])) == 0 &&  count(array_diff($field['text']['font_style'], $default)) == 0){
+      if (count(array_diff($default, $field['text']['font_style'])) == 0 && count(array_diff($field['text']['font_style'], $default)) == 0) {
         $form_state['values']['row_options']['formats'][$id]['text']['font_style'] = NULL;
       }
       
-      if($field['text']['align'] == $this->display->handler->get_option('default_text_align')){
+      if ($field['text']['align'] == $this->display->handler->get_option('default_text_align')) {
         $form_state['values']['row_options']['formats'][$id]['text']['align'] = NULL;
       }  
     }
+    // Save new file:
+    // Note: The jQuery update is required to use Ajax for file upload. With
+    // default Drupal jQuery it will not work.
+    // For upload with Ajax a iFrame is open and upload in it, because
+    // normal forms are not allowed to handle directly.
+    $destination = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
     
-    // TODO: move the template file to a private domian or let the user decide it
-    $files_path = drupal_realpath('public://');
-    $template_dir = variable_get('views_pdf_template_path','views_pdf_templates');
-    $dir = $files_path.'/'.$template_dir;
-    if(!is_dir($dir)) {
-      @mkdir($dir);
-      @chmod($dir, 0775);
-    }
-    
-    if(is_writable($dir)) {      
-      if($file) {
-        $form_state['values']['row_options']['template'] = $file->destination;
+    if (file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
+      // The file field is not called "template_file" as expected, it calls
+      // "row_options". The reason for that is not clear.
+      $file = file_save_upload('row_options', array(), $destination);
+      if (is_object($file)) {
+        $file_name =  basename($file->destination, '.pdf');
+        $form_state['values']['row_options']['template'] = $file_name;
       }
     }
     
-    if($form_state['values']['row_options']['leading_template'] == t(' -- None -- ')) {
+    if ($form_state['values']['row_options']['leading_template'] == t(' -- None -- ')) {
       $form_state['values']['row_options']['leading_template'] = '';
     }
     
-    if($form_state['values']['row_options']['template'] == t(' -- None -- ')) {
+    if ($form_state['values']['row_options']['template'] == t(' -- None -- ')) {
       $form_state['values']['row_options']['template'] = '';
     }
     
-    if($form_state['values']['row_options']['succeed_template'] == t(' -- None -- ')) {
+    if ($form_state['values']['row_options']['succeed_template'] == t(' -- None -- ')) {
       $form_state['values']['row_options']['succeed_template'] = '';
     }
 
   }
-
-
-
 }

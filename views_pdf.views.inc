@@ -1,23 +1,9 @@
 <?php
 
 /**
- * Implementation of hook_views_handlers()
+ * @file
+ * Implementaion of the views hooks.
  */
-/*function views_pdf_views_handlers() {
-  return array(
-    'info' => array(
-      'path' => drupal_get_path('module', 'views_pdf') .'/field_plugins',
-    ),
-    'handlers' => array(
-      'views_pdf_handler_page_break' => array(
-        'parent' => 'views_handler_field',
-      ),
-      'views_pdf_handler_page_number' => array(
-        'parent' => 'views_handler_field',
-      ),
-    ),
-  );
-}*/
 
 /**
  * Implementation of hook_views_data()
@@ -56,35 +42,32 @@ function views_pdf_views_data() {
  * Implementation of hook_views_plugins().
  */
 function views_pdf_views_plugins() {
- // $path = drupal_get_path('module', 'views_pdf');
- // $theme_path = $path . '/theme';
+  $path = drupal_get_path('module', 'views_pdf');
+  $theme_path = $path . '/theme';
   return array(
     'module' => 'views_pdf',
     'display' => array(
       'pdf' => array(
         'title' => t('PDF Page'),
         'help' => t('Outputs the view as a PDF file.'),
-        'help topic' => 'display-pdf',
-        'handler' => 'views_pdf_plugin_display_pdf',
-      //  'parent' => 'page', // so it knows to load the page plugin .inc file
+        'handler' => 'views_pdf_plugin_display',
+     //   'parent' => 'page', // so it knows to load the page plugin .inc file
         'uses hook menu' => TRUE,
-        //'contextual links locations' => array('pdf'),
         'use ajax' => FALSE,
         'use pager' => FALSE,
-        'use more' => FALSE,
-
+        'use_more' => FALSE,
         'accept attachments' => FALSE,
+      //  'path' => $path,
         'admin' => t('PDF Page'),
- //       'theme' => 'views_pdf', // For the prefix of template file!
- //       'theme path' => drupal_get_path('module', 'views_pdf') . '/theme',
- //       'theme file' => 'views_pdf.theme.inc',
+      //  'theme' => 'views_pdf', // For the prefix of template file!
+      //  'theme file' => 'views_pdf.theme.inc',
       ),
     ),
     'style' => array(
       'pdf_table' => array(
         'title' => t('PDF Table'),
         'help' => t('Display the view as a table.'),
-//        'path' => $path,
+     //   'path' => $path,
         'handler' => 'views_pdf_plugin_style_table',
         'parent' => 'default',
         'theme' => 'views_pdf_table',
@@ -97,7 +80,7 @@ function views_pdf_views_plugins() {
       'pdf_unformatted' => array(
         'title' => t('PDF unformatted'),
         'help' => t('Display the view in a unformatted way.'),
-//        'path' => $path,
+    //    'path' => $path,
         'handler' => 'views_pdf_plugin_style_unformatted',
         'parent' => 'default',
         'theme' => 'views_pdf_unformatted',

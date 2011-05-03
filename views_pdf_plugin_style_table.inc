@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Table PDF style plugin
+ */
+
 
 /**
  * Style plugin to render each item as a row in a table.
@@ -7,6 +12,10 @@
  * @ingroup views_style_plugins
  */
 class views_pdf_plugin_style_table extends views_plugin_style {
+  
+  /**
+   * Render the style
+   */ 
   function render() {
     $output = '';
     
@@ -17,7 +26,9 @@ class views_pdf_plugin_style_table extends views_plugin_style {
   }
 
 
-
+  /**
+   * Option definitions
+   */
   function option_definition() {
     $options = parent::option_definition();
 
@@ -27,6 +38,9 @@ class views_pdf_plugin_style_table extends views_plugin_style {
     return $options;
   }
   
+  /**
+   * Options form
+   */
   function options_form(&$form, &$form_state) {
     
     $handlers = $this->display->handler->get_handlers('field');
@@ -64,8 +78,7 @@ class views_pdf_plugin_style_table extends views_plugin_style {
 
     foreach ($columns as $field => $column) {
       
-      if($fields[$field]['exclude'] == 1)
-      {
+      if ($fields[$field]['exclude'] == 1) {
         continue;
       }
     
@@ -117,7 +130,8 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       );
       $form['info'][$field]['header_style']['text']['color'] = array(
         '#type' => 'textfield',
-        '#title' => t('Text Color (Hexadecimal)'),
+        '#title' => t('Text Color'),
+        '#description' => t('If a value is entered without a comma, it will be interpreted as a hexadecimal RGB color. Normal RGB can be used by separating the components by a comma. e.g 255,255,255 for white. A CMYK color can be entered in the same way as RGB. e.g. 0,100,0,0 for magenta.'),
         '#size' => 10,
         '#default_value' => $this->options['info'][$field]['header_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['header_style']['text']['font_style'],
       );
@@ -188,8 +202,9 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       );
       $form['info'][$field]['body_style']['text']['color'] = array(
         '#type' => 'textfield',
-        '#title' => t('Text Color (Hexadecimal)'),
-        '#size' => 10,
+        '#title' => t('Text Color'),
+        '#description' => t('If a value is entered without a comma, it will be interpreted as a hexadecimal RGB color. Normal RGB can be used by separating the components by a comma. e.g 255,255,255 for white. A CMYK color can be entered in the same way as RGB. e.g. 0,100,0,0 for magenta.'),
+        '#size' => 20,
         '#default_value' => $this->options['info'][$field]['body_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['body_style']['text']['font_style'],
       );
       
@@ -270,31 +285,32 @@ class views_pdf_plugin_style_table extends views_plugin_style {
 
   }
 
+  /**
+   * Options form storage
+   */
   function options_submit(&$form, &$form_state) {
     $default_font_style = $this->display->handler->get_option('default_font_style');
-    foreach($form_state['values']['style_options']['info'] as $id => $field) {
+    foreach ($form_state['values']['style_options']['info'] as $id => $field) {
       
       // Reset to default, if the elements are equal to the default settings
-      if(
+      if (
         count(array_diff($default_font_style, $field['header_style']['text']['font_style'])) == 0 && 
-        count(array_diff($field['header_style']['text']['font_style'], $default_font_style)) == 0)
-      {
+        count(array_diff($field['header_style']['text']['font_style'], $default_font_style)) == 0) {
         $form_state['values']['style_options']['info'][$id]['header_style']['text']['font_style'] = NULL;
       }
       
-      if($field['header_style']['text']['align'] == $this->display->handler->get_option('default_text_align')){
+      if ($field['header_style']['text']['align'] == $this->display->handler->get_option('default_text_align')) {
         $form_state['values']['style_options']['info'][$id]['header_style']['text']['align'] = NULL;
       }  
       
       // Reset to default, if the elements are equal to the default settings
-      if(
+      if (
         count(array_diff($default_font_style, $field['body_style']['text']['font_style'])) == 0 && 
-        count(array_diff($field['body_style']['text']['font_style'], $default_font_style)) == 0)
-      {
+        count(array_diff($field['body_style']['text']['font_style'], $default_font_style)) == 0) {
         $form_state['values']['style_options']['info'][$id]['body_style']['text']['font_style'] = NULL;
       }
       
-      if($field['body_style']['text']['align'] == $this->display->handler->get_option('default_text_align')){
+      if ($field['body_style']['text']['align'] == $this->display->handler->get_option('default_text_align')) {
         $form_state['values']['style_options']['info'][$id]['body_style']['text']['align'] = NULL;
       }  
     }
