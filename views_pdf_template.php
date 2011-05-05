@@ -258,7 +258,27 @@ class PdfTemplate extends FPDI
   /**
    * This method draws a field on the PDF.
    */
-  public function drawContent($row, $options, &$view = NULL, $key = NULL) {
+  public function drawContent($row, $options, &$view = NULL, $key = NULL, $printLabels = TRUE) {
+    
+    // Set defaults:
+    $options += array(
+      'position' => array(
+        'corner' => 'top_left',
+        'x' => 0,
+        'y' => 0,
+        'object' => '',
+        'width' => 0,
+        'height' => 0,
+      ),
+      'text' => array(
+        'font_family' => 'default',
+        'font_style' => '',
+      ),
+      'render' => array(
+        'eval_before' => '',
+        'eval_after' => '',
+      ),
+    );    
     
     // Check if there is a page, if not add it:
     if ($this->getPage() == 0 or $this->addNewPageBeforeNextContent == true) {
@@ -278,10 +298,7 @@ class PdfTemplate extends FPDI
       $x = $this->x+$options['position']['x'];
       $y = $this->y+$options['position']['y'];
     }
-    elseif ($options['position']['object'] == 'page') {
-      
-      
-      
+    elseif ($options['position']['object'] == 'page') {      
       switch($options['position']['corner']) {
         default:
         case 'top_left':
@@ -367,12 +384,24 @@ class PdfTemplate extends FPDI
     // Render the content if it is not already:
     if (is_object($view) && $key != NULL ) {
       $content = $view->field[$key]->theme($row);
+     // print_r($row);
+     // echo "\n\n\n";
     }
     else {
       $content = $row;
     }
     if (!empty($view->field[$key]->options['exclude'])) {
       return '';
+    }
+    
+    // Render Labels
+    $prefix = '';
+    if ($printLabels && !empty($view->field[$key]->options['label'])) {
+      $prefix = $view->field[$key]->options['label'];
+      if ($view->field[$key]->options['element_label_colon']) {
+        $prefix .= ':';
+      }
+      $prefix .= ' ';
     }
     
     $font_size = !isset($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
@@ -405,7 +434,7 @@ class PdfTemplate extends FPDI
     $this->SetFont($font_family, implode('', $font_style), $font_size);
                 
     // Write the content of a field to the pdf file:
-    $this->MultiCell($w, $h, $content, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell);
+    $this->MultiCell($w, $h, $prefix . $content, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell);
     
     // Reset font to default
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
@@ -482,7 +511,48 @@ class PdfTemplate extends FPDI
       if (!empty($column->options['exclude'])) {
         continue;
       }
-
+      
+      
+        $options['info'][$id] += array(
+          'header_style' => array(
+            'position' => array(
+              'corner' => 'top_left',
+              'x' => NULL,
+              'y' => NULL,
+              'object' => '',
+              'width' => NULL,
+              'height' => NULL,
+            ),
+            'text' => array(
+              'font_family' => 'default',
+              'font_style' => '',
+            ),
+            'render' => array(
+              'eval_before' => '',
+              'eval_after' => '',
+            ),
+          ),
+          'body_style' => array(
+            'position' => array(
+              'corner' => 'top_left',
+              'x' => NULL,
+              'y' => NULL,
+              'object' => '',
+              'width' => NULL,
+              'height' => NULL,
+            ),
+            'text' => array(
+              'font_family' => 'default',
+              'font_style' => '',
+            ),
+            'render' => array(
+              'eval_before' => '',
+              'eval_after' => '',
+            ),
+          ),
+        );
+     
+      
       $headerOptions = $options['info'][$id]['header_style'];
       
       if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
@@ -527,7 +597,7 @@ class PdfTemplate extends FPDI
         $this->SetX($x);
         $this->setPage($page);
       
-        $this->drawContent($row, $bodyOptions, $view, $id);
+        $this->drawContent($row, $bodyOptions, $view, $id, FALSE);
         $x += $headerOptions['position']['width'];
       }
       
@@ -762,9 +832,9 @@ class PdfTemplate extends FPDI
     foreach ($clean as $key => $font) {
       
       // Unset bold, italic, italic/bold fonts
-      unset($clean[ ($key.'b') ]);
-      unset($clean[ ($key.'bi') ]);
-      unset($clean[ ($key.'i') ]);
+      unset($clean[ ($key . 'b') ]);
+      unset($clean[ ($key . 'bi') ]);
+      unset($clean[ ($key . 'i') ]);
       
     }
     

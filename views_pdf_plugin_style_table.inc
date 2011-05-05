@@ -42,26 +42,26 @@ class views_pdf_plugin_style_table extends views_plugin_style {
    * Options form
    */
   function options_form(&$form, &$form_state) {
-    
+    parent::options_form($form, $form_state);
     $handlers = $this->display->handler->get_handlers('field');
     if (empty($handlers)) {
       $form['error_markup'] = array(
-        '#value' => t('You need at least one field before you can configure your table settings'),
-        '#prefix' => '<div class="error form-item description">',
-        '#suffix' => '</div>',
+        '#markup' => '<div class="error messages">' . t('You need at least one field before you can configure your table settings') . '</div>',
       );
       return;
     }
-
-    // Note: views UI registers this theme handler on our behalf. Your module
-    // will have to register your theme handlers if you do stuff like this.
-    $form['#theme'] = 'views_pdf_plugin_style_table';
-
-    $columns = $this->display->handler->get_field_labels();
+    $attached = array(
+      'css' => array(drupal_get_path('module', 'views_pdf') . '/theme/admin.css'),
+    );
     
+    $form['#theme'] = 'views_pdf_plugin_style_table';
+    $form['#attached'] = $attached;
+    
+    $columns = $this->display->handler->get_field_labels();   
     $fields = $this->display->handler->get_option('fields');
   
     $fonts = array_merge(array('default' => t(' -- Default -- ')), views_pdf_get_font_list());
+
     $font_styles = array(
       'b' => t('Bold'),
       'i' => t('Italic'),
@@ -76,26 +76,28 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       'J' => t('Justify'),
     );      
 
+
     foreach ($columns as $field => $column) {
       
       if ($fields[$field]['exclude'] == 1) {
         continue;
       }
-    
+          
       $safe = str_replace(array('][', '_', ' '), '-', $field);
+      
       // the $id of the column for dependency checking.
       $id = 'edit-style-options-columns-' . $safe;
 
       // markup for the field name
       $form['info'][$field]['name'] = array(
-        '#value' => $column,
+        '#markup' => $column,
       );
       
       $form['info'][$field]['header_style']['text'] = array(
         '#type' => 'fieldset',
         '#title' => t('Text Settings'),
-        '#collapsed' => TRUE,
-        '#collapsable' => TRUE,
+        '#collapsed' => FALSE,
+        '#collapsible' => TRUE,
       );
       
       $form['info'][$field]['header_style']['text']['font_size'] = array(
@@ -141,8 +143,8 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       $form['info'][$field]['header_style']['render'] = array(
         '#type' => 'fieldset',
         '#title' => t('Render Settings'),
-        '#collapsed' => TRUE,
-        '#collapsable' => TRUE,
+        '#collapsed' => FALSE,
+        '#collapsible' => TRUE,
       );
 
       $form['info'][$field]['header_style']['render']['is_html'] = array(
@@ -168,8 +170,8 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       $form['info'][$field]['body_style']['text'] = array(
         '#type' => 'fieldset',
         '#title' => t('Text Settings'),
-        '#collapsed' => TRUE,
-        '#collapsable' => TRUE,
+        '#collapsed' => FALSE,
+        '#collapsible' => TRUE,
       );
       $form['info'][$field]['body_style']['text']['font_size'] = array(
         '#type' => 'textfield',
@@ -212,8 +214,8 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       $form['info'][$field]['body_style']['render'] = array(
         '#type' => 'fieldset',
         '#title' => t('Render Settings'),
-        '#collapsed' => TRUE,
-        '#collapsable' => TRUE,
+        '#collapsed' => FALSE,
+        '#collapsible' => TRUE,
       );
 
       $form['info'][$field]['body_style']['render']['is_html'] = array(
@@ -240,15 +242,14 @@ class views_pdf_plugin_style_table extends views_plugin_style {
         '#title' => t('Width'),
         '#default_value' => isset($this->options['info'][$field]['position']['width']) ? $this->options['info'][$field]['position']['width'] : '',
       );
-      
-
     }
+    
     
     // Some general options
     $form['position'] = array(
       '#type' => 'fieldset',
       '#title' => t('Table Position'),
-      '#collapsed' => TRUE,
+      '#collapsed' => FALSE,
       '#collapsable' => TRUE,
     );
     $form['position']['x'] = array(
@@ -279,10 +280,6 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       '#default_value' => isset($this->options['position']['row_height']) ? $this->options['position']['row_height'] : '',
     );
     
-    
-
-    parent::options_form($form, $form_state);
-
   }
 
   /**

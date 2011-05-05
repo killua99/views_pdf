@@ -10,7 +10,9 @@
  * Theme function to style the table UI in the Table Style Settings pages in the
  * view editing form. 
  */
-function theme_views_pdf_plugin_style_table($form) {
+function theme_views_pdf_plugin_style_table($variables) {
+  $form = $variables['form'];
+  
   $output = drupal_render($form['description_markup']);
 
   $header = array(
@@ -19,6 +21,7 @@ function theme_views_pdf_plugin_style_table($form) {
     t('Body Style'),
     t('Position')
   );
+  //$output .= print_r($variables, 1);
   
   $rows = array();
   foreach (element_children($form['info']) as $id) {
@@ -30,9 +33,10 @@ function theme_views_pdf_plugin_style_table($form) {
 
     $rows[] = $row;
   }
-
-  $output .= theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  
+  
+  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  $output .= drupal_render_children($form);
   return $output;
 
 }

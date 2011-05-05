@@ -145,9 +145,9 @@ class views_view_field_handler_include_view extends views_handler_field {
     }
     
     $view_name = $this->options['view'];
-    $view = views_get_view($view_name);
     
-    $view->set_arguments($args);
+    $view = views_get_view($view_name); 
+    //$view->set_arguments($args);
     
     // Try same display as the current
     if (!$view->set_display($currentDisplay)) {
@@ -157,24 +157,22 @@ class views_view_field_handler_include_view extends views_handler_field {
         $view->init_display();
       }      
     }
-      
-    $view->pre_execute();
-    $view->execute();
+    
+    $view->pre_execute($args);
     
     $view->init_style();
-
+    
     // Important only for pdf views. With this action we assign the 
     // PDF document to the new view
     if (isset($this->view->pdf) && is_object($this->view->pdf)) {
       $view->pdf =& $this->view->pdf;
-    }
-    
-    if (is_object($view->style_plugin)) {
-      return $view->style_plugin->render();
+      $output = $view->render($view->display_handler->display->id);
     }
     else {
-      return 'style plugin not found';
-    } 
+      $output = $view->display_handler->execute();
+    }
+    
+    return $output;
   }
   
   function allow_advanced_render() {
