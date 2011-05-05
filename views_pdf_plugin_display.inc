@@ -105,7 +105,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     }
     
     print $this->view->pdf->Output($path_to_store_pdf, $destination);
-    
+    exit();
   }
 
   /**
