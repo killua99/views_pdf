@@ -295,11 +295,11 @@ class PdfTemplate extends FPDI
     
     // Determin the x and y coordinates
     if ($options['position']['object'] == 'last_position') {
-      $x = $this->x+$options['position']['x'];
-      $y = $this->y+$options['position']['y'];
+      $x = $this->x + $options['position']['x'];
+      $y = $this->y + $options['position']['y'];
     }
     elseif ($options['position']['object'] == 'page') {      
-      switch($options['position']['corner']) {
+      switch ($options['position']['corner']) {
         default:
         case 'top_left':
           $x = $options['position']['x']+$this->lMargin;
@@ -360,6 +360,12 @@ class PdfTemplate extends FPDI
             break;
         }
         
+        // Handle if the relative element is on another page. So using the 
+        // the last writing position instead for x. 
+        if ($this->getPage() != $this->elements[$relative_to_element]['page']) {
+          $x = $x - $this->elements[$relative_to_element]['x'] + $this->x;
+        }    
+           
       }
       else {
         $x = $this->x;
@@ -384,8 +390,6 @@ class PdfTemplate extends FPDI
     // Render the content if it is not already:
     if (is_object($view) && $key != NULL ) {
       $content = $view->field[$key]->theme($row);
-     // print_r($row);
-     // echo "\n\n\n";
     }
     else {
       $content = $row;
@@ -444,7 +448,8 @@ class PdfTemplate extends FPDI
       'x' => $x,
       'y' => $y,
       'width' => empty($w) ? ($pageDim['wk'] - $this->rMargin-$x) : $w,
-      'height' => $this->y - $y
+      'height' => $this->y - $y,
+      'page' => $this->getPage(),
     );
     
     // Run eval after
@@ -505,6 +510,9 @@ class PdfTemplate extends FPDI
       $page = $this->getPage();
     }
     
+    if (!isset($options['position']['row_height']) || empty($options['position']['row_height'])) {
+      $options['position']['row_height'] = 0;
+    }    
     
     foreach ($columns as $id => $column) {
       
@@ -555,12 +563,13 @@ class PdfTemplate extends FPDI
       
       $headerOptions = $options['info'][$id]['header_style'];
       
-      if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
-        $headerOptions['position']['width'] = $option['info'][$id]['position']['width'];
+      if (isset($options['info'][$id]['position']['width']) && !empty($options['info'][$id]['position']['width'])){
+        $headerOptions['position']['width'] = $options['info'][$id]['position']['width'];
       }
       else {
         $headerOptions['position']['width'] = $defaultColumnWidth;
       }
+      $headerOptions['position']['height'] = $options['position']['row_height'];
       $headerOptions['position']['object'] = 'last_position';
       $this->SetY($y);
       $this->SetX($x);
@@ -571,40 +580,53 @@ class PdfTemplate extends FPDI
       $x += $headerOptions['position']['width'];
     }
     
+    $rowY = $this->y;  
+
+    
     foreach ($rows as $row) {
-      // Print header:
-      $y = $this->y;
       $x = $this->x;
+      $y = $rowY;
       $page = $this->getPage();
       foreach ($columns as $id => $column) {
       
         if (!empty($column->options['exclude'])) {
-          // Render the element, but dont print any thing
+          // Render the element, but dont print anything
           $view->field[$key]->theme($row);
           continue;
         }
 
         $bodyOptions = $options['info'][$id]['body_style'];
       
-        if (isset($option['info'][$id]['position']['width']) && !empty($option['info'][$id]['position']['width'])){
-          $bodyOptions['position']['width'] = $option['info'][$id]['position']['width'];
+        if (isset($options['info'][$id]['position']['width']) && !empty($options['info'][$id]['position']['width'])){
+          $bodyOptions['position']['width'] = $options['info'][$id]['position']['width'];
         }
         else {
           $bodyOptions['position']['width'] = $defaultColumnWidth;
         }
         $bodyOptions['position']['object'] = 'last_position';
+        
         $this->SetY($y);
         $this->SetX($x);
         $this->setPage($page);
+        
+        $bodyOptions['position']['height'] = 0;
       
-        $this->drawContent($row, $bodyOptions, $view, $id, FALSE);
-        $x += $headerOptions['position']['width'];
+        $this->drawContent($row, $bodyOptions, $view, $id);
+        $x += $bodyOptions['position']['width'];
+        
+        // If the cell is writting over the row, we need to adjust the 
+        // row y position.
+        if (($rowY + $options['position']['row_height']) < $this->y) {
+          $rowY = $this->y - $options['position']['row_height'];
+        }
+ 
       }
+      
+      $rowY += $options['position']['row_height'];
       
     }
     
-    
-    
+    $this->SetY($rowY + $options['position']['row_height']);   
   }
   
   
@@ -746,7 +768,7 @@ class PdfTemplate extends FPDI
     $templates = array();
     
     foreach ($templatesFiles as $file) {
-      $templates[$file->name] = $file->name;
+      $templates[$file->filename] = $file->name;
     }
     
     self::$templateList = $templates;
@@ -768,8 +790,7 @@ class PdfTemplate extends FPDI
     }
     
     $template_dir = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
-    return drupal_realpath($template_dir . '/' . $template.'.pdf');
-    
+    return drupal_realpath($template_dir . '/' . $template);
   }
 
   /**
