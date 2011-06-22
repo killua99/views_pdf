@@ -206,6 +206,10 @@ class PdfTemplate extends FPDI
    */
   public function drawContent($row, $options, &$view = NULL, $key = NULL, $printLabels = TRUE) {
     
+    if (!is_array($options)) {
+      $options = array();
+    }
+    
     // Set defaults:
     $options += array(
       'position' => array(),
@@ -955,7 +959,7 @@ class PdfTemplate extends FPDI
       $cached_font_mapping = $cache->data;
     }
     
-    if (is_array($cached_font_mapping) ) {
+    if (is_array($cached_font_mapping) && is_array($cached_font_mapping)) {
       $font_mapping = array_merge(self::$defaultFontList, $cached_font_mapping);
     }
     else {

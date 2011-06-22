@@ -15,6 +15,8 @@
  */
 class views_pdf_handler_page_break extends views_handler_field {
   
+  protected $countRecords = 0;
+  
   /**
    * This method  is used to query data. In our case
    * we want that no data is queried.
