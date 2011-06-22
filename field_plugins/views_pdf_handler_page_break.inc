@@ -33,7 +33,7 @@ class views_pdf_handler_page_break extends views_handler_field {
   function option_definition() {
     $options = parent::option_definition();
     
-    $options['last_row'] = array('default' => TRUE);
+    $options['last_row'] = array('default' => FALSE);
     
     return $options;
   }

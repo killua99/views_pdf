@@ -30,35 +30,13 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       // Due of limitations of field renderer, we invoke them
       // here and not in the field render function.
       foreach ($this->view->field as $id => $field) {
-        if (isset($this->options['formats'][$id])) {
-          $options = $this->options['formats'][$id];
-        }
-        else {
-          $options = array(
-            'position' => array(
-              'corner' => 'top_left',
-              'x' => 0,
-              'y' => 0,
-              'object' => '',
-              'width' => 0,
-              'height' => 0,
-            ),
-            'text' => array(
-              'font_family' => 'default',
-              'font_style' => '',
-            ),
-            'render' => array(
-              'eval_before' => '',
-              'eval_after' => '',
-            ),
-          );
-        }
-           
+        $options = $this->options['formats'][$id];      
         $this->view->pdf->drawContent($row, $options, $this->view, $id);
-        if ($options['position']['object'] == 'header_footer') {
-          // Set or update header / footer options
-          $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
-        }
+       
+        // Set or update header / footer options per row
+        // this ensures that we write the last record for each page
+        // in the cache.
+        $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
       }
       
       // Footer of a record
@@ -122,7 +100,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
     $relativeElements = array(
       'page' => t('Page'),
       'header_footer' => t('In header / footer'),
-      'last_position' => t('Last wrting position'),
+      'last_position' => t('Last Writing Position'),
       'self' => t('Field: Self'),
     );
     
@@ -132,7 +110,12 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       'R' => t('Right'),
       'J' => t('Justify'),
     );      
-      
+    
+    $hyphenate = array(
+      'none' => t('None'),
+      'auto' => t('Detect automatically'),
+    );
+    $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());      
     
 
     if (empty($this->options['inline'])) {
@@ -255,6 +238,13 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#options' => $align,
         '#default_value' => !isset($this->options['formats'][$field]['text']['align']) ? $this->display->handler->get_option('default_text_align') : $this->options['formats'][$field]['text']['align'],
       );
+      $form['formats'][$field]['text']['hyphenate'] = array(
+        '#type' => 'select',
+        '#title' => t('Text Hyphenation'),
+        '#options' => $hyphenate,
+        '#description' => t('If you want to use hyphenation, then you need to download from <a href="@url">ctan.org</a> your needed pattern set. Then upload it to the dir "hyphenate_patterns" in the TCPDF lib directory. Perhaps you need to create the dir first. If you select the automated detection, then we try to get the language of the current node and select an appropriate hyphenation pattern.', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
+        '#default_value' => !isset($this->options['formats'][$field]['text']['hyphenate']) ? $this->display->handler->get_option('default_text_hyphenate') : $this->options['formats'][$field]['text']['hyphenate'],
+      );
       $form['formats'][$field]['text']['color'] = array(
         '#type' => 'textfield',
         '#title' => t('Text Color'),
@@ -272,6 +262,13 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#type' => 'checkbox',
         '#title' => t('Render As HTML'),
         '#default_value' => isset($this->options['formats'][$field]['render']['is_html']) ? $this->options['formats'][$field]['render']['is_html'] : 1,
+      );
+      
+      $form['formats'][$field]['render']['minimal_space'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Minimal Space'),
+        '#description' => t('Specify here the minimal space, which is needed on the page, that the content is placed on the page.'),
+        '#default_value' => isset($this->options['formats'][$field]['render']['swap_on_new_page']) ? $this->options['formats'][$field]['render']['swap_on_new_page'] : 1,
       );
       
       $form['formats'][$field]['render']['eval_before'] = array(
@@ -340,7 +337,12 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       if ($field['text']['align'] == $this->display->handler->get_option('default_text_align')) {
         $form_state['values']['row_options']['formats'][$id]['text']['align'] = NULL;
       }  
+      
+      if ($field['text']['hyphenate'] == $this->display->handler->get_option('default_text_hyphenate')) {
+        $form_state['values']['row_options']['formats'][$id]['text']['hyphenate'] = NULL;
+      }  
     }
+    
     // Save new file:
     // Note: The jQuery update is required to use Ajax for file upload. With
     // default Drupal jQuery it will not work.

@@ -130,7 +130,7 @@ class views_view_field_handler_include_view extends views_handler_field {
   function render($values) {
     
     if (!empty($this->options['exclude'])) {
-    //  return '';
+      return '';
     }
   
     $displayType = $this->view->display_handler->get_style_type();
