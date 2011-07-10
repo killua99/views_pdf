@@ -10,76 +10,67 @@
 /**
  * Implementation of hook_rules_action_info()
  */
-/*
-
-TODO: Port this code to d7
-
 function views_pdf_rules_action_info() {
   
   $items = array();
   
   $items['views_pdf_rules_action_save'] = array(
     'label' => t('Save PDF as file on server'),
-    'module' => 'Views PDF',
-    'eval input' => array('views_pdf', 'path', 'arguments'),
-  
+    'group' => t('Views PDF'),
+    'parameter' => array(
+      'views_pdf' => array(
+        'type' => 'text',
+        'label' => t('View'),
+        'options list' => 'views_pdf_rules_view_list',
+        'description' => t('You need to enter the View and the Display to use. Use the ids of them and separate them by a ":".'),
+      ),
+      'arguments' => array(
+        'type' => 'text',
+        'label' => t('Views Arguments'),
+        'optional' => TRUE,
+        'description' => t('Place on each line one argument.')
+      ),
+      'path' => array(
+        'type' => 'text',
+        'label' => t('Store Path'),
+        'optional' => FALSE,
+        'description' => t('Enter an absolute path where the view should be saved. You may use some tokens.'),
+      ),
+    ),
   );
   
   return $items;
 }
 
+function views_pdf_rules_view_list() {
+  $views = views_get_all_views();
 
+  $list = array();
 
-function views_pdf_rules_action_save_form($settings = array(), &$form) {
-   $views = views_get_all_views();
-    
-  $view_options = array( ' ' => ' ');
-  
-  // Filter only views with a pdf display
-  foreach ($views as $key => $view) {
-    foreach ($view->display as $id => $display) {
-      if ($display->display_plugin == 'pdf') {
-        $view_options[$key] = $view->name;
+  foreach($views as $view => $view_object) {
+    foreach($view_object->display as $display => $display_object) {
+      if ($display_object->display_plugin == 'pdf') {
+        $list[$view . ':' . $display] = $view_object->human_name . ': ' . $display_object->display_title;
       }
     }
   }
 
-  $form['settings']['views_pdf'] = array(
-    '#type' => 'select',
-    '#title' => t('View'),
-    '#options' => $view_options,
-    '#default_value' => $settings['views_pdf'],
-  );
-
-  $form['settings']['arguments'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Arguments'),
-    '#default_value' => $settings['arguments'],
-    '#description' => t('Separate different arguments by commas.'),
-  );
-
-
-  $form['settings']['path'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Path'),
-    '#default_value' => $settings['path'],
-    '#description' => t('Enter an absolute path where the view should be saved. You may use some tokens.'),
-  );
+  return $list;
 }
 
 
-function views_pdf_rules_action_save($settings) {
+function views_pdf_rules_action_save($views_pdf, $arguments, $path) {
+  $splits = explode(':', $views_pdf);
+  $view_id = $splits[0];
+  $display_id = $splits[1];
 
-  $view_name = $settings['views_pdf'];
-  $arguments = $settings['arguments'];
-  $path = $settings['path'];
-  if (!empty($view_name)) {
-    $view = views_get_view($view_name);
+  if (!empty($view_id)) {
+    $view = views_get_view($view_id);
 
-    $view->set_arguments(explode(',', $arguments));
+    $view->set_arguments(explode("\n", $arguments));
 
     // Try to get pdf display
-    if (!$view->set_display('pdf')) {
+    if (!$view->set_display($display_id)) {
       // Try the display type
       if (!$view->set_display('pdf_1')) {
         // There is definitly no pdf display
@@ -91,9 +82,8 @@ function views_pdf_rules_action_save($settings) {
     foreach ($view->display as $id => $display) {
       if ($display->display_plugin == 'pdf' && isset($display->handler)) {
         $display->handler->execute($path, 'F');
-        echo $arguments;
       }
     }
             
   }
-}*/
+}
