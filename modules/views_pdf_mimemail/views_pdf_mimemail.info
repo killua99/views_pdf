@@ -1,9 +1,0 @@
-name = Views PDF Mime Mail
-description = "Integrates Views PDF with Mime Mail."
-dependencies[] = views_pdf
-dependencies[] = mimemail
-dependencies[] = rules
-package = Views
-core = 7.x
-
-
