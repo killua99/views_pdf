@@ -375,10 +375,10 @@ class PdfTemplate extends FPDI
     $this->SetX($x);
     $this->SetY($y);
         
-    $this->renderRow($x, $y, $row, $options, $view, $key);
+    $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
   }
   
-  protected function renderRow($x, $y, $row, $options, &$view = NULL, $key = NULL) {
+  protected function renderRow($x, $y, $row, $options, &$view = NULL, $key = NULL, $printLabels = TRUE) {
     
     $pageDim = $this->getPageDimensions();
     
