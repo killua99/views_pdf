@@ -93,7 +93,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $this->view->pdf->setDefaultFontStyle($this->get_option('default_font_style'));
     $this->view->pdf->setDefaultTextAlign($this->get_option('default_text_align'));
     $this->view->pdf->setDefaultFontColor($this->get_option('default_font_color'));
-    
+     
     $html = $this->view->render($this->display->id);
     
     if (!empty($html)) {
@@ -104,8 +104,17 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       $path_to_store_pdf = $this->view->name;
     }
     
-    print $this->view->pdf->Output($path_to_store_pdf, $destination);
-    exit();
+    if (!preg_match('\.pdf$', $path_to_store_pdf)) {
+      $path_to_store_pdf .= '.pdf';
+    }
+    
+    if ($destination == 'I') {
+      echo $this->view->pdf->Output($path_to_store_pdf, $destination);
+      exit();
+    }
+    else {
+      return $this->view->pdf->Output($path_to_store_pdf, $destination);
+    }  
   }
 
   /**

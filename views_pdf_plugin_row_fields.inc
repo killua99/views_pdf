@@ -30,7 +30,13 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       // Due of limitations of field renderer, we invoke them
       // here and not in the field render function.
       foreach ($this->view->field as $id => $field) {
-        $options = $this->options['formats'][$id];      
+        if (isset($this->options['formats'][$id])) {
+          $options = $this->options['formats'][$id];
+        }
+        else {
+          $options = array();
+        }
+        
         $this->view->pdf->drawContent($row, $options, $this->view, $id);
        
         // Set or update header / footer options per row
