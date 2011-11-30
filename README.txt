@@ -23,8 +23,10 @@ Installation instructions:
    2. Upload the module to your Drupal instance.
    3. Download the required libraries. Download TCPDF and FPDI. Copy the files 
       to the lib directory in the module directory. The path must be so: 
-      "sites/all/libraries/tcpdf/tcpdf.php" respectively "sites/all/libraries/fpdi/fpdi.php".
-      If you are using the Libraries API then put them into the libraries folder.
+      "sites/all/libraries/tcpdf/tcpdf.php" 
+      respectively "sites/all/libraries/fpdi/fpdi.php".
+      If you are using the Libraries API then put them into the 
+      libraries folder.
    4. Check under reports if you setup everything correct.
    5. Setup a view with a PDF display.
    6. Use it.
@@ -50,4 +52,3 @@ Basic Usage
       page number. Important for positioning the field in the header or footer, 
       you need to set the relative position in the field settings to 
       "In header / footer".
-
