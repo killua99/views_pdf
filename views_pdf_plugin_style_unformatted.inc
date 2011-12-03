@@ -44,12 +44,17 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
       $url_options['query'] = $input;
     }
 
-    $url = url($this->view->get_url(NULL, $path), $url_options);
-
     if (empty($this->view->feed_icon)) {
       $this->view->feed_icon = '';
     }
-    $this->view->feed_icon .= theme('views_pdf_icon', $url, $title);
+    $this->view->feed_icon .= theme(
+      'views_pdf_icon', 
+      array(
+        'path' => $this->view->get_url(NULL, $path), 
+        'title' => $title, 
+        'options' => $url_options
+      )
+    );
   }
 
 }

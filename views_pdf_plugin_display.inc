@@ -175,6 +175,9 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $options['default_font_size'] = array('default' => '11');
     $options['default_text_align'] = array('default' => 'L');
     $options['default_font_color'] = array('default' => '000000');
+    $options['default_text_hyphenate'] = array('default' => 'none');
+    
+    $options['css_file'] = array('default' => '');
 
     return $options;
   }
@@ -259,6 +262,12 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           'R' => t('Right'),
           'J' => t('Justify'),
         );  
+        
+        $hyphenate = array(
+          'none' => t('None'),
+          'auto' => t('Detect automatically'),
+        );
+        $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
             
         $form['#title'] .= t('PDF Default Font Options');
         $form['description'] = array(
@@ -291,6 +300,14 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#options' => $align,
           '#default_value' => $this->get_option('default_text_align'),
         );
+        $form['default_text_hyphenate'] = array(
+          '#type' => 'select',
+          '#title' => t('Text Hyphenation'),
+          '#options' => $hyphenate,
+          '#description' => t('If you want to use hyphenation, then you need to download from <a href="@url">ctan.org</a> your needed pattern set. Then upload it to the dir "hyphenate_patterns" in the TCPDF lib directory. Perhaps you need to create the dir first. If you select the automated detection, then we try to get the language of the current node and select an appropriate hyphenation pattern.', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
+          '#default_value' => $this->get_option('default_text_hyphenate'),
+        );
+
         $form['default_font_color'] = array(
           '#type' => 'textfield',
           '#title' => t('Text Color'),
@@ -356,6 +373,15 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#description' => t('The feed icon will be available only to the selected displays.'),
           '#options' => $displays,
           '#default_value' => $this->get_option('displays'),
+        );
+        break;
+        
+      case 'css':
+        $form['#title'] .= t('CSS File');
+        $form['css_file'] = array(
+          '#type' => 'textfield',
+          '#description' => t('URL to a CSS file. This file is attached to all fields, rendered as HTML.'),
+          '#default_value' => $this->get_option('css_file'),
         );
         break;
     }
@@ -431,8 +457,20 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       'desc' => t('Define some PDF specific settings.'),
     );    
     
-    
-    
+    if ($this->get_option('css_file') == '') {
+      $css_file = t('None');
+    }
+    else {
+      //if ($this->get_option('css_file') > 
+      $css_file = $this->get_option('css_file');
+    }
+      
+    $options['css'] = array(
+      'category' => 'page',
+      'title' => t('CSS File'),
+      'value' => $css_file,
+      'desc' => t('Define a CSS file attached to all HTML output.'),
+    );
   }
   
   /**
@@ -487,6 +525,10 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       
       case 'displays':
         $this->set_option($form_state['section'], $form_state['values'][$form_state['section']]);
+        break;
+        
+      case 'css':
+        $this->set_option('css_file', $form_state['values']['css_file']);
         break;
     }
   }

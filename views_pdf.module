@@ -26,7 +26,8 @@ function views_pdf_theme() {
       'file' => 'views_pdf.admin.inc',
     ),
     'views_pdf_icon' => array(
-      'arguments' => array('url' => NULL, 'title' => NULL),
+      'render element' => 'form',
+      'variables' => array('url' => NULL, 'title' => NULL),
     ),
   );
 }
@@ -43,11 +44,18 @@ function views_pdf_get_new_pdf_instance($orientation='P', $unit='mm', $format='A
 /**
  * Theme function for the PDF icon of appended PDFs.
  */
-function theme_views_pdf_icon($url, $title) {
-  $path = drupal_get_path('module', 'views_pdf') . '/images/pdf.png';
-  if ($image = theme('image', $path, t('PDF content'), $title)) {
-    return '<a href="'. check_url($url) .'" class="pdf-icon">'. $image .'</a>';
-  }  
+function theme_views_pdf_icon($vars) {
+  $title = $vars['title'];
+  $path = $vars['path'];
+  $options = $vars['options'];
+  $options['html'] = TRUE;
+  $options['attributes']['class'] = 'pdf-icon';
+
+  $imagePath = drupal_get_path('module', 'views_pdf') . '/images/pdf.png';
+  
+  if ($image = theme('image', array('path' => $imagePath, 'title' => $title, 'alt' => $title))) {
+    return l($image, $path, $options);
+  }
 }
 
 /**

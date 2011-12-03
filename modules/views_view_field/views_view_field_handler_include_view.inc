@@ -166,6 +166,7 @@ class views_view_field_handler_include_view extends views_handler_field {
     // PDF document to the new view
     if (isset($this->view->pdf) && is_object($this->view->pdf)) {
       $view->pdf =& $this->view->pdf;
+      
       $output = $view->render($view->display_handler->display->id);
     }
     else {

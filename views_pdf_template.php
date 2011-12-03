@@ -383,7 +383,7 @@ class PdfTemplate extends FPDI
     $pageDim = $this->getPageDimensions();
     
     // Render the content if it is not already:
-    if (is_object($view) && $key != NULL && is_object($view->field[$key])) {
+    if (is_object($view) && $key != NULL && isset($view->field[$key]) && is_object($view->field[$key])) {
       $content = $view->field[$key]->theme($row);
     }
     elseif(is_string($row)) {
@@ -409,11 +409,18 @@ class PdfTemplate extends FPDI
     if (isset($options['text']['hyphenate']) && $options['text']['hyphenate'] != 'none') {
       $patternFile = $options['text']['hyphenate'];
       if ($options['text']['hyphenate'] == 'auto' && is_object($row)) {
-        $nodeLanguage = $row->node_language;
-        foreach (self::getAvailableHyphenatePatterns() as $file => $pattern) {
-          if (stristr($pattern, $nodeLanguage) !== FALSE) {
-            $patternFile = $file;
-            break;
+        
+        // Workaround:
+        // Since "$nodeLanguage = $row->node_language;" does not work anymore,
+        // we using this:
+        if (isset($row->_field_data['nid']['entity']->language)) {
+          $nodeLanguage = $row->_field_data['nid']['entity']->language;
+        
+          foreach (self::getAvailableHyphenatePatterns() as $file => $pattern) {
+            if (stristr($pattern, $nodeLanguage) !== FALSE) {
+              $patternFile = $file;
+              break;
+            }
           }
         }
       }
@@ -510,6 +517,8 @@ class PdfTemplate extends FPDI
       'height' => $this->y - $y,
       'page' => $this->lastWritingPage,
     );
+    
+    $this->lastWritingElement = $key;
   }
   
   /**
@@ -781,11 +790,17 @@ class PdfTemplate extends FPDI
    */
   public function addPage($path = NULL, $reset = false, $numbering = 'main') {
     
+    // Do not add any new page, if we are writing
+    // in the footer or header.
+    if ($this->InFooter) {
+      return;
+    }
+    
     $this->mainContentPageNumber++;
     $this->rowContentPageNumber++;
     
-    // Reset without any template
-    if ((empty($path) || !file_exists($path)) && $reset == true) {
+    // Prevent a reset without any template
+    if ($reset == true && (empty($path) || !file_exists($path))) {
       parent::addPage();
       $this->setPageFormat($this->defaultFormat, $this->defaultOrientation);
       return;
