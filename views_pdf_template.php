@@ -714,7 +714,7 @@ class PdfTemplate extends FPDI
         
         $bodyOptions['position']['height'] = 0;
                 
-        $this->renderRow($x, $y, $row, $bodyOptions, $view, $id);
+        $this->renderRow($x, $y, $row, $bodyOptions, $view, $id, FALSE);
         
         $x += $bodyOptions['position']['width'];
         
