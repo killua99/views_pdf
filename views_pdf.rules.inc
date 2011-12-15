@@ -34,7 +34,7 @@ function views_pdf_rules_action_info() {
         'type' => 'text',
         'label' => t('Store Path'),
         'optional' => FALSE,
-        'description' => t('Enter an absolute path where the view should be saved. You may use some tokens.'),
+        'description' => t('Enter an relative path where the view should be saved. You may use some tokens.'),
       ),
     ),
   );
