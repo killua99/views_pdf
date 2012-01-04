@@ -515,6 +515,8 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           if (is_object($file)) {
             $file_name =  basename($file->destination, '.pdf');
             $form_state['values']['template'] = $file_name;          
+            $file->status |= FILE_STATUS_PERMANENT;
+            $file = file_save($file);
           }
          }
         

@@ -363,6 +363,8 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       if (is_object($file)) {
         $file_name =  basename($file->destination, '.pdf');
         $form_state['values']['row_options']['template'] = $file_name;
+        $file->status |= FILE_STATUS_PERMANENT;
+        $file = file_save($file);
       }
     }
     
