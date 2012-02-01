@@ -9,12 +9,12 @@
  * This class contains all the functionality of the PDF display.
  */
 class views_pdf_plugin_display extends views_plugin_display_page {
-  
+
   /**
    * Define the display type
    */
   function get_style_type() { return 'pdf'; }
-  
+
   /**
    * Disable the breadcrumb
    */
@@ -28,25 +28,25 @@ class views_pdf_plugin_display extends views_plugin_display_page {
    */
   function render() {
     // Generall document layout
-    
+
     // Set default code
     $this->view->pdf->SetFont('');
-    
+
     // Add leading pages
     $path = $this->view->pdf->getTemplatePath($this->get_option('leading_template'));
     $this->view->pdf->addPdfDocument($path);
-    
+
     // Set the default background template
     $path = $this->view->pdf->getTemplatePath($this->get_option('template'));
-    $this->view->pdf->setDefaultPageTemplate($path, 'main');  
-      
+    $this->view->pdf->setDefaultPageTemplate($path, 'main');
+
     // Render the items
     $this->view->style_plugin->render();
 
     // Add succeed pages
     $path = $this->view->pdf->getTemplatePath($this->get_option('succeed_template'));
     $this->view->pdf->addPdfDocument($path);
-    
+
   }
 
   /**
@@ -56,13 +56,13 @@ class views_pdf_plugin_display extends views_plugin_display_page {
   function preview() {
     return t('The PDF display does not provide a preview.');
   }
-  
+
   /**
    * This function executes the PDF display.
    *
    */
   function execute($path_to_store_pdf = '', $destination = 'I') {
-    
+
     if ($this->get_option('default_page_format') == 'custom') {
       if (preg_match('/([0-9]+)x([0-9]+)/', $this->get_option('default_page_format_custom'), $result)) {
         $format[0] = $result[1]; // width
@@ -71,50 +71,49 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       else {
         $format = 'A4';
       }
-    
+
     }
     else {
       $format = $this->get_option('default_page_format');
     }
-        
+
     $orientation = $this->get_option('default_page_orientation'); // P or L
     $unit = $this->get_option('unit');
     $this->view->pdf = views_pdf_get_new_pdf_instance($orientation, $unit, $format);
-    
+
     // Set margins: top, left, right
     $this->view->pdf->SetMargins($this->get_option('margin_left'), $this->get_option('margin_top'), $this->get_option('margin_right'), TRUE);
-    
+
     // Set auto page break: margin bottom:
     $this->view->pdf->SetAutoPageBreak(TRUE, $this->get_option('margin_bottom'));
-    
-    
+
     $this->view->pdf->setDefaultFontSize($this->get_option('default_font_size'));
     $this->view->pdf->setDefaultFontFamily($this->get_option('default_font_family'));
     $this->view->pdf->setDefaultFontStyle($this->get_option('default_font_style'));
     $this->view->pdf->setDefaultTextAlign($this->get_option('default_text_align'));
     $this->view->pdf->setDefaultFontColor($this->get_option('default_font_color'));
-     
+
     $html = $this->view->render($this->display->id);
-    
+
     if (!empty($html)) {
       echo $html;
     }
-    
+
     if (empty($path_to_store_pdf)) {
       $path_to_store_pdf = $this->view->name;
     }
-    
+
     if (!preg_match('/\.pdf$/', $path_to_store_pdf)) {
       $path_to_store_pdf .= '.pdf';
     }
-    
+
     if ($destination == 'I') {
       echo $this->view->pdf->Output($path_to_store_pdf, $destination);
       exit();
     }
     else {
       return $this->view->pdf->Output($path_to_store_pdf, $destination);
-    }  
+    }
   }
 
   /**
@@ -155,7 +154,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $options['defaults']['default']['style_options'] = FALSE;
     $options['defaults']['default']['row_plugin'] = FALSE;
     $options['defaults']['default']['row_options'] = FALSE;
-    
+
     // New Options
     $options['default_page_format'] = array('default' => 'A4');
     $options['default_page_format_custom'] = array('default' => '');
@@ -165,29 +164,29 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $options['margin_right'] = array('default' => '15');
     $options['margin_top'] = array('default' => '15');
     $options['margin_bottom'] = array('default' => '15');
-    
+
     $options['leading_template'] = array('default' => '');
     $options['template'] = array('default' => '');
     $options['succeed_template'] = array('default' => '');
-    
+
     $options['default_font_family'] = array('default' => 'helvetica');
     $options['default_font_style'] = array('default' => array());
     $options['default_font_size'] = array('default' => '11');
     $options['default_text_align'] = array('default' => 'L');
     $options['default_font_color'] = array('default' => '000000');
     $options['default_text_hyphenate'] = array('default' => 'none');
-    
+
     $options['css_file'] = array('default' => '');
 
     return $options;
   }
-  
+
   /**
    * Option form
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    
+
     switch ($form_state['section']) {
       case 'pdf_page':
         $form['#title'] .= t('PDF Page Options');
@@ -255,20 +254,20 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           'd' => t('Line through'),
           'o' => t('Overline')
         );
-    
+
         $align = array(
           'L' => t('Left'),
           'C' => t('Center'),
           'R' => t('Right'),
           'J' => t('Justify'),
-        );  
-        
+        );
+
         $hyphenate = array(
           'none' => t('None'),
           'auto' => t('Detect automatically'),
         );
         $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
-            
+
         $form['#title'] .= t('PDF Default Font Options');
         $form['description'] = array(
           '#prefix' => '<div class="description form-item">',
@@ -315,13 +314,13 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#size' => 20,
           '#default_value' => $this->get_option('default_font_color'),
         );
-    
+
         break;
-      
+
       case 'pdf_template':
         $form['#title'] .= t('PDF Templates');
 
-        $templates = array_merge(array(t(' -- None -- ')), views_pdf_get_pdf_templates());
+        $templates = array_merge(array(t('-- None --')), views_pdf_get_pdf_templates());
         $form['leading_template'] = array(
           '#type' => 'select',
           '#options' => $templates,
@@ -330,8 +329,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#description' => t('Here you specify a PDF file to be printed in front of every row.'),
           '#default_value' => $this->get_option('leading_template'),
         );
-    
-    
+
         $form['template'] = array(
           '#type' => 'select',
           '#options' => $templates,
@@ -339,8 +337,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#description' => t('Here you specify a PDF file on which the content is printed. The first page of this document is used for the first page, in the target document. The second page is used for the second page in the target document and so on. If the target document has more that this template file, the last page of the template will be repeated. The leading document has no effect on the order of the pages.'),
           '#default_value' => $this->get_option('template'),
         );
-    
-    
+
         $form['succeed_template'] = array(
           '#type' => 'select',
           '#options' => $templates,
@@ -349,17 +346,14 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#description' => t('Here you specify a PDF file to be printed after the main content.'),
           '#default_value' => $this->get_option('succeed_template'),
         );
-    
-    
+
         $form['template_file'] = array(
           '#type' => 'file',
           '#title' => t('Upload New Template File'),
-        );        
-        
-        
-        
+        );
+
         break;
-        
+
       case 'displays':
         $form['#title'] .= t('Attach to');
         $displays = array();
@@ -375,7 +369,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
           '#default_value' => $this->get_option('displays'),
         );
         break;
-        
+
       case 'css':
         $form['#title'] .= t('CSS File');
         $form['css_file'] = array(
@@ -386,15 +380,15 @@ class views_pdf_plugin_display extends views_plugin_display_page {
         break;
     }
   }
-  
+
   /**
    * Provide a summary of the options.
    */
   function options_summary(&$categories, &$options) {
     parent::options_summary($categories, $options);
-    
+
     $fonts = views_pdf_get_font_list();
-    
+
     // Change Page title:
     $categories['page'] = array(
       'title' => t('PDF settings'),
@@ -403,7 +397,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
         '#weight' => -10,
       ),
     );
-    
+
     // Add for attach the display to others:
     $displays = array_filter($this->get_option('displays'));
     if (count($displays) > 1) {
@@ -425,46 +419,45 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       'title' => t('Attach to'),
       'value' => $attach_to,
     );
-  
+
     // Add for pdf page settings
     $options['pdf_page'] = array(
       'category' => 'page',
       'title' => t('PDF Page Settings'),
       'value' => $this->get_option('default_page_format'),
       'desc' => t('Define some PDF specific settings.'),
-    );    
-    
+    );
+
     // Add for pdf font settings
     $options['pdf_fonts'] = array(
       'category' => 'page',
       'title' => t('PDF Fonts Settings'),
       'value' => t('!family at !size pt', array('!family' => $fonts[$this->get_option('default_font_family')], '!size' => $this->get_option('default_font_size'))),
       'desc' => t('Define some PDF specific settings.'),
-    );    
-    
+    );
+
     // add for pdf template settings
     if ($this->get_option('leading_template') != '' || $this->get_option('template') != '' || $this->get_option('succeed_template') != '') {
       $isAnyTemplate = t('Yes');
     }
     else {
-      $isAnyTemplate = t('No');    
+      $isAnyTemplate = t('No');
     }
-    
+
     $options['pdf_template'] = array(
       'category' => 'page',
       'title' => t('PDF Template Settings'),
       'value' => $isAnyTemplate,
       'desc' => t('Define some PDF specific settings.'),
-    );    
-    
+    );
+
     if ($this->get_option('css_file') == '') {
       $css_file = t('None');
     }
     else {
-      //if ($this->get_option('css_file') > 
       $css_file = $this->get_option('css_file');
     }
-      
+
     $options['css'] = array(
       'category' => 'page',
       'title' => t('CSS File'),
@@ -472,7 +465,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
       'desc' => t('Define a CSS file attached to all HTML output.'),
     );
   }
-  
+
   /**
    * Handles the storage of the options.
    *
@@ -490,18 +483,18 @@ class views_pdf_plugin_display extends views_plugin_display_page {
         $this->set_option('margin_right', $form_state['values']['margin_right']);
         $this->set_option('margin_top', $form_state['values']['margin_top']);
         $this->set_option('margin_bottom', $form_state['values']['margin_bottom']);
-        
+
         break;
-        
-      case 'pdf_fonts': 
+
+      case 'pdf_fonts':
         $this->set_option('default_font_size', $form_state['values']['default_font_size']);
         $this->set_option('default_font_style', $form_state['values']['default_font_style']);
         $this->set_option('default_font_family', $form_state['values']['default_font_family']);
         $this->set_option('default_text_align', $form_state['values']['default_text_align']);
         $this->set_option('default_font_color', $form_state['values']['default_font_color']);
-      
+
         break;
-      
+
       case 'pdf_template':
         // Save new file:
         // Note: The jQuery update is required to use Ajax for file upload. With
@@ -509,32 +502,32 @@ class views_pdf_plugin_display extends views_plugin_display_page {
         // For upload with Ajax a iFrame is open and upload in it, because
         // normal forms are not allowed to handle directly.
         $destination = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
-                        
+
         if (file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
           $file = file_save_upload('template_file', array(), $destination);
           if (is_object($file)) {
             $file_name =  basename($file->destination, '.pdf');
-            $form_state['values']['template'] = $file_name;          
+            $form_state['values']['template'] = $file_name;
             $file->status |= FILE_STATUS_PERMANENT;
             $file = file_save($file);
           }
-         }
-        
+        }
+
         $this->set_option('leading_template', $form_state['values']['leading_template']);
         $this->set_option('template', $form_state['values']['template']);
         $this->set_option('succeed_template', $form_state['values']['succeed_template']);
         break;
-      
+
       case 'displays':
         $this->set_option($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
-        
+
       case 'css':
         $this->set_option('css_file', $form_state['values']['css_file']);
         break;
     }
   }
-  
+
   /**
    * Attach to another view.
    */

@@ -29,7 +29,7 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
 
     return $output;
   }
-  
+
   /**
    * Attach this view to another display as a feed.
    *
@@ -48,10 +48,10 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
       $this->view->feed_icon = '';
     }
     $this->view->feed_icon .= theme(
-      'views_pdf_icon', 
+      'views_pdf_icon',
       array(
-        'path' => $this->view->get_url(NULL, $path), 
-        'title' => $title, 
+        'path' => $this->view->get_url(NULL, $path),
+        'title' => $title,
         'options' => $url_options
       )
     );

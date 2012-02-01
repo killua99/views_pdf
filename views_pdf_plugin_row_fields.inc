@@ -8,25 +8,25 @@
 
 /**
  * This class contains all the functionality of the field PDF style.
- */ 
+ */
 class views_pdf_plugin_row_fields extends views_plugin_row {
   /**
    * Renders the views.
    */
   function render($records) {
     $options = $this->option_definition();
-    
+
     foreach ($records as $row_index => $row) {
       $this->view->row_index = $row_index;
 
       // Header of a record
       $path = $this->view->pdf->getTemplatePath($this->options['leading_template']);
       $this->view->pdf->addPdfDocument($path);
-      
+
       // Set row page template
       $path = $this->view->pdf->getTemplatePath($this->options['template'], $row, $this->view);
       $this->view->pdf->setDefaultPageTemplate($path, 'row', 'row');
-      
+
       // Due of limitations of field renderer, we invoke them
       // here and not in the field render function.
       foreach ($this->view->field as $id => $field) {
@@ -36,26 +36,25 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         else {
           $options = array();
         }
-        
+
         $this->view->pdf->drawContent($row, $options, $this->view, $id);
-       
+
         // Set or update header / footer options per row
         // this ensures that we write the last record for each page
         // in the cache.
         $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
       }
-      
+
       // Footer of a record
       $path = $this->view->pdf->getTemplatePath($this->options['succeed_template']);
       $this->view->pdf->addPdfDocument($path);
-            
-      
+
       // Reset the row page number
       $this->view->pdf->resetRowPageNumber();
     }
-    
+
   }
-  
+
   /**
    * Option definitions
    */
@@ -66,8 +65,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
     $options['leading_template'] = array('default' => '');
     $options['template'] = array('default' => '');
     $options['succeed_template'] = array('default' => '');
-    
-    
+
     return $options;
   }
 
@@ -75,13 +73,11 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
    * Provide a form for setting options.
    */
   function options_form(&$form, &$form_state) {
-  
 
     $options = $this->display->handler->get_field_labels();
     $fields = $this->display->handler->get_option('fields');
-    
-    
-    $fonts = array_merge(array('default' => t(' -- Default -- ')), views_pdf_get_font_list());
+
+    $fonts = array_merge(array('default' => t('-- Default --')), views_pdf_get_font_list());
     $font_styles = array(
       'b' => t('Bold'),
       'i' => t('Italic'),
@@ -89,40 +85,40 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       'd' => t('Line through'),
       'o' => t('Overline')
     );
-    $templates = array_merge(array(t(' -- None -- ')), views_pdf_get_pdf_templates());
-    
+    $templates = array_merge(array(t('-- None --')), views_pdf_get_pdf_templates());
+
     $file_fields = array();
 
     foreach ($this->display->handler->get_handlers('field') as $id => $handler) {
       $info = field_read_field($id);
-   
+
       if (isset($info['type']) && $info['type'] == 'file') {
         $file_fields[$id] = $info['field_name'];
       }
-    } 
-    
+    }
+
     $row_templates = array_merge($templates, $file_fields);
-    
+
     $relativeElements = array(
       'page' => t('Page'),
       'header_footer' => t('In header / footer'),
       'last_position' => t('Last Writing Position'),
       'self' => t('Field: Self'),
     );
-    
+
     $align = array(
       'L' => t('Left'),
       'C' => t('Center'),
       'R' => t('Right'),
       'J' => t('Justify'),
-    );      
-    
+    );
+
     $hyphenate = array(
       'none' => t('None'),
       'auto' => t('Detect automatically'),
     );
-    $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());      
-    
+    $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
+
 
     if (empty($this->options['inline'])) {
       $this->options['inline'] = array();
@@ -132,13 +128,12 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       '#suffix' => '</div>',
       '#value' => t('Here you can define some style settings for each field.'),
     );
-    
+
     foreach ($options as $field => $option) {
-      
+
       if (isset($fields[$field]['exclude']) && $fields[$field]['exclude'] == 1) {
         continue;
       }
-      
 
 
       $form['formats'][$field] = array(
@@ -147,15 +142,14 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#collapsed' => TRUE,
         '#collapsable' => TRUE,
       );
-      
-      
+
       $form['formats'][$field]['position'] = array(
         '#type' => 'fieldset',
         '#title' => t('Position Settings'),
         '#collapsed' => FALSE,
         '#collapsable' => TRUE,
       );
-      
+
       $form['formats'][$field]['position']['object'] = array(
         '#type' => 'select',
         '#title' => t('Position relative to'),
@@ -163,7 +157,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#options' => $relativeElements,
         '#default_value' => !empty($this->options['formats'][$field]['position']['object']) ? $this->options['formats'][$field]['position']['object'] : 'page',
       );
-      
+
       $form['formats'][$field]['position']['corner'] = array(
         '#type' => 'radios',
         '#title' => t('Position relative to corner'),
@@ -171,52 +165,50 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#options' => array(
           'top_left' => t('Top Left'),
           'top_right' => t('Top Right'),
-          'bottom_left' => t('Bottom Left'), 
+          'bottom_left' => t('Bottom Left'),
           'bottom_right' => t('Bottom Right'),
         ),
         '#default_value' => !empty($this->options['formats'][$field]['position']['corner']) ? $this->options['formats'][$field]['position']['corner'] : 'top_left',
       );
-      
+
       $relativeElements['field_' . $field] = t('Field: !field', array('!field' => $option));
-      
-      
+
+
       $form['formats'][$field]['position']['x'] = array(
         '#type' => 'textfield',
         '#title' => t('Position X'),
         '#required' => FALSE,
         '#default_value' => !empty($this->options['formats'][$field]['position']['x']) ? $this->options['formats'][$field]['position']['x'] : '',
       );
-      
+
       $form['formats'][$field]['position']['y'] = array(
         '#type' => 'textfield',
         '#title' => t('Position Y'),
         '#required' => FALSE,
         '#default_value' => !empty($this->options['formats'][$field]['position']['y']) ? $this->options['formats'][$field]['position']['y'] : '',
       );
-      
+
       $form['formats'][$field]['position']['width'] = array(
         '#type' => 'textfield',
         '#title' => t('Width'),
         '#required' => FALSE,
         '#default_value' => !empty($this->options['formats'][$field]['position']['width']) ? $this->options['formats'][$field]['position']['width'] : '',
       );
-      
+
       $form['formats'][$field]['position']['height'] = array(
         '#type' => 'textfield',
         '#title' => t('Height'),
         '#required' => FALSE,
         '#default_value' => !empty($this->options['formats'][$field]['position']['height']) ? $this->options['formats'][$field]['position']['height'] : '',
       );
-      
-      
-      
+
       $form['formats'][$field]['text'] = array(
         '#type' => 'fieldset',
         '#title' => t('Text Settings'),
         '#collapsed' => FALSE,
         '#collapsable' => TRUE,
       );
-      
+
       $form['formats'][$field]['text']['font_size'] = array(
         '#type' => 'textfield',
         '#title' => t('Font Size'),
@@ -269,28 +261,28 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#title' => t('Render As HTML'),
         '#default_value' => isset($this->options['formats'][$field]['render']['is_html']) ? $this->options['formats'][$field]['render']['is_html'] : 1,
       );
-      
+
       $form['formats'][$field]['render']['minimal_space'] = array(
         '#type' => 'textfield',
         '#title' => t('Minimal Space'),
         '#description' => t('Specify here the minimal space, which is needed on the page, that the content is placed on the page.'),
         '#default_value' => isset($this->options['formats'][$field]['render']['swap_on_new_page']) ? $this->options['formats'][$field]['render']['swap_on_new_page'] : 1,
       );
-      
+
       $form['formats'][$field]['render']['eval_before'] = array(
         '#type' => 'textarea',
         '#title' => t('PHP Code Before Output'),
         '#default_value' => isset($this->options['formats'][$field]['render']['eval_before']) ? $this->options['formats'][$field]['render']['eval_before'] : '',
       );
-      
+
       $form['formats'][$field]['render']['eval_after'] = array(
         '#type' => 'textarea',
         '#title' => t('PHP Code After Output'),
         '#default_value' => isset($this->options['formats'][$field]['render']['eval_after']) ? $this->options['formats'][$field]['render']['eval_after'] : '',
       );
-      
+
     }
-    
+
     $form['leading_template'] = array(
       '#type' => 'select',
       '#options' => $templates,
@@ -299,8 +291,8 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       '#description' => t('Here you specify a PDF file to be printed in front of every row.'),
       '#default_value' => $this->options['leading_template'],
     );
-    
-    
+
+
     $form['template'] = array(
       '#type' => 'select',
       '#options' => $row_templates,
@@ -308,8 +300,8 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       '#description' => t('Here you specify a PDF file on which the content is printed. The first page of this document is used for the first page, in the target document. The second page is used for the second page in the target document and so on. If the target document has more that this template file, the last page of the template will be repeated. The leading document has no effect on the order of the pages. This option does not override the same option for the whole document. This template will be applyed addtionaly. The page format is defined by the document template, if it is defined.'),
       '#default_value' => $this->options['template'],
     );
-    
-    
+
+
     $form['succeed_template'] = array(
       '#type' => 'select',
       '#options' => $templates,
@@ -318,8 +310,8 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
       '#description' => t('Here you specify a PDF file to be printed after the main content.'),
       '#default_value' => $this->options['succeed_template'],
     );
-    
-    
+
+
     $form['template_file'] = array(
       '#type' => 'file',
       '#title' => t('Upload New Template File'),
@@ -327,35 +319,35 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
 
 
   }
-  
+
   /**
    * Stores the options
    */
   function options_submit(&$form, &$form_state) {
     $default = $this->display->handler->get_option('default_font_style');
     foreach ($form_state['values']['row_options']['formats'] as $id => $field) {
-      
+
       // Reset to default, if the elements are equal to the default settings
       if (count(array_diff($default, $field['text']['font_style'])) == 0 && count(array_diff($field['text']['font_style'], $default)) == 0) {
         $form_state['values']['row_options']['formats'][$id]['text']['font_style'] = NULL;
       }
-      
+
       if ($field['text']['align'] == $this->display->handler->get_option('default_text_align')) {
         $form_state['values']['row_options']['formats'][$id]['text']['align'] = NULL;
-      }  
-      
+      }
+
       if ($field['text']['hyphenate'] == $this->display->handler->get_option('default_text_hyphenate')) {
         $form_state['values']['row_options']['formats'][$id]['text']['hyphenate'] = NULL;
-      }  
+      }
     }
-    
+
     // Save new file:
     // Note: The jQuery update is required to use Ajax for file upload. With
     // default Drupal jQuery it will not work.
     // For upload with Ajax a iFrame is open and upload in it, because
     // normal forms are not allowed to handle directly.
     $destination = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
-    
+
     if (file_prepare_directory($destination, FILE_CREATE_DIRECTORY)) {
       // The file field is not called "template_file" as expected, it calls
       // "row_options". The reason for that is not clear.
@@ -367,16 +359,16 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         $file = file_save($file);
       }
     }
-    
-    if ($form_state['values']['row_options']['leading_template'] == t(' -- None -- ')) {
+
+    if ($form_state['values']['row_options']['leading_template'] == t('-- None --')) {
       $form_state['values']['row_options']['leading_template'] = '';
     }
-    
-    if ($form_state['values']['row_options']['template'] == t(' -- None -- ')) {
+
+    if ($form_state['values']['row_options']['template'] == t('-- None --')) {
       $form_state['values']['row_options']['template'] = '';
     }
-    
-    if ($form_state['values']['row_options']['succeed_template'] == t(' -- None -- ')) {
+
+    if ($form_state['values']['row_options']['succeed_template'] == t('-- None --')) {
       $form_state['values']['row_options']['succeed_template'] = '';
     }
 

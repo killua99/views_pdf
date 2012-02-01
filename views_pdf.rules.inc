@@ -1,19 +1,18 @@
 <?php
 
-
 /**
  * @file
- * Rules integration of the mimemail and the PDF Views module. 
+ * Rules integration of the mimemail and the PDF Views module.
  *
  */
 
 /**
- * Implementation of hook_rules_action_info()
+ * Implements hook_rules_action_info().
  */
 function views_pdf_rules_action_info() {
-  
+
   $items = array();
-  
+
   $items['views_pdf_rules_action_save'] = array(
     'label' => t('Save PDF as file on server'),
     'group' => t('Views PDF'),
@@ -38,7 +37,7 @@ function views_pdf_rules_action_info() {
       ),
     ),
   );
-  
+
   return $items;
 }
 
@@ -47,8 +46,8 @@ function views_pdf_rules_view_list() {
 
   $list = array();
 
-  foreach($views as $view => $view_object) {
-    foreach($view_object->display as $display => $display_object) {
+  foreach ($views as $view => $view_object) {
+    foreach ($view_object->display as $display => $display_object) {
       if ($display_object->display_plugin == 'pdf') {
         $list[$view . ':' . $display] = $view_object->human_name . ': ' . $display_object->display_title;
       }
@@ -75,15 +74,15 @@ function views_pdf_rules_action_save($views_pdf, $arguments, $path) {
       if (!$view->set_display('pdf_1')) {
         // There is definitly no pdf display
         return;
-      }      
+      }
     }
-     
+
     $view->pre_execute();
     foreach ($view->display as $id => $display) {
       if ($display->display_plugin == 'pdf' && isset($display->handler)) {
         $display->handler->execute($path, 'F');
       }
     }
-            
+
   }
 }
