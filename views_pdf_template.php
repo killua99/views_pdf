@@ -364,12 +364,13 @@ class PdfTemplate extends FPDI
     
     // No position match (for example header/footer)
     else {
-      // Render and then return
+      // Render or return
       if (is_object($view) && $key != NULL ) {
         $content = $view->field[$key]->theme($row);
+      }else{
+        return;
       }
 
-      return;
     }
     
     $this->SetX($x);
