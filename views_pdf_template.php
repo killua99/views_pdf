@@ -592,7 +592,11 @@ class PdfTemplate extends FPDI
       if (!empty($column->options['exclude'])) {
         continue;
       }
-      
+
+      if(!is_array($options['info'][$id]) ) {
+        $options['info'][$id] = array();
+      }
+
       $options['info'][$id] += array(
         'header_style' => array(),
         'body_style' => array(),
