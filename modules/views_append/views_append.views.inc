@@ -25,9 +25,6 @@ function views_append_views_data() {
       'click sortable' => FALSE,
       'notafield' => TRUE,
     ),
-  ); 
+  );
   return $data;
 }
-
-
-
