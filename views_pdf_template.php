@@ -233,6 +233,8 @@ class PdfTemplate extends FPDI {
       'eval_after' => '',
     );
 
+    $x = $y = 0;
+
 
     // Get the page dimensions
     $pageDim = $this->getPageDimensions();
