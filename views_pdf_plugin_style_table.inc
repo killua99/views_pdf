@@ -139,16 +139,16 @@ class views_pdf_plugin_style_table extends views_plugin_style {
         '#type' => 'select',
         '#title' => t('Text Hyphenation'),
         '#options' => $hyphenate,
-        '#description' => t('If you want to use hyphenation, then you need to download from <a href="@url">ctan.org</a> your needed pattern set. Then upload it to the dir "hyphenate_patterns" in the TCPDF lib directory. Perhaps you need to create the dir first. If you select the automated detection, then we try to get the language of the current node and select an appropriate hyphenation pattern.', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
+        '#description' => t('upload patterns from <a href="@url">ctan.org</a> to <br />sites/libraries/tcpdf/hyphenate_patterns', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
         '#default_value' => $this->options['info'][$field]['header_style']['text']['hyphenate'] == NULL ? $this->display->handler->get_option('default_text_hyphenate') : $this->options['info'][$field]['header_style']['text']['hyphenate'],
       );
 
       $form['info'][$field]['header_style']['text']['color'] = array(
         '#type' => 'textfield',
         '#title' => t('Text Color'),
-        '#description' => t('If a value is entered without a comma, it will be interpreted as a hexadecimal RGB color. Normal RGB can be used by separating the components by a comma. e.g 255,255,255 for white. A CMYK color can be entered in the same way as RGB. e.g. 0,100,0,0 for magenta.'),
+        '#description' => t('Enter Any format: <br />000000 (HexRGB) - 000,000,000 (RGB) - 000,000,000,000 (CMYK)'),
         '#size' => 10,
-        '#default_value' => $this->options['info'][$field]['header_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['header_style']['text']['font_style'],
+        '#default_value' => $this->options['info'][$field]['header_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['header_style']['text']['color'],
       );
 
       $form['info'][$field]['header_style']['render'] = array(
@@ -216,16 +216,16 @@ class views_pdf_plugin_style_table extends views_plugin_style {
         '#type' => 'select',
         '#title' => t('Text Hyphenation'),
         '#options' => $hyphenate,
-        '#description' => t('If you want to use hyphenation, then you need to download from <a href="@url">ctan.org</a> your needed pattern set. Then upload it to the dir "hyphenate_patterns" in the TCPDF lib directory. Perhaps you need to create the dir first. If you select the automated detection, then we try to get the language of the current node and select an appropriate hyphenation pattern.', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
+        '#description' => t('upload patterns from <a href="@url">ctan.org</a> to <br />sites/libraries/tcpdf/hyphenate_patterns', array('@url' => 'http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/tex')),
         '#default_value' => $this->options['info'][$field]['body_style']['text']['hyphenate'] == NULL ? $this->display->handler->get_option('default_text_hyphenate') : $this->options['info'][$field]['body_style']['text']['hyphenate'],
       );
 
       $form['info'][$field]['body_style']['text']['color'] = array(
         '#type' => 'textfield',
         '#title' => t('Text Color'),
-        '#description' => t('If a value is entered without a comma, it will be interpreted as a hexadecimal RGB color. Normal RGB can be used by separating the components by a comma. e.g 255,255,255 for white. A CMYK color can be entered in the same way as RGB. e.g. 0,100,0,0 for magenta.'),
+        '#description' => t('Enter Any format: <br />000000 (HexRGB) - 000,000,000 (RGB) - 000,000,000,000 (CMYK)'),
         '#size' => 20,
-        '#default_value' => $this->options['info'][$field]['body_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['body_style']['text']['font_style'],
+        '#default_value' => $this->options['info'][$field]['body_style']['text']['color'] == NULL ? $this->display->handler->get_option('default_text_color') : $this->options['info'][$field]['body_style']['text']['color'],
       );
 
       $form['info'][$field]['body_style']['render'] = array(
