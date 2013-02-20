@@ -155,6 +155,7 @@ function views_pdf_get_page_formats() {
   $format['LEGAL'] = 'LEGAL';
   $format['EXECUTIVE'] = 'EXECUTIVE';
   $format['FOLIO'] = 'FOLIO';
+  $format['MEMO'] = 'MEMO';
   return $format;
 }
 
