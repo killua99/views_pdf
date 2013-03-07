@@ -266,7 +266,7 @@ class views_pdf_plugin_style_table extends views_plugin_style {
       '#type' => 'fieldset',
       '#title' => t('Table Position'),
       '#collapsed' => FALSE,
-      '#collapsable' => TRUE,
+      '#collapsible' => TRUE,
     );
 
     $form['position']['last_writing_position'] = array(
