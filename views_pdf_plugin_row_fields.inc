@@ -266,7 +266,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#type' => 'textfield',
         '#title' => t('Minimal Space'),
         '#description' => t('Specify here the minimal space, which is needed on the page, that the content is placed on the page.'),
-        '#default_value' => isset($this->options['formats'][$field]['render']['swap_on_new_page']) ? $this->options['formats'][$field]['render']['swap_on_new_page'] : 1,
+        '#default_value' => isset($this->options['formats'][$field]['render']['minimal_space']) ? $this->options['formats'][$field]['render']['minimal_space'] : 1,
       );
 
       $form['formats'][$field]['render']['eval_before'] = array(
