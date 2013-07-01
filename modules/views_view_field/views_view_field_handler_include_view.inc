@@ -52,7 +52,7 @@ class views_view_field_handler_include_view extends views_handler_field {
       '#title' => t('View to include'),
       '#options' => $view_options,
       '#default_value' => $this->options['view'],
-      '#description' => t('Select the view to include. The display will be automatically determine.'),
+      '#description' => t('Select the view to include. The display will be automatically determined.'),
     );
 
     $form['number_of_args'] = array(
@@ -65,9 +65,9 @@ class views_view_field_handler_include_view extends views_handler_field {
     for ($i = 0; $this->options['number_of_args'] > $i; $i++) {
       $form['args'][$i] = array(
         '#type' => 'textfield',
-        '#title' => t('Arguement #%number', array('%number' => ($i+1))),
+        '#title' => t('Argument #%number', array('%number' => ($i+1))),
         '#default_value' => $this->options['args'][$i],
-        '#description' => t('Enter here the argument to pass to the view. If you want to use a value from a field, then use the replacements below.'),
+        '#description' => t('Enter here the argument to pass to the view. If you want to use a value from a field, then use the replacement patterns in <strong>Rewrite results</strong> below.'),
       );
     }
 
@@ -100,7 +100,7 @@ class views_view_field_handler_include_view extends views_handler_field {
           foreach ($options[$type] as $key => $value) {
             $items[] = $key . ' == ' . $value;
           }
-          $output .= theme('item_list', $items, $type);
+          $output .= theme('item_list', array('items' => $items, 'title' => $type));
         }
       }
     }
