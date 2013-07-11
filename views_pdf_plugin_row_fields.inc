@@ -155,7 +155,7 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
         '#title' => t('Position relative to'),
         '#required' => FALSE,
         '#options' => $relativeElements,
-        '#default_value' => !empty($this->options['formats'][$field]['position']['object']) ? $this->options['formats'][$field]['position']['object'] : 'page',
+        '#default_value' => !empty($this->options['formats'][$field]['position']['object']) ? $this->options['formats'][$field]['position']['object'] : 'last_position',
       );
 
       $form['formats'][$field]['position']['corner'] = array(
