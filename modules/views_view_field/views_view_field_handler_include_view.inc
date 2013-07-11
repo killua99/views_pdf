@@ -144,16 +144,19 @@ class views_view_field_handler_include_view extends views_handler_field {
     $view_name = $this->options['view'];
 
     $view = views_get_view($view_name);
-    //$view->set_arguments($args);
 
-    // Try same display as the current
-    if (!$view->set_display($currentDisplay)) {
-      // Try the display type
-      if (!$view->set_display($displayType . '_1')) {
-        // Use the default:
-        $view->init_display();
+    // look for a display named pdf_X.
+    foreach($view->display as $display) {
+      if (preg_match('/^pdf_/', $display->id)) {
+        // found a PDF display so break out of loop.
+        $pdf_display = $display->id;
+        break;
       }
     }
+
+    // Set the found PDF display or automatically revert to default if it's
+    // not found.
+    $view->set_display($pdf_display);
 
     $view->pre_execute($args);
 
