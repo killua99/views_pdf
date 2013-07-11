@@ -108,6 +108,9 @@ class views_pdf_plugin_display extends views_plugin_display_page {
     $this->view->pdf->setDefaultTextAlign($this->get_option('default_text_align'));
     $this->view->pdf->setDefaultFontColor($this->get_option('default_font_color'));
 
+    $this->view->pdf->setViewsHeader($this->view->display_handler->render_header());
+    $this->view->pdf->setViewsFooter($this->view->display_handler->render_footer());
+
     $html = $this->view->render($this->display->id);
 
     if (!empty($html)) {

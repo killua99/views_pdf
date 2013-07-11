@@ -39,7 +39,9 @@ class PdfTemplate extends FPDI {
   protected $addNewPageBeforeNextContent = FALSE;
   protected $elements = array();
   protected $headerFooterData = array();
+  protected $views_header = '';
   protected $view = NULL;
+  protected $views_footer = '';
   protected $headerFooterOptions = array();
   protected $lastWritingPage = 1;
   protected $lastWritingPositions;
@@ -138,20 +140,32 @@ class PdfTemplate extends FPDI {
     );
   }
 
+  public function setViewsHeader($header) {
+    $this->views_header = $header;
+  }
   /**
    * This method must be overriden, in the other case, some
    * output is printed to the header.
    */
   function Header() {
-
+    if (!empty($this->views_header)) {
+      $this->writeHTML($this->views_header);
+    }
   }
+
+  public function setViewsFooter($footer) {
+    $this->views_footer = $footer;
+   }
 
   /**
    * This method must be overriden, in the other case, some
    * output is printed to the footer.
    */
   function Footer() {
-
+    $this->SetY(-$this->bMargin);
+    if (!empty($this->views_footer)) {
+      $this->writeHTML($this->views_footer);
+    }
   }
 
   /**
