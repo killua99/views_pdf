@@ -218,7 +218,7 @@ class PdfTemplate extends FPDI {
       'corner' => 'top_left',
       'x' => 0,
       'y' => 0,
-      'object' => '',
+      'object' => 'last_position',
       'width' => 0,
       'height' => 0,
     );
