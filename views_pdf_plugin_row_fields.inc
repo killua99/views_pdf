@@ -11,46 +11,46 @@
  */
 class views_pdf_plugin_row_fields extends views_plugin_row {
   /**
-   * Renders the views.
+   * Renders the rows.
    */
-  function render($records) {
+  function render($row) {
     $options = $this->option_definition();
 
     foreach ($records as $row_index => $row) {
       $this->view->row_index = $row_index;
 
-      // Header of a record
-      $path = $this->view->pdf->getTemplatePath($this->options['leading_template']);
-      $this->view->pdf->addPdfDocument($path);
+    // Header of a record.
+    $path = $this->view->pdf->getTemplatePath($this->options['leading_template']);
+    $this->view->pdf->addPdfDocument($path);
 
-      // Set row page template
-      $path = $this->view->pdf->getTemplatePath($this->options['template'], $row, $this->view);
-      $this->view->pdf->setDefaultPageTemplate($path, 'row', 'row');
+    // Set row page template.
+    $path = $this->view->pdf->getTemplatePath($this->options['template'], $row, $this->view);
+    $this->view->pdf->setDefaultPageTemplate($path, 'row', 'row');
 
-      // Due of limitations of field renderer, we invoke them
-      // here and not in the field render function.
-      foreach ($this->view->field as $id => $field) {
-        if (isset($this->options['formats'][$id])) {
-          $options = $this->options['formats'][$id];
-        }
-        else {
-          $options = array();
-        }
-
-        $this->view->pdf->drawContent($row, $options, $this->view, $id);
-
-        // Set or update header / footer options per row
-        // this ensures that we write the last record for each page
-        // in the cache.
-        $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
+    // Due of limitations of field renderer, we invoke them
+    // here and not in the field render function.
+    foreach ($this->view->field as $id => $field) {
+      if (isset($this->options['formats'][$id])) {
+        $options = $this->options['formats'][$id];
+      }
+      else {
+        $options = array();
       }
 
-      // Footer of a record
-      $path = $this->view->pdf->getTemplatePath($this->options['succeed_template']);
-      $this->view->pdf->addPdfDocument($path);
+      $this->view->pdf->drawContent($row, $options, $this->view, $id);
 
-      // Reset the row page number
-      $this->view->pdf->resetRowPageNumber();
+      // Set or update header / footer options per row
+      // this ensures that we write the last record for each page
+      // in the cache.
+      $this->view->pdf->setHeaderFooter($row, $this->options, $this->view);
+    }
+
+    // Footer of a record.
+    $path = $this->view->pdf->getTemplatePath($this->options['succeed_template']);
+    $this->view->pdf->addPdfDocument($path);
+
+    // Reset the row page number.
+    $this->view->pdf->resetRowPageNumber();
     }
 
   }
