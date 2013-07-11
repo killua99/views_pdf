@@ -395,7 +395,7 @@ class PdfTemplate extends FPDI {
       return;
     }
 
-    if (!empty($view->field[$key]->options['exclude'])) {
+    if (!empty($view->field[$key]->options['exclude']) || (empty($content) && $view->field[$key]->options['hide_empty'])) {
       return '';
     }
 
