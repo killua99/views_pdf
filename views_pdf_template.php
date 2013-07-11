@@ -492,19 +492,23 @@ class PdfTemplate extends FPDI {
     $valign = 'T';
     $fitcell = FALSE;
 
-    // Run eval before
-    php_eval($options['render']['eval_before']);
+    // Run eval before.
+    if( !variable_get('views_pdf_prefer_eval', FALSE) ){
+      php_eval($options['render']['eval_before']);
+    }else{
+      eval($options['render']['eval_before']);
+    }
 
     // Add css if there is a css file set and stripHTML is not
-    // active
+    // active.
     if (!empty($css_file) && is_string($css_file) && !$stripHTML && $ishtml && !empty($content)) {
       $content = '<link type="text/css" rel="stylesheet" media="all" href="' . $css_file . '" />' . "\n" . $content;
     }
 
-    // Set Text Color
+    // Set Text Color.
     $this->SetTextColorArray($textColor);
 
-    // Set font
+    // Set font.
     $this->SetFont($font_family, implode('', $font_style), $font_size);
 
     // Save the last page before starting writing, this
@@ -519,14 +523,18 @@ class PdfTemplate extends FPDI {
     // Write the content of a field to the pdf file:
     $this->MultiCell($w, $h, $prefix . $content, $border, $align, $fill, $ln, $x, $y, $reseth, $stretch, $ishtml, $autopadding, $maxh, $valign, $fitcell);
 
-    // Reset font to default
+    // Reset font to default.
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
-    // Run eval after
-    php_eval($options['render']['eval_after']);
+    // Run eval after.
+    if( !variable_get('views_pdf_prefer_eval', FALSE) ){
+      php_eval($options['render']['eval_after']);
+    }else{
+      eval($options['render']['eval_after']);
+    }
 
 
-    // Write Coordinates of element
+    // Write Coordinates of element.
     $this->elements[$key] = array(
       'x' => $x,
       'y' => $y,
