@@ -36,6 +36,7 @@ class views_pdf_handler_page_break extends views_handler_field {
     $options = parent::option_definition();
 
     $options['last_row'] = array('default' => FALSE);
+    $options['every_nth'] = array('default' => 1);
 
     return $options;
   }
@@ -52,6 +53,14 @@ class views_pdf_handler_page_break extends views_handler_field {
       '#default_value' => $this->options['last_row'],
       '#description' => t('Check this box to not add new page on last row.'),
     );
+    $form['every_nth'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Insert break after how many rows?'),
+      '#size' => 10,
+      '#default_value' => $this->options['every_nth'],
+      '#element_validate' => array('element_validate_integer_positive'),
+      '#description' => t('Enter a value greater than 1 if you want to have multiple rows on one page')
+    );
   }
 
   /**
@@ -60,15 +69,24 @@ class views_pdf_handler_page_break extends views_handler_field {
    */
   function render($values) {
     if (isset($this->view->pdf) && is_object($this->view->pdf)) {
-      if ($this->options['last_row'] == TRUE && ($this->countRecords + 1 >= $this->view->numberOfRecords)) {
+      if ($this->options['last_row'] == TRUE && ($this->countRecords + 1 >= $this->view->total_rows)) {
         return '';
       }
 
       $this->countRecords++;
-      $this->view->pdf->addPage();
-      return '';
-    }
+      if ($this->countRecords == $this->view->total_rows + 1) {
+        $this->countRecords = 1;
+      }
 
+      $output = '';
+      if ($this->countRecords % $this->options['every_nth'] == 0) {
+        $output .= '<br pagebreak="true" />';
+      }
+      else {
+        $output .= '';
+      }
+      return $output;
+    }
   }
 
   /**
