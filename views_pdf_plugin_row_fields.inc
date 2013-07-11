@@ -16,9 +16,6 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
   function render($row) {
     $options = $this->option_definition();
 
-    foreach ($records as $row_index => $row) {
-      $this->view->row_index = $row_index;
-
     // Header of a record.
     $path = $this->view->pdf->getTemplatePath($this->options['leading_template']);
     $this->view->pdf->addPdfDocument($path);
@@ -51,7 +48,6 @@ class views_pdf_plugin_row_fields extends views_plugin_row {
 
     // Reset the row page number.
     $this->view->pdf->resetRowPageNumber();
-    }
 
   }
 

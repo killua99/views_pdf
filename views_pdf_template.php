@@ -386,7 +386,7 @@ class PdfTemplate extends FPDI {
 
     }
 
-    if ($view->field[$key]->theme($row)) {
+    if ($key !== NULL && $view->field[$key]->theme($row)) {
       $this->SetX($x);
       $this->SetY($y);
       $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
