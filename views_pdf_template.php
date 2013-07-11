@@ -426,7 +426,12 @@ class PdfTemplate extends FPDI {
       $patternFile = views_pdf_get_library('tcpdf') . '/hyphenate_patterns/' . $patternFile;
 
       if (file_exists($patternFile)) {
-        $hyphen_patterns = $this->getHyphenPatternsFromTEX($patternFile);
+        if (method_exists('TCPDF_STATIC', 'getHyphenPatternsFromTEX')) {
+          $hyphen_patterns = TCPDF_STATIC::getHyphenPatternsFromTEX($patternFile);
+        }
+        else {
+          $hyphen_patterns = $this->getHyphenPatternsFromTEX($patternFile);
+        }
 
         // Bugfix if you like to print some html code to the PDF, we
         // need to prevent the replacement of this tags.
