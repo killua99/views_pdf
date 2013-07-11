@@ -372,10 +372,11 @@ class PdfTemplate extends FPDI {
 
     }
 
-    $this->SetX($x);
-    $this->SetY($y);
-
-    $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
+    if ($view->field[$key]->theme($row)) {
+      $this->SetX($x);
+      $this->SetY($y);
+      $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
+    }
   }
 
   protected function renderRow($x, $y, $row, $options, &$view = NULL, $key = NULL, $printLabels = TRUE) {
