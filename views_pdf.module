@@ -1,23 +1,21 @@
 <?php
-
 /**
  * @file
  * PDF Views allows the creation of PDF's directly from a view. Without the
  * creation of HTML first.
  */
 
-
 /**
- * Implemenation of hook_views_api().
+ * Implements hook_views_api().
  */
 function views_pdf_views_api() {
   return array(
-    'api' => '3.0-alpha1',
+    'api' => 3,
   );
 }
 
 /**
- * Implemenation of hook_theme()
+ * Implements hook_theme().
  */
 function views_pdf_theme() {
   return array(
@@ -35,10 +33,9 @@ function views_pdf_theme() {
 /**
  * This method can be used to load the PDF library class.
  */
-function views_pdf_get_new_pdf_instance($orientation='P', $unit='mm', $format='A4', $unicode=TRUE, $encoding='UTF-8', $diskcache=FALSE) {
+function views_pdf_get_new_pdf_instance($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = TRUE, $encoding = 'UTF-8', $diskcache = FALSE) {
   _views_pdf_include_pdf_lib();
   return new PdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
-
 }
 
 /**
@@ -156,6 +153,7 @@ function views_pdf_get_page_formats() {
   $format['EXECUTIVE'] = 'EXECUTIVE';
   $format['FOLIO'] = 'FOLIO';
   $format['MEMO'] = 'MEMO';
+
   return $format;
 }
 
@@ -164,8 +162,7 @@ function views_pdf_get_page_formats() {
  * Get the PDF class.
  */
 function _views_pdf_include_pdf_lib() {
-  $path = drupal_get_path('module', 'views_pdf');
-  require_once $path . '/views_pdf_template.php';
+  module_load_include('php', 'views_pdf', 'views_pdf_template');
 }
 
 
@@ -181,12 +178,12 @@ if (!function_exists('array_replace_recursive')) {
     if (!function_exists('recurse')) {
       function recurse($array, $array1) {
         foreach ($array1 as $key => $value) {
-          // create new key in $array, if it is empty or not an array
+          // Create new key in $array, if it is empty or not an array.
           if (!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key]))) {
             $array[$key] = array();
           }
 
-          // overwrite the value in the base array
+          // Overwrite the value in the base array.
           if (is_array($value)) {
             $value = recurse($array[$key], $value);
           }
@@ -195,7 +192,7 @@ if (!function_exists('array_replace_recursive')) {
         return $array;
       }
 
-      // handle the arguments, merge one by one
+      // Handle the arguments, merge one by one.
       $args = func_get_args();
       $array = $args[0];
       if (!is_array($array)) {

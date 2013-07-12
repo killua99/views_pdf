@@ -1,17 +1,19 @@
 <?php
-
-
 /**
  * @file
  * Install the views module
  */
+
+/**
+ * Implements hook_requirements().
+ */
 function views_pdf_requirements($phase) {
   $requirements = array();
 
-  // Ensure translations don't break at install time
+  // Ensure translations don't break at install time.
   $t = get_t();
 
-  // Report Drupal version
+  // Report Drupal version.
   if ($phase == 'runtime') {
     $path_tcpdf = views_pdf_get_library('tcpdf');
     $path_fpdi = views_pdf_get_library('fpdi');
@@ -53,7 +55,6 @@ function views_pdf_requirements($phase) {
       unset($requirements['views_pdf_fpdi_tpl']['description']);
     }
   }
-
 
   return $requirements;
 }
