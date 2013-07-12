@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * The page number plugin for PDF page display.

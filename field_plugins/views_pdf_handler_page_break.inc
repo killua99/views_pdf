@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * The page break plugin for PDF page display.

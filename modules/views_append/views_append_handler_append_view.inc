@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Views Append Handler
@@ -12,7 +11,6 @@
  *
  */
 class views_append_handler_append_view extends views_handler_field {
-
 
   /**
    * This method  is used to query data. In our case

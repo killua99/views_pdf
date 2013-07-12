@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Plugin for the views include field
