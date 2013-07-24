@@ -493,16 +493,16 @@ class PdfTemplate extends FPDI {
     $fitcell = FALSE;
 
     // Run eval before.
-    if( !variable_get('views_pdf_prefer_eval', FALSE) ){
-      php_eval($options['render']['eval_before']);
-    }else{
+    if ($options['render']['bypass_eval_before'] && !empty($options['render']['eval_before'])) {
       eval($options['render']['eval_before']);
     }
+    elseif (!empty($options['render']['eval_before']))  {
+      $content = php_eval($options['render']['eval_before']);
+    }
 
-    // Add css if there is a css file set and stripHTML is not
-    // active.
+    // Add css if there is a css file set and stripHTML is not active.
     if (!empty($css_file) && is_string($css_file) && !$stripHTML && $ishtml && !empty($content)) {
-      $content = '<link type="text/css" rel="stylesheet" media="all" href="' . $css_file . '" />' . "\n" . $content;
+      $content = '<link type="text/css" rel="stylesheet" media="all" href="' . $css_file . '" />' . PHP_EOL . $content;
     }
 
     // Set Text Color.
@@ -527,12 +527,12 @@ class PdfTemplate extends FPDI {
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
     // Run eval after.
-    if( !variable_get('views_pdf_prefer_eval', FALSE) ){
-      php_eval($options['render']['eval_after']);
-    }else{
+    if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
       eval($options['render']['eval_after']);
     }
-
+    elseif (!empty($options['render']['eval_alter'])) {
+      $content = php_eval($options['render']['eval_after']);
+    }
 
     // Write Coordinates of element.
     $this->elements[$key] = array(
