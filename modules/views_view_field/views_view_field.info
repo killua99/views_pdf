@@ -1,0 +1,8 @@
+name = Views Field
+description = "Views plugin to include a view as a field."
+dependencies[] = views
+package = Views
+core = 7.x
+
+files[] = views_view_field_handler_include_view.inc
+
