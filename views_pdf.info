@@ -1,7 +1,7 @@
 name = Views PDF Display
 description = "Views plugin to export a view as a PDF file."
 dependencies[] = views
-dependencies[] = jquery_update
+dependencies[] = libraries (>=2.x)
 dependencies[] = php
 package = Views
 core = 7.x

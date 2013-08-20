@@ -13,9 +13,9 @@
 /**
  * Get the depending classes.
  */
-require_once views_pdf_get_library('tcpdf') . '/tcpdf.php';
-require_once views_pdf_get_library('fpdi') . '/fpdi2tcpdf_bridge.php';
-require_once views_pdf_get_library('fpdi') . '/fpdi.php';
+require_once libraries_get_path('tcpdf') . '/tcpdf.php';
+require_once libraries_get_path('fpdi_tcpdf') . '/fpdi2tcpdf_bridge.php';
+require_once libraries_get_path('fpdi_tcpdf') . '/fpdi.php';
 
 
 /**
@@ -245,6 +245,8 @@ class PdfTemplate extends FPDI {
     $options['render'] += array(
       'eval_before' => '',
       'eval_after' => '',
+      'bypass_eval_before' => FALSE,
+      'bypass_eval_after' => FALSE,
     );
 
     $x = $y = 0;
@@ -386,7 +388,7 @@ class PdfTemplate extends FPDI {
 
     }
 
-    if ($key !== NULL && $view->field[$key]->theme($row)) {
+    if ($key !== NULL && $view->field[$key]->theme($row) || !empty($row)) {
       $this->SetX($x);
       $this->SetY($y);
       $this->renderRow($x, $y, $row, $options, $view, $key, $printLabels);
