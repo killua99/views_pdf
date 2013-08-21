@@ -7,6 +7,8 @@
 
 
 /**
+ * Theme function to style the table UI.
+ *
  * Theme function to style the table UI in the Table Style Settings pages in the
  * view editing form.
  */
@@ -19,9 +21,8 @@ function theme_views_pdf_plugin_style_table($variables) {
     t('Field'),
     t('Header Style'),
     t('Body Style'),
-    t('Position')
+    t('Position'),
   );
-  //$output .= print_r($variables, 1);
 
   $rows = array();
   foreach (element_children($form['info']) as $id) {
@@ -36,6 +37,7 @@ function theme_views_pdf_plugin_style_table($variables) {
 
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
   $output .= drupal_render_children($form);
+
   return $output;
 
 }

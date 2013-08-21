@@ -6,11 +6,11 @@ dependencies[] = php
 package = Views
 core = 7.x
 
-files[] = views_pdf_plugin_display.inc
-files[] = views_pdf_plugin_style_table.inc
-files[] = views_pdf_plugin_style_unformatted.inc
-files[] = views_pdf_plugin_row_fields.inc
+files[] = plugins/views_pdf_plugin_display.inc
+files[] = plugins/views_pdf_plugin_style_table.inc
+files[] = plugins/views_pdf_plugin_style_unformatted.inc
+files[] = plugins/views_pdf_plugin_row_fields.inc
 
 ; Handlers
-files[] = field_plugins/views_pdf_handler_page_number.inc
-files[] = field_plugins/views_pdf_handler_page_break.inc
+files[] = handlers/views_pdf_handler_page_number.inc
+files[] = handlers/views_pdf_handler_page_break.inc
