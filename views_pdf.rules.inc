@@ -3,7 +3,6 @@
 /**
  * @file
  * Rules integration of the mimemail and the PDF Views module.
- *
  */
 
 /**
@@ -27,7 +26,7 @@ function views_pdf_rules_action_info() {
         'type' => 'text',
         'label' => t('Views Arguments'),
         'optional' => TRUE,
-        'description' => t('Place on each line one argument.')
+        'description' => t('Place on each line one argument.'),
       ),
       'path' => array(
         'type' => 'text',
@@ -41,6 +40,9 @@ function views_pdf_rules_action_info() {
   return $items;
 }
 
+/**
+ * Implements hook_rules_view_list().
+ */
 function views_pdf_rules_view_list() {
   $views = views_get_all_views();
 
@@ -57,7 +59,9 @@ function views_pdf_rules_view_list() {
   return $list;
 }
 
-
+/**
+ * Implements hook_rules_action_save().
+ */
 function views_pdf_rules_action_save($views_pdf, $arguments, $path) {
   $splits = explode(':', $views_pdf);
   $view_id = $splits[0];
@@ -68,11 +72,11 @@ function views_pdf_rules_action_save($views_pdf, $arguments, $path) {
 
     $view->set_arguments(explode("\n", $arguments));
 
-    // Try to get pdf display
+    // Try to get pdf display.
     if (!$view->set_display($display_id)) {
-      // Try the display type
+      // Try the display type.
       if (!$view->set_display('pdf_1')) {
-        // There is definitly no pdf display
+        // There is definitly no pdf display.
         return;
       }
     }

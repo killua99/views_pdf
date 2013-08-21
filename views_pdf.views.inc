@@ -81,7 +81,7 @@ function views_pdf_views_plugins() {
         'type' => 'pdf',
       ),
     ),
-   'row' => array(
+    'row' => array(
       'pdf_fields' => array(
         'title' => t('PDF Fields'),
         'help' => t('Displays the fields with an optional template.'),
@@ -92,7 +92,5 @@ function views_pdf_views_plugins() {
         'help topic' => 'style-row-fields',
       ),
     ),
-
-
   );
 }
