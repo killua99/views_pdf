@@ -15,8 +15,8 @@ function views_pdf_requirements($phase) {
 
   // Report Drupal version.
   if ($phase == 'runtime') {
-    $path_tcpdf = views_pdf_get_library('tcpdf');
-    $path_fpdi = views_pdf_get_library('fpdi');
+    $path_tcpdf = libraries_get_path('tcpdf');
+    $path_fpdi = libraries_get_path('fpdi_tcpdf');
 
     $requirements['views_pdf_tcpdf'] = array(
       'title' => $t('Views PDF - TCPDF'),
@@ -58,4 +58,3 @@ function views_pdf_requirements($phase) {
 
   return $requirements;
 }
-
