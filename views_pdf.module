@@ -48,38 +48,25 @@ function theme_views_pdf_icon($vars) {
   $options['html'] = TRUE;
   $options['attributes']['class'] = 'pdf-icon';
 
-  $imagePath = drupal_get_path('module', 'views_pdf') . '/images/pdf.png';
+  $image_path = drupal_get_path('module', 'views_pdf') . '/images/pdf.png';
+  $image = theme('image', array(
+    'path' => $image_path,
+    'title' => $title,
+    'alt' => $titl)
+  );
 
-  if ($image = theme('image', array('path' => $imagePath, 'title' => $title, 'alt' => $title))) {
+  if ($image) {
     return l($image, $path, $options);
   }
 }
 
 /**
- * This method can be used to get all available fonts.
+ * This method can be used to applyaapplypplyget all available fonts.
  */
 function views_pdf_get_font_list() {
   _views_pdf_include_pdf_lib();
   return PdfTemplate::getAvailableFontsCleanList();
 }
-
-
-/**
- * This function returns the path to a given library.
- *
- * @param $name Name of the Library
- *
- */
-function views_pdf_get_library($name) {
-    if (function_exists('libraries_get_path')) {
-      return libraries_get_path($name);
-    }
-    else {
-      return 'sites/all/libraries/' . $name;
-    }
-}
-
-
 
 /**
  * This method can be used to get all available templates.
@@ -90,8 +77,7 @@ function views_pdf_get_pdf_templates() {
 }
 
 /**
- * This method returns all available hyphenation
- * patterns (paths to files).
+ * This method returns all available hyphenation patterns (paths to files).
  */
 function views_pdf_get_hyphenations() {
   _views_pdf_include_pdf_lib();
@@ -157,15 +143,12 @@ function views_pdf_get_page_formats() {
   return $format;
 }
 
-
 /**
  * Get the PDF class.
  */
 function _views_pdf_include_pdf_lib() {
   module_load_include('php', 'views_pdf', 'views_pdf_template');
 }
-
-
 
 /**
  * For backward compatibilty (< 5.3) we implemented
@@ -174,8 +157,15 @@ function _views_pdf_include_pdf_lib() {
  *
  */
 if (!function_exists('array_replace_recursive')) {
+  /**
+   * Internal php function backport to PHP < 5.3.
+   */
   function array_replace_recursive($array, $array1) {
     if (!function_exists('recurse')) {
+
+      /**
+       * Internal function of array_replace_recursive().
+       */
       function recurse($array, $array1) {
         foreach ($array1 as $key => $value) {
           // Create new key in $array, if it is empty or not an array.
@@ -207,8 +197,3 @@ if (!function_exists('array_replace_recursive')) {
     }
   }
 }
-
-
-
-
-
