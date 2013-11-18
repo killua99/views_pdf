@@ -44,7 +44,7 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
       }
       // Render as a record set.
       else {
-        if (isset($set['group'])) {
+        if (!empty($set['group'])) {
           $field_id = $this->options['grouping'][$level]['field'];
           $options = array();
           if(isset($this->row_plugin->options['formats'][$field_id])) {

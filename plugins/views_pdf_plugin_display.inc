@@ -63,7 +63,7 @@ class views_pdf_plugin_display extends views_plugin_display_page {
   function execute($path_to_store_pdf = '', $destination = 'I') {
 
     // Defines external configuration for TCPDF library
-    $tcpdf_path = drupal_realpath(views_pdf_get_library('tcpdf'));
+    $tcpdf_path = drupal_realpath(libraries_get_path('tcpdf'));
     $cache_path = 'public://views_pdf_cache/';
     if(file_prepare_directory($cache_path, FILE_CREATE_DIRECTORY) == TRUE){
       global $base_url;

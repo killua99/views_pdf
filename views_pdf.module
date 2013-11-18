@@ -14,6 +14,10 @@ function views_pdf_views_api() {
   );
 }
 
+function views_pdf_libraries_info() {
+
+}
+
 /**
  * Implements hook_theme().
  */
