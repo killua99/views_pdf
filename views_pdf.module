@@ -18,7 +18,19 @@ function views_pdf_views_api() {
  * Implements hook_libraries_info().
  */
 function views_pdf_libraries_info() {
+  $libraries = array();
 
+  $libraries['fpdi_tcpdf'] = array(
+    'name' => 'FPDI library',
+  );
+  $libraries['tcpdf'] = array(
+    'name' => 'TCPDF library',
+  );
+  $libraries['MPDF57'] = array(
+    'name' => 'mPDF library',
+  );
+
+  return $libraries;
 }
 
 /**
