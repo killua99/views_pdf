@@ -14,6 +14,9 @@ function views_pdf_views_api() {
   );
 }
 
+/**
+ * Implements hook_libraries_info().
+ */
 function views_pdf_libraries_info() {
 
 }
@@ -56,7 +59,7 @@ function theme_views_pdf_icon($vars) {
   $image = theme('image', array(
     'path' => $image_path,
     'title' => $title,
-    'alt' => $titl)
+    'alt' => $title)
   );
 
   if ($image) {
@@ -65,7 +68,7 @@ function theme_views_pdf_icon($vars) {
 }
 
 /**
- * This method can be used to applyaapplypplyget all available fonts.
+ * This method can be used to apply get all available fonts.
  */
 function views_pdf_get_font_list() {
   _views_pdf_include_pdf_lib();
@@ -89,7 +92,7 @@ function views_pdf_get_hyphenations() {
 }
 
 /**
- * This method can be used to return a list of posible page formats.
+ * This method can be used to return a list of possible page formats.
  */
 function views_pdf_get_page_formats() {
   $format['custom'] = t('Custom');
@@ -152,52 +155,4 @@ function views_pdf_get_page_formats() {
  */
 function _views_pdf_include_pdf_lib() {
   module_load_include('php', 'views_pdf', 'views_pdf_template');
-}
-
-/**
- * For backward compatibilty (< 5.3) we implemented
- * this function by our self. If we are in a newer
- * environment, then this is obsolete.
- *
- */
-if (!function_exists('array_replace_recursive')) {
-  /**
-   * Internal php function backport to PHP < 5.3.
-   */
-  function array_replace_recursive($array, $array1) {
-    if (!function_exists('recurse')) {
-
-      /**
-       * Internal function of array_replace_recursive().
-       */
-      function recurse($array, $array1) {
-        foreach ($array1 as $key => $value) {
-          // Create new key in $array, if it is empty or not an array.
-          if (!isset($array[$key]) || (isset($array[$key]) && !is_array($array[$key]))) {
-            $array[$key] = array();
-          }
-
-          // Overwrite the value in the base array.
-          if (is_array($value)) {
-            $value = recurse($array[$key], $value);
-          }
-          $array[$key] = $value;
-        }
-        return $array;
-      }
-
-      // Handle the arguments, merge one by one.
-      $args = func_get_args();
-      $array = $args[0];
-      if (!is_array($array)) {
-        return $array;
-      }
-      for ($i = 1; $i < count($args); $i++) {
-        if (is_array($args[$i])) {
-          $array = recurse($array, $args[$i]);
-        }
-      }
-      return $array;
-    }
-  }
 }

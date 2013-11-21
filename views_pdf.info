@@ -2,10 +2,11 @@ name = Views PDF Display
 description = "Views plugin to export a view as a PDF file."
 dependencies[] = views
 dependencies[] = libraries (>=2.x)
-dependencies[] = php
+
 package = Views
 core = 7.x
 
+; Plugins
 files[] = plugins/views_pdf_plugin_display.inc
 files[] = plugins/views_pdf_plugin_style_table.inc
 files[] = plugins/views_pdf_plugin_style_unformatted.inc
