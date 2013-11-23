@@ -22,12 +22,52 @@ function views_pdf_libraries_info() {
 
   $libraries['fpdi_tcpdf'] = array(
     'name' => 'FPDI library',
+    'vendor url' => 'https://github.com/onigoetz/fpdi_tcpdf',
+    'download url' => 'https://github.com/onigoetz/fpdi_tcpdf/archive/master.zip',
+    'path' => 'src/fpdi',
+    'version arguments' => array(
+      'file' => 'src/fpdi/FPDI.php',
+      'pattern' => '@Version\s+([0-9a-zA-Z\.-]+)@',
+      'lines' => 3,
+    ),
+    'files' => array(
+      'php' => array(
+        'FPDI.php',
+        'FPDF.inc',
+      ),
+    ),
   );
+
   $libraries['tcpdf'] = array(
     'name' => 'TCPDF library',
+    'vendor url' => 'http://www.tcpdf.org/',
+    'download url' => 'http://sourceforge.net/projects/tcpdf/files/',
+    'version arguments' => array(
+      'file' => 'tcpdf.php',
+      'pattern' => '@Version\s+:\s+([0-9a-zA-Z\.-]+)@',
+      'lines' => 4,
+    ),
+    'files' => array(
+      'php' => array(
+        'tcpdf.php',
+      ),
+    ),
   );
+
   $libraries['MPDF57'] = array(
     'name' => 'mPDF library',
+    'vendor url' => 'http://www.mpdf1.com/mpdf',
+    'download url' => 'http://www.mpdf1.com/mpdf/index.php?page=Download',
+    'version arguments' => array(
+      'file' => 'mpdf.php',
+      'pattern' => '@Version:\s+([0-9a-zA-Z\.-]+)@',
+      'lines' => 5,
+    ),
+    'files' => array(
+      'php' => array(
+        'mpdf.php',
+      ),
+    ),
   );
 
   return $libraries;
