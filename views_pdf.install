@@ -10,21 +10,64 @@
 function views_pdf_requirements($phase) {
   $requirements = array();
 
-  // Ensure translations don't break at install time.
-  $t = get_t();
-
-  $fpdi_tcpdf = libraries_detect('fpdi_tcpdf');
-  dpm($fpdi_tcpdf);
-
-  $tcpdf = libraries_detect('tcpdf');
-  dpm($tcpdf);
-
-  $mpdf = libraries_detect('MPDF57');
-  dpm($mpdf);
-
-  // Report Drupal version.
   if ($phase == 'runtime') {
+    // Ensure translations don't break at install time.
+    $t = get_t();
 
+    $fpdi_tcpdf = libraries_detect('fpdi_tcpdf');
+    $tcpdf      = libraries_detect('tcpdf');
+    $mpdf       = libraries_detect('MPDF57');
+    dpm($tcpdf);
+
+    if ($fpdi_tcpdf['installed']) {
+      $requirements['views_pdf_fpdi_tcpdf'] = array(
+        'title'    => $t('Views pdf: FPDI library'),
+        'severity' => REQUIREMENT_OK,
+        'value'    => $fpdi_tcpdf['version'],
+      );
+    }
+    if ($tcpdf['installed']) {
+      $requirements['views_pdf_tcpdf'] = array(
+        'title'    => $t('Views pdf: TCPDF library'),
+        'severity' => REQUIREMENT_OK,
+        'value'    => $tcpdf['version'],
+      );
+    }
+    if ($mpdf['installed']) {
+      $requirements['views_pdf_mpdf'] = array(
+        'title'    => $t('Views pdf: mPDF library'),
+        'severity' => REQUIREMENT_OK,
+        'value'    => $mpdf['version'],
+      );
+    }
+
+    if ((!$fpdi_tcpdf['installed'] && !$tcpdf['installed']) || !$mpdf['installed']) {
+      $requirements['views_pdf_fpdi_tcpdf_mpdf'] = array(
+        'title'       => $t('Views pdf: libraries'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => $t('Some library it is needed. Views PDF support this libraries @fpdi @tcpdf @mpdf (if you plan to use TCPDF you also need to install FPDI)', array(
+          '@fpdi'  => '<a href="' . $fpdi_tcpdf['download url'] . '" title="FPDI">FPDI</a>',
+          '@tcpdf' => '<a href="' . $tcpdf['download url'] . '" title="TCPDF">TCPDF</a>',
+          '@mpdf'  => '<a href="' . $mpdf['download url'] . '" title="mPDF">mPDF</a>',
+        )),
+      );
+    }
+
+    if (!$mpdf['installed'] && $fpdi_tcpdf['installed'] && !$tcpdf['installed']) {
+      $requirements['views_pdf_tcpdf'] = array(
+        'title'       => $t('Views pdf: TCPDF library'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => $t('FPDI library need TCPDF to work, please download @tcpdf', array('@tcpdf' => '<a href="' . $tcpdf['download url'] . '" title="TCPDF">TCPDF</a>')),
+      );
+    }
+
+    if (!$mpdf['installed'] && !$fpdi_tcpdf['installed'] && $tcpdf['installed']) {
+      $requirements['views_pdf_fpdi_tcpdf'] = array(
+        'title'       => $t('Views pdf: FPDI library'),
+        'severity'    => REQUIREMENT_ERROR,
+        'description' => $t('TCPDF library need FPDI to work, please download @fpdi', array('@fpdi' => '<a href="' . $fpdi_tcpdf['download url'] . '" title="FPDI">FPDI</a>')),
+      );
+    }
 
   }
 
