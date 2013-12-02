@@ -13,25 +13,25 @@ function views_pdf_rules_action_info() {
   $items = array();
 
   $items['views_pdf_rules_action_save'] = array(
-    'label' => t('Save PDF as file on server'),
-    'group' => t('Views PDF'),
+    'label'     => t('Save PDF as file on server'),
+    'group'     => t('Views PDF'),
     'parameter' => array(
       'views_pdf' => array(
-        'type' => 'text',
-        'label' => t('View'),
+        'type'         => 'text',
+        'label'        => t('View'),
         'options list' => 'views_pdf_rules_view_list',
-        'description' => t('You need to enter the View and the Display to use. Use the ids of them and separate them by a ":".'),
+        'description'  => t('You need to enter the View and the Display to use. Use the ids of them and separate them by a ":".'),
       ),
       'arguments' => array(
-        'type' => 'text',
-        'label' => t('Views Arguments'),
-        'optional' => TRUE,
+        'type'        => 'text',
+        'label'       => t('Views Arguments'),
+        'optional'    => TRUE,
         'description' => t('Place on each line one argument.'),
       ),
-      'path' => array(
-        'type' => 'text',
-        'label' => t('Store Path'),
-        'optional' => FALSE,
+      'path'      => array(
+        'type'        => 'text',
+        'label'       => t('Store Path'),
+        'optional'    => FALSE,
         'description' => t('Enter an relative path where the view should be saved. You may use some tokens.'),
       ),
     ),
@@ -63,8 +63,8 @@ function views_pdf_rules_view_list() {
  * Implements hook_rules_action_save().
  */
 function views_pdf_rules_action_save($views_pdf, $arguments, $path) {
-  $splits = explode(':', $views_pdf);
-  $view_id = $splits[0];
+  $splits     = explode(':', $views_pdf);
+  $view_id    = $splits[0];
   $display_id = $splits[1];
 
   if (!empty($view_id)) {

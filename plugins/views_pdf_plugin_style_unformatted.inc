@@ -17,9 +17,9 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
    * Plugins may override this method if they wish some other way of handling
    * grouping.
    *
-   * @param $sets
+   * @param array $sets
    *   Array containing the grouping sets to render.
-   * @param $level
+   * @param int $level
    *   Integer indicating the hierarchical level of the grouping.
    *
    * @return string
@@ -35,8 +35,8 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
       // Render as a grouping set.
       if (is_array($row) && isset($row['group'])) {
         $field_id = $this->options['grouping'][$level]['field'];
-        $options = array();
-        if(isset($this->row_plugin->options['formats'][$field_id])) {
+        $options  = array();
+        if (isset($this->row_plugin->options['formats'][$field_id])) {
           $options = $this->row_plugin->options['formats'][$field_id];
         }
         $this->view->pdf->drawContent($set['group'], $options, $this->view);
@@ -46,8 +46,8 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
       else {
         if (!empty($set['group'])) {
           $field_id = $this->options['grouping'][$level]['field'];
-          $options = array();
-          if(isset($this->row_plugin->options['formats'][$field_id])) {
+          $options  = array();
+          if (isset($this->row_plugin->options['formats'][$field_id])) {
             $options = $this->row_plugin->options['formats'][$field_id];
           }
           $this->view->pdf->drawContent($set['group'], $options, $this->view);
@@ -56,13 +56,14 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
         if ($this->uses_row_plugin()) {
           foreach ($set['rows'] as $index => $row) {
             $this->view->row_index = $index;
-            $set['rows'][$index] = $this->row_plugin->render($row);
+            $set['rows'][$index]   = $this->row_plugin->render($row);
           }
         }
       }
     }
 
     unset($this->view->row_index);
+
     return $output;
   }
 
@@ -73,9 +74,9 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
    * feed image link.
    */
   function attach_to($display_id, $path, $title) {
-    $display = $this->view->display[$display_id]->handler;
+    $display     = $this->view->display[$display_id]->handler;
     $url_options = array();
-    $input = $this->view->get_exposed_input();
+    $input       = $this->view->get_exposed_input();
     if ($input) {
       $url_options['query'] = $input;
     }
@@ -86,9 +87,9 @@ class views_pdf_plugin_style_unformatted extends views_plugin_style {
     $this->view->feed_icon .= theme(
       'views_pdf_icon',
       array(
-        'path' => $this->view->get_url(NULL, $path),
-        'title' => $title,
-        'options' => $url_options
+        'path'    => $this->view->get_url(NULL, $path),
+        'title'   => $title,
+        'options' => $url_options,
       )
     );
   }

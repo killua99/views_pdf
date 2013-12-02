@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Theme function for enhence the views admin interface vor PDF options.
+ * Theme function for enhance the views admin interface for PDF options.
  */
 
 
@@ -26,11 +26,23 @@ function theme_views_pdf_plugin_style_table($variables) {
 
   $rows = array();
   foreach (element_children($form['info']) as $id) {
-    $row = array();
-    $row[] = array('data' => drupal_render($form['info'][$id]['name']), 'width' => '20%');
-    $row[] = array('data' => drupal_render($form['info'][$id]['header_style']), 'width' => '30%');
-    $row[] = array('data' => drupal_render($form['info'][$id]['body_style']), 'width' => '30%');
-    $row[] = array('data' => drupal_render($form['info'][$id]['position']), 'width' => '20%');
+    $row   = array();
+    $row[] = array(
+      'data'  => drupal_render($form['info'][$id]['name']),
+      'width' => '20%',
+    );
+    $row[] = array(
+      'data'  => drupal_render($form['info'][$id]['header_style']),
+      'width' => '30%',
+    );
+    $row[] = array(
+      'data'  => drupal_render($form['info'][$id]['body_style']),
+      'width' => '30%',
+    );
+    $row[] = array(
+      'data'  => drupal_render($form['info'][$id]['position']),
+      'width' => '20%',
+    );
 
     $rows[] = $row;
   }

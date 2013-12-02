@@ -10,7 +10,6 @@
 /**
  * Plugin class that holds the functionality for the
  * page break in a PDF display.
- *
  */
 class views_pdf_handler_page_break extends views_handler_field {
 
@@ -27,44 +26,41 @@ class views_pdf_handler_page_break extends views_handler_field {
   }
 
   /**
-   * This method contains the defintion of the options for the page
-   * break.
-   *
+   * This method contains the defintion of the options for the page break.
    */
   function option_definition() {
     $options = parent::option_definition();
 
-    $options['last_row'] = array('default' => FALSE);
+    $options['last_row']  = array('default' => FALSE);
     $options['every_nth'] = array('default' => 1);
 
     return $options;
   }
 
   /**
-   * Option form
+   * Option form.
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    $form['last_row'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Exclude from last row'),
+    $form['last_row']  = array(
+      '#type'          => 'checkbox',
+      '#title'         => t('Exclude from last row'),
       '#default_value' => $this->options['last_row'],
-      '#description' => t('Check this box to not add new page on last row.'),
+      '#description'   => t('Check this box to not add new page on last row.'),
     );
     $form['every_nth'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Insert break after how many rows?'),
-      '#size' => 10,
-      '#default_value' => $this->options['every_nth'],
+      '#type'             => 'textfield',
+      '#title'            => t('Insert break after how many rows?'),
+      '#size'             => 10,
+      '#default_value'    => $this->options['every_nth'],
       '#element_validate' => array('element_validate_integer_positive'),
-      '#description' => t('Enter a value greater than 1 if you want to have multiple rows on one page')
+      '#description'      => t('Enter a value greater than 1 if you want to have multiple rows on one page')
     );
   }
 
   /**
-   * This method renders the page break. It uses the PDF class to
-   * add a page break.
+   * This method renders the page break. It uses the PDF class to add a page break.
    */
   function render($values) {
     if (isset($this->view->pdf) && is_object($this->view->pdf)) {
@@ -84,12 +80,13 @@ class views_pdf_handler_page_break extends views_handler_field {
       else {
         $output .= '';
       }
+
       return $output;
     }
   }
 
   /**
-   * We dont want to use advanced rendering.
+   * We don't want to use advanced rendering.
    */
   function allow_advanced_render() {
     return FALSE;
