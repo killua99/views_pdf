@@ -17,7 +17,6 @@ function views_pdf_requirements($phase) {
     $fpdi_tcpdf = libraries_detect('fpdi_tcpdf');
     $tcpdf      = libraries_detect('tcpdf');
     $mpdf       = libraries_detect('MPDF57');
-    dpm($tcpdf);
 
     if ($fpdi_tcpdf['installed']) {
       $requirements['views_pdf_fpdi_tcpdf'] = array(
@@ -41,15 +40,18 @@ function views_pdf_requirements($phase) {
       );
     }
 
-    if ((!$fpdi_tcpdf['installed'] && !$tcpdf['installed']) || !$mpdf['installed']) {
+    if ((!$fpdi_tcpdf['installed'] && !$tcpdf['installed']) && !$mpdf['installed']) {
       $requirements['views_pdf_fpdi_tcpdf_mpdf'] = array(
         'title'       => $t('Views pdf: libraries'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => $t('Some library it is needed. Views PDF support this libraries @fpdi @tcpdf @mpdf (if you plan to use TCPDF you also need to install FPDI)', array(
-          '@fpdi'  => '<a href="' . $fpdi_tcpdf['download url'] . '" title="FPDI">FPDI</a>',
-          '@tcpdf' => '<a href="' . $tcpdf['download url'] . '" title="TCPDF">TCPDF</a>',
-          '@mpdf'  => '<a href="' . $mpdf['download url'] . '" title="mPDF">mPDF</a>',
-        )),
+        'description' => $t(
+          'Some library it is needed. Views PDF support this libraries <a href="@fpdi_url" title="FPDI">FPDI</a> <a href="@tcpdf_url" title="TCPDF">TCPDF</a> <a href="@mpdf_url" title="mPDF">mPDF</a> (if you plan to use TCPDF you also need to install FPDI)',
+          array(
+            '@fpdi_url'  => $fpdi_tcpdf['download url'],
+            '@tcpdf_url' => $tcpdf['download url'],
+            '@mpdf_url'  => $mpdf['download url'],
+          )
+        ),
       );
     }
 
@@ -57,7 +59,12 @@ function views_pdf_requirements($phase) {
       $requirements['views_pdf_tcpdf'] = array(
         'title'       => $t('Views pdf: TCPDF library'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => $t('FPDI library need TCPDF to work, please download @tcpdf', array('@tcpdf' => '<a href="' . $tcpdf['download url'] . '" title="TCPDF">TCPDF</a>')),
+        'description' => $t(
+          'FPDI library need TCPDF to work, please download <a href="@tcpdf" title="TCPDF">TCPDF</a>',
+          array(
+            '@tcpdf' => $tcpdf['download url'],
+          )
+        ),
       );
     }
 
@@ -65,10 +72,14 @@ function views_pdf_requirements($phase) {
       $requirements['views_pdf_fpdi_tcpdf'] = array(
         'title'       => $t('Views pdf: FPDI library'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => $t('TCPDF library need FPDI to work, please download @fpdi', array('@fpdi' => '<a href="' . $fpdi_tcpdf['download url'] . '" title="FPDI">FPDI</a>')),
+        'description' => $t(
+          'TCPDF library need FPDI to work, please download <a href="@fpdi" title="FPDI">FPDI</a>',
+          array(
+            '@fpdi' => $fpdi_tcpdf['download url'],
+          )
+        ),
       );
     }
-
   }
 
   return $requirements;

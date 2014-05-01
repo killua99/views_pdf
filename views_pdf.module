@@ -9,6 +9,8 @@
 
 xautoload()->registerModulePsr4(__FILE__, 'src');
 
+use Drupal\views_pdf;
+
 /**
  * Implements hook_views_api().
  */
@@ -40,6 +42,9 @@ function views_pdf_libraries_info() {
         'FPDF.inc',
       ),
     ),
+    'xautoload' => function($api) {
+      $api->namespaceRoot('XALib\fpdi', 'src');
+    }
   );
 
   $libraries['tcpdf'] = array(
@@ -101,7 +106,7 @@ function views_pdf_theme() {
 function views_pdf_get_new_pdf_instance($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = TRUE, $encoding = 'UTF-8', $diskcache = FALSE) {
   _views_pdf_include_pdf_lib();
 
-  return new PdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
+  return new ViewsPdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
 }
 
 /**
@@ -134,7 +139,7 @@ function theme_views_pdf_icon($vars) {
 function views_pdf_get_font_list() {
   _views_pdf_include_pdf_lib();
 
-  return PdfTemplate::getAvailableFontsCleanList();
+  return ViewsPdfTemplate::getAvailableFontsCleanList();
 }
 
 /**
@@ -143,7 +148,7 @@ function views_pdf_get_font_list() {
 function views_pdf_get_pdf_templates() {
   _views_pdf_include_pdf_lib();
 
-  return PdfTemplate::getAvailableTemplates();
+  return ViewsPdfTemplate::getAvailableTemplates();
 }
 
 /**
@@ -152,7 +157,7 @@ function views_pdf_get_pdf_templates() {
 function views_pdf_get_hyphenations() {
   _views_pdf_include_pdf_lib();
 
-  return PdfTemplate::getAvailableHyphenatePatterns();
+  return ViewsPdfTemplate::getAvailableHyphenatePatterns();
 }
 
 /**
@@ -216,7 +221,8 @@ function views_pdf_get_page_formats() {
 
 /**
  * Get the PDF class.
+ * TODO: Remove this load function.
  */
 function _views_pdf_include_pdf_lib() {
-  module_load_include('php', 'views_pdf', 'views_pdf_template');
+  // module_load_include('php', 'views_pdf', 'views_pdf_template');
 }
