@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @file
  * PDF Views allows the creation of PDF's directly from a view. Without the
  * creation of HTML first.
  */
+
+xautoload()->registerModulePsr4(__FILE__, 'src');
 
 /**
  * Implements hook_views_api().
