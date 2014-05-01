@@ -28,7 +28,7 @@ class PdfTemplate extends FPDI {
   protected static $templateList         = NULL;
   protected static $hyphenatePatterns    = NULL;
   protected $defaultFontStyle            = '';
-  protected $defaultFontFamily           = 'helvetica';
+  protected $defaultFontFamily           = 'Helvetica';
   protected $defaultFontSize             = '11';
   protected $defaultTextAlign            = 'L';
   protected $defaultFontColor            = '000000';
@@ -816,7 +816,7 @@ class PdfTemplate extends FPDI {
   /**
    * This method adds a new page to the PDF.
    */
-  public function addPage($path = NULL, $reset = FALSE, $numbering = 'main') {
+  public function addPage($path = NULL, $reset = FALSE, $numbering = 'main', $tocpage = false) {
 
     // Do not add any new page, if we are writing
     // in the footer or header.
@@ -1066,7 +1066,7 @@ class PdfTemplate extends FPDI {
 
     self::$hyphenatePatterns = array();
 
-    $files = file_scan_directory(views_pdf_get_library('tcpdf') . '/hyphenate_patterns', '/.tex$/', array('nomask' => '/(\.\.?|CVS)$/'), 1);
+    $files = file_scan_directory(libraries_get_path('tcpdf') . '/hyphenate_patterns', '/.tex$/', array('nomask' => '/(\.\.?|CVS)$/'), 1);
 
     foreach ($files as $file) {
       self::$hyphenatePatterns[basename($file->uri)] = str_replace('hyph-', '', $file->name);

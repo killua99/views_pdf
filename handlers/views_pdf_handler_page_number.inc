@@ -9,16 +9,12 @@
 
 
 /**
- * Plugin class that holds the functionality for the
- * page number in a PDF display.
- *
+ * Plugin class that holds the functionality for the page number in a PDF display.
  */
 class views_pdf_handler_page_number extends views_handler_field {
 
   /**
-   * This method  is used to query data. In our case
-   * we want that no data is queried.
-   *
+   * This method  is used to query data. In our case we want that no data is queried.
    */
   function query() {
     // Override parent::query() and don't alter query.
@@ -27,6 +23,7 @@ class views_pdf_handler_page_number extends views_handler_field {
 
   /**
    * This method adds a page number to the display, if it is a PDF display.
+   *
    * Therefore the PDF class is used.
    */
   function render($values) {
@@ -41,7 +38,7 @@ class views_pdf_handler_page_number extends views_handler_field {
   }
 
   /**
-   * We dont want to use advanced rendering.
+   * We don't want to use advanced rendering.
    */
   function allow_advanced_render() {
     return FALSE;
