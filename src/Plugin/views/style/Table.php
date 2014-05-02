@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\Table.
  */
 
-namespace Drupal\views_pdf\Plugin\views\style;
+// In Drupal 7 can't use namespace with views;
+// namespace Drupal\views_pdf\Plugin\views\style;
 
 /**
  * Style plugin to render each item as a row in a table.

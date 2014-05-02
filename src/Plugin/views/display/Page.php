@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\display\Page.
  */
 
-namespace Drupal\views_pdf\Plugin\views\display;
+// In Drupal 7 can't use namespace with views;
+// namespace Drupal\views_pdf\Plugin\views\display;
 
 /**
  * This class contains all the functionality of the PDF display.
@@ -31,7 +32,6 @@ class Page extends views_plugin_display_page {
   function has_path() {
     return TRUE;
   }
-
 
   /**
    * Render the display.
@@ -107,7 +107,7 @@ class Page extends views_plugin_display_page {
 
     $orientation     = $this->get_option('default_page_orientation'); // P or L
     $unit            = $this->get_option('unit');
-    $this->view->pdf = views_pdf_get_new_pdf_instance($orientation, $unit, $format);
+    $this->view->pdf = new Drupal\views_pdf\ViewsPdfTemplate($orientation, $unit, $format);
 
     // Set margins: top, left, right
     $this->view->pdf->SetMargins($this->get_option('margin_left'), $this->get_option('margin_top'), $this->get_option('margin_right'), TRUE);

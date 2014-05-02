@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\row\Fields.
  */
 
-namespace Drupal\views_pdf\Plugin\views\row;
+// In Drupal 7 can't use namespace with views;
+// namespace Drupal\views_pdf\Plugin\views\row;
 
 /**
  * This class contains all the functionality of the field PDF style.

@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\Unformatted.
  */
 
-namespace Drupal\views_pdf\Plugin\views\style;
+// In Drupal 7 can't use namespace with views;
+// namespace Drupal\views_pdf\Plugin\views\style;
 
 /**
  * This class holds all the funtionality used for the unformatted style plugin.

@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\PageNumber.
  */
 
-namespace Drupal\views_pdf\Plugin\views\style;
+// In Drupal 7 can't use namespace with views;
+// namespace Drupal\views_pdf\Plugin\views\style;
 
 /**
  * Class that holds the functionality for the page number in a PDF display.

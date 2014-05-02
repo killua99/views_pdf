@@ -8,8 +8,9 @@
  */
 
 xautoload()->registerModulePsr4(__FILE__, 'src');
+// _xautoload_register_drupal();
 
-use Drupal\views_pdf;
+use Drupal\views_pdf\ViewsPdfTemplate;
 
 /**
  * Implements hook_views_api().
@@ -43,7 +44,7 @@ function views_pdf_libraries_info() {
       ),
     ),
     'xautoload' => function($api) {
-      $api->namespaceRoot('XALib\fpdi', 'src');
+      $api->namespaceRoot('fpdi', 'src');
     }
   );
 
@@ -104,7 +105,6 @@ function views_pdf_theme() {
  * TODO: Refactor or delete this function.
  */
 function views_pdf_get_new_pdf_instance($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = TRUE, $encoding = 'UTF-8', $diskcache = FALSE) {
-  _views_pdf_include_pdf_lib();
 
   return new ViewsPdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
 }
@@ -137,7 +137,6 @@ function theme_views_pdf_icon($vars) {
  * TODO: We need a function to get fonts?
  */
 function views_pdf_get_font_list() {
-  _views_pdf_include_pdf_lib();
 
   return ViewsPdfTemplate::getAvailableFontsCleanList();
 }
@@ -146,7 +145,6 @@ function views_pdf_get_font_list() {
  * This method can be used to get all available templates.
  */
 function views_pdf_get_pdf_templates() {
-  _views_pdf_include_pdf_lib();
 
   return ViewsPdfTemplate::getAvailableTemplates();
 }
@@ -155,7 +153,6 @@ function views_pdf_get_pdf_templates() {
  * This method returns all available hyphenation patterns (paths to files).
  */
 function views_pdf_get_hyphenations() {
-  _views_pdf_include_pdf_lib();
 
   return ViewsPdfTemplate::getAvailableHyphenatePatterns();
 }
@@ -217,12 +214,4 @@ function views_pdf_get_page_formats() {
   $format['MEMO']      = 'MEMO';
 
   return $format;
-}
-
-/**
- * Get the PDF class.
- * TODO: Remove this load function.
- */
-function _views_pdf_include_pdf_lib() {
-  // module_load_include('php', 'views_pdf', 'views_pdf_template');
 }

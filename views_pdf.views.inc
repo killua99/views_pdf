@@ -5,6 +5,10 @@
  * Implementaion of the views hooks.
  */
 
+use Drupal\views_pdf\Plugin\views\display;
+use Drupal\views_pdf\Plugin\views\row;
+use Drupal\views_pdf\Plugin\views\style;
+
 /**
  * Implements hook_views_data().
  */
@@ -18,7 +22,7 @@ function views_pdf_views_data() {
     'title' => t('Page Break'),
     'help'  => t('Insert in the PDF view a new page.'),
     'field' => array(
-      'handler'        => 'views_pdf_handler_page_break',
+      'handler'        => 'PageBreak',
       'click sortable' => FALSE,
       'notafield'      => TRUE,
     ),
@@ -28,7 +32,7 @@ function views_pdf_views_data() {
     'title' => t('Page Number'),
     'help'  => t('Contains the page number of the current page.'),
     'field' => array(
-      'handler'        => 'views_pdf_handler_page_number',
+      'handler'        => 'PageNumber',
       'click sortable' => FALSE,
       'notafield'      => TRUE,
     ),
@@ -49,7 +53,7 @@ function views_pdf_views_plugins() {
       'pdf' => array(
         'title'              => t('PDF Page'),
         'help'               => t('Outputs the view as a PDF file.'),
-        'handler'            => 'views_pdf_plugin_display',
+        'handler'            => 'Page',
         'uses hook menu'     => TRUE,
         'use ajax'           => FALSE,
         'use pager'          => FALSE,
@@ -62,7 +66,7 @@ function views_pdf_views_plugins() {
       'pdf_table'       => array(
         'title'           => t('PDF Table'),
         'help'            => t('Display the view as a table.'),
-        'handler'         => 'views_pdf_plugin_style_table',
+        'handler'         => 'Table',
         'parent'          => 'default',
         'uses row plugin' => FALSE,
         'uses fields'     => TRUE,
@@ -72,7 +76,7 @@ function views_pdf_views_plugins() {
       'pdf_unformatted' => array(
         'title'           => t('PDF unformatted'),
         'help'            => t('Display the view in a unformatted way.'),
-        'handler'         => 'views_pdf_plugin_style_unformatted',
+        'handler'         => 'Unformatted',
         'parent'          => 'default',
         'uses row plugin' => TRUE,
         'uses fields'     => TRUE,
@@ -84,7 +88,7 @@ function views_pdf_views_plugins() {
       'pdf_fields' => array(
         'title'        => t('PDF Fields'),
         'help'         => t('Displays the fields with an optional template.'),
-        'handler'      => 'views_pdf_plugin_row_fields',
+        'handler'      => 'Fields',
         'uses fields'  => TRUE,
         'uses options' => TRUE,
         'type'         => 'pdf',

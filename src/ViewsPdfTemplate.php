@@ -7,7 +7,8 @@
 
 namespace Drupal\views_pdf;
 
-use XALib\fpdi;
+require_once libraries_get_path('tcpdf') . '/tcpdf.php';
+use fpdi\FPDI;
 
 /**
  * The main class to generate the PDF.
