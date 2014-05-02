@@ -101,15 +101,6 @@ function views_pdf_theme() {
 }
 
 /**
- * This method can be used to load the PDF library class.
- * TODO: Refactor or delete this function.
- */
-function views_pdf_get_new_pdf_instance($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = TRUE, $encoding = 'UTF-8', $diskcache = FALSE) {
-
-  return new ViewsPdfTemplate($orientation, $unit, $format, $unicode, $encoding, $diskcache);
-}
-
-/**
  * Theme function for the PDF icon of appended PDFs.
  */
 function theme_views_pdf_icon($vars) {
