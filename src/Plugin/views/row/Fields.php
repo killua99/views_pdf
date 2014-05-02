@@ -78,7 +78,12 @@ class Fields extends views_plugin_row {
     $options = $this->display->handler->get_field_labels();
     $fields  = $this->display->handler->get_option('fields');
 
-    $fonts       = array_merge(array('default' => t('-- Default --')), views_pdf_get_font_list());
+    $fonts       = array_merge(
+      array(
+        'default' => t('-- Default --')
+      ),
+      Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList());
+
     $font_styles = array(
       'b' => t('Bold'),
       'i' => t('Italic'),

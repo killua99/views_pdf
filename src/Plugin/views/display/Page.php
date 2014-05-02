@@ -296,7 +296,7 @@ class Page extends views_plugin_display_page {
         );
         break;
       case 'pdf_fonts':
-        $fonts       = views_pdf_get_font_list();
+        $fonts       = Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList();
         $font_styles = array(
           'b' => t('Bold'),
           'i' => t('Italic'),
@@ -437,7 +437,7 @@ class Page extends views_plugin_display_page {
   function options_summary(&$categories, &$options) {
     parent::options_summary($categories, $options);
 
-    $fonts = views_pdf_get_font_list();
+    $fonts = Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList();
 
     // Change Page title:
     $categories['page'] = array(
