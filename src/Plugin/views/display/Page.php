@@ -370,7 +370,12 @@ class Page extends views_plugin_display_page {
       case 'pdf_template':
         $form['#title'] .= t('PDF Templates');
 
-        $templates                = array_merge(array(t('-- None --')), views_pdf_get_pdf_templates());
+        $templates                = array_merge(
+          array(
+            t('-- None --')
+          ),
+          Drupal\views_pdf\ViewsPdfTemplate::getAvailableTemplates());
+
         $form['leading_template'] = array(
           '#type'          => 'select',
           '#options'       => $templates,

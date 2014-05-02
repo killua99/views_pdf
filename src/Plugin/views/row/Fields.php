@@ -91,7 +91,11 @@ class Fields extends views_plugin_row {
       'd' => t('Line through'),
       'o' => t('Overline'),
     );
-    $templates   = array_merge(array(t('-- None --')), views_pdf_get_pdf_templates());
+    $templates   = array_merge(
+      array(
+        t('-- None --')
+      ),
+      Drupal\views_pdf\ViewsPdfTemplate::getAvailableTemplates());
 
     $file_fields = array();
 

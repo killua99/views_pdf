@@ -124,14 +124,6 @@ function theme_views_pdf_icon($vars) {
 }
 
 /**
- * This method can be used to get all available templates.
- */
-function views_pdf_get_pdf_templates() {
-
-  return ViewsPdfTemplate::getAvailableTemplates();
-}
-
-/**
  * This method returns all available hyphenation patterns (paths to files).
  */
 function views_pdf_get_hyphenations() {
