@@ -127,7 +127,10 @@ class Fields extends views_plugin_row {
       'none' => t('None'),
       'auto' => t('Detect automatically'),
     );
-    $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
+    $hyphenate = array_merge(
+      $hyphenate,
+      Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+    );
 
 
     if (empty($this->options['inline'])) {

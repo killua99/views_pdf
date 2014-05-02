@@ -316,7 +316,10 @@ class Page extends views_plugin_display_page {
           'none' => t('None'),
           'auto' => t('Detect automatically'),
         );
-        $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
+        $hyphenate = array_merge(
+          $hyphenate,
+          Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+        );
 
         $form['#title'] .= t('PDF Default Font Options');
         $form['description']            = array(

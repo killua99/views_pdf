@@ -87,7 +87,10 @@ class Table extends views_plugin_style {
       'none' => t('None'),
       'auto' => t('Detect automatically'),
     );
-    $hyphenate = array_merge($hyphenate, views_pdf_get_hyphenations());
+    $hyphenate = array_merge(
+      $hyphenate,
+      Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+    );
 
     foreach ($columns as $field => $column) {
 
