@@ -7,7 +7,9 @@
 
 namespace Drupal\views_pdf;
 
-require_once libraries_get_path('tcpdf') . '/tcpdf.php';
+//$library = libraries_load('fpdi_tcpdf');
+//libraries_load_files($library);
+
 use fpdi\FPDI;
 
 /**
@@ -100,10 +102,10 @@ class ViewsPdfTemplate extends FPDI {
    * This method overrides the parent constructor method.
    * this is need to reset the default values.
    */
-  public function __construct($orientation='P', $unit='mm', $format='A4', $unicode=TRUE, $encoding='UTF-8', $diskcache=FALSE) {
+  public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = TRUE, $encoding = 'UTF-8', $diskcache = FALSE) {
     parent::__construct($orientation, $unit, $format, $unicode, $encoding, $diskcache);
     $this->defaultOrientation = $orientation;
-    $this->defaultFormat = $format;
+    $this->defaultFormat      = $format;
   }
 
   public function setDefaultFontSize($size) {
@@ -128,7 +130,7 @@ class ViewsPdfTemplate extends FPDI {
 
   public function setDefaultPageTemplate($path, $key, $pageNumbering = 'main') {
     $this->defaultPageTemplateFiles[$key] = array(
-      'path' => $path,
+      'path'      => $path,
       'numbering' => $pageNumbering
     );
   }
@@ -136,6 +138,7 @@ class ViewsPdfTemplate extends FPDI {
   public function setViewsHeader($header) {
     $this->views_header = $header;
   }
+
   /**
    * This method must be overriden, in the other case, some
    * output is printed to the header.
@@ -148,7 +151,7 @@ class ViewsPdfTemplate extends FPDI {
 
   public function setViewsFooter($footer) {
     $this->views_footer = $footer;
-   }
+  }
 
   /**
    * This method must be overriden, in the other case, some
@@ -169,6 +172,7 @@ class ViewsPdfTemplate extends FPDI {
       $r = drupal_substr($hex, 0, 2);
       $g = drupal_substr($hex, 2, 2);
       $b = drupal_substr($hex, 4, 2);
+
       return array(hexdec($r), hexdec($g), hexdec($b));
 
     }
@@ -176,6 +180,7 @@ class ViewsPdfTemplate extends FPDI {
       $r = drupal_substr($hex, 0, 1);
       $g = drupal_substr($hex, 1, 1);
       $b = drupal_substr($hex, 2, 1);
+
       return array(hexdec($r), hexdec($g), hexdec($b));
 
     }
@@ -191,7 +196,7 @@ class ViewsPdfTemplate extends FPDI {
    * @return array color as an array
    */
   public function parseColor($color) {
-    $color = trim($color, ', ');
+    $color      = trim($color, ', ');
     $components = explode(',', $color);
     if (count($components) == 1) {
       return $this->convertHexColorToArray($color);
@@ -201,6 +206,7 @@ class ViewsPdfTemplate extends FPDI {
       foreach ($components as $id => $component) {
         $components[$id] = trim($component);
       }
+
       return $components;
     }
   }
@@ -217,29 +223,29 @@ class ViewsPdfTemplate extends FPDI {
     // Set defaults:
     $options += array(
       'position' => array(),
-      'text' => array(),
-      'render' => array(),
+      'text'     => array(),
+      'render'   => array(),
     );
 
     $options['position'] += array(
       'corner' => 'top_left',
-      'x' => 0,
-      'y' => 0,
+      'x'      => 0,
+      'y'      => 0,
       'object' => 'last_position',
-      'width' => 0,
+      'width'  => 0,
       'height' => 0,
     );
 
     $options['text'] += array(
       'font_family' => 'default',
-      'font_style' => '',
+      'font_style'  => '',
     );
 
     $options['render'] += array(
-      'eval_before' => '',
-      'eval_after' => '',
+      'eval_before'        => '',
+      'eval_after'         => '',
       'bypass_eval_before' => FALSE,
-      'bypass_eval_after' => FALSE,
+      'bypass_eval_after'  => FALSE,
     );
 
     $x = $y = 0;
@@ -287,8 +293,8 @@ class ViewsPdfTemplate extends FPDI {
       switch ($options['position']['corner']) {
         default:
         case 'top_left':
-          $x = $options['position']['x']+$this->lMargin;
-          $y = $options['position']['y']+$this->tMargin;
+          $x = $options['position']['x'] + $this->lMargin;
+          $y = $options['position']['y'] + $this->tMargin;
           break;
 
         case 'top_right':
@@ -368,14 +374,13 @@ class ViewsPdfTemplate extends FPDI {
       }
 
     }
-
-    // No position match (for example header/footer)
     else {
+      // No position match (for example header/footer)
       // Render or return
-      if (is_object($view) && $key != NULL ) {
+      if (is_object($view) && $key != NULL) {
         $content = $view->field[$key]->theme($row);
       }
-      else{
+      else {
         return;
       }
 
@@ -466,32 +471,32 @@ class ViewsPdfTemplate extends FPDI {
       $prefix .= ' ';
     }
 
-    $font_size = empty($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'] ;
+    $font_size   = empty($options['text']['font_size']) ? $this->defaultFontSize : $options['text']['font_size'];
     $font_family = ($options['text']['font_family'] == 'default' || empty($options['text']['font_family'])) ? $this->defaultFontFamily : $options['text']['font_family'];
-    $font_style = is_array($options['text']['font_style']) ? $options['text']['font_style'] : $this->defaultFontStyle;
-    $textColor = !empty($options['text']['color']) ? $this->parseColor($options['text']['color']) : $this->parseColor($this->defaultFontColor);
+    $font_style  = is_array($options['text']['font_style']) ? $options['text']['font_style'] : $this->defaultFontStyle;
+    $textColor   = !empty($options['text']['color']) ? $this->parseColor($options['text']['color']) : $this->parseColor($this->defaultFontColor);
 
 
-    $w = $options['position']['width'];
-    $h = $options['position']['height'];
-    $border = 0;
-    $align = isset($options['text']['align']) ? $options['text']['align'] : $this->defaultTextAlign;
-    $fill = 0;
-    $ln = 1;
-    $reseth = TRUE;
-    $stretch = 0;
-    $ishtml = isset($options['render']['is_html']) ? $options['render']['is_html'] : 1;
-    $stripHTML = !$ishtml;
+    $w           = $options['position']['width'];
+    $h           = $options['position']['height'];
+    $border      = 0;
+    $align       = isset($options['text']['align']) ? $options['text']['align'] : $this->defaultTextAlign;
+    $fill        = 0;
+    $ln          = 1;
+    $reseth      = TRUE;
+    $stretch     = 0;
+    $ishtml      = isset($options['render']['is_html']) ? $options['render']['is_html'] : 1;
+    $stripHTML   = !$ishtml;
     $autopadding = TRUE;
-    $maxh = 0;
-    $valign = 'T';
-    $fitcell = FALSE;
+    $maxh        = 0;
+    $valign      = 'T';
+    $fitcell     = FALSE;
 
     // Run eval before.
     if ($options['render']['bypass_eval_before'] && !empty($options['render']['eval_before'])) {
       eval($options['render']['eval_before']);
     }
-    elseif (!empty($options['render']['eval_before']))  {
+    elseif (!empty($options['render']['eval_before'])) {
       $content = php_eval($options['render']['eval_before']);
     }
 
@@ -531,11 +536,11 @@ class ViewsPdfTemplate extends FPDI {
 
     // Write Coordinates of element.
     $this->elements[$key] = array(
-      'x' => $x,
-      'y' => $y,
-      'width' => empty($w) ? ($pageDim['wk'] - $this->rMargin-$x) : $w,
+      'x'      => $x,
+      'y'      => $y,
+      'width'  => empty($w) ? ($pageDim['wk'] - $this->rMargin - $x) : $w,
       'height' => $this->y - $y,
-      'page' => $this->lastWritingPage,
+      'page'   => $this->lastWritingPage,
     );
 
     $this->lastWritingElement = $key;
@@ -546,7 +551,7 @@ class ViewsPdfTemplate extends FPDI {
    */
   public function drawTable(&$view, $options) {
 
-    $rows = $view->result;
+    $rows    = $view->result;
     $columns = $view->field;
     $pageDim = $this->getPageDimensions();
 
@@ -575,7 +580,7 @@ class ViewsPdfTemplate extends FPDI {
       $width = $pageDim['wk'] - $this->rMargin - $x;
     }
 
-    $sumWidth = 0;
+    $sumWidth                    = 0;
     $numberOfColumnsWithoutWidth = 0;
 
     // Set the definitiv width of a column
@@ -618,57 +623,57 @@ class ViewsPdfTemplate extends FPDI {
 
       $options['info'][$id] += array(
         'header_style' => array(),
-        'body_style' => array(),
+        'body_style'   => array(),
       );
 
       $options['info'][$id]['header_style'] += array(
         'position' => array(),
-        'text' => array(),
-        'render' => array(),
+        'text'     => array(),
+        'render'   => array(),
       );
 
       $options['info'][$id]['header_style']['position'] += array(
         'corner' => 'top_left',
-        'x' => NULL,
-        'y' => NULL,
+        'x'      => NULL,
+        'y'      => NULL,
         'object' => '',
-        'width' => NULL,
+        'width'  => NULL,
         'height' => NULL,
       );
 
       $options['info'][$id]['header_style']['text'] += array(
         'font_family' => 'default',
-        'font_style' => '',
+        'font_style'  => '',
       );
 
       $options['info'][$id]['header_style']['text'] += array(
         'eval_before' => '',
-        'eval_after' => '',
+        'eval_after'  => '',
       );
 
       $options['info'][$id]['body_style'] += array(
         'position' => array(),
-        'text' => array(),
-        'render' => array(),
+        'text'     => array(),
+        'render'   => array(),
       );
 
       $options['info'][$id]['body_style']['position'] += array(
         'corner' => 'top_left',
-        'x' => NULL,
-        'y' => NULL,
+        'x'      => NULL,
+        'y'      => NULL,
         'object' => '',
-        'width' => NULL,
+        'width'  => NULL,
         'height' => NULL,
       );
 
       $options['info'][$id]['body_style']['text'] += array(
         'font_family' => 'default',
-        'font_style' => '',
+        'font_style'  => '',
       );
 
       $options['info'][$id]['body_style']['text'] += array(
         'eval_before' => '',
-        'eval_after' => '',
+        'eval_after'  => '',
       );
 
       $headerOptions = $options['info'][$id]['header_style'];
@@ -698,7 +703,7 @@ class ViewsPdfTemplate extends FPDI {
     foreach ($rows as $row) {
       $x = $rowX;
 
-       // Get the page dimensions
+      // Get the page dimensions
       $pageDim = $this->getPageDimensions();
 
       if (($rowY + $this->bMargin + $options['position']['row_height']) > $pageDim['hk']) {
@@ -710,7 +715,7 @@ class ViewsPdfTemplate extends FPDI {
         $rowY = $this->y; // $rowY - $pageDim['hk']
       }
 
-      $y = $rowY;
+      $y    = $rowY;
       $page = $this->getPage();
       foreach ($columns as $id => $column) {
 
@@ -772,7 +777,7 @@ class ViewsPdfTemplate extends FPDI {
     $numberOfPages = $this->setSourceFile($path);
     for ($i = 1; $i <= $numberOfPages; $i++) {
 
-      $dim = $this->getTemplateSize($i);
+      $dim       = $this->getTemplateSize($i);
       $format[0] = $dim['w'];
       $format[1] = $dim['h'];
 
@@ -808,7 +813,7 @@ class ViewsPdfTemplate extends FPDI {
   /**
    * This method adds a new page to the PDF.
    */
-  public function addPage($path = NULL, $reset = FALSE, $numbering = 'main', $tocpage = false) {
+  public function addPage($path = NULL, $reset = FALSE, $numbering = 'main', $tocpage = FALSE) {
 
     // Do not add any new page, if we are writing
     // in the footer or header.
@@ -823,6 +828,7 @@ class ViewsPdfTemplate extends FPDI {
     if ($reset == TRUE && (empty($path) || !file_exists($path))) {
       parent::addPage();
       $this->setPageFormat($this->defaultFormat, $this->defaultOrientation);
+
       return;
     }
 
@@ -842,7 +848,7 @@ class ViewsPdfTemplate extends FPDI {
         $path = realpath($file['path']);
 
         $numberOfPages = $this->setSourceFile($path);
-        if ($file['numbering'] == 'row')  {
+        if ($file['numbering'] == 'row') {
           $index = min($this->rowContentPageNumber, $numberOfPages);
         }
         else {
@@ -855,7 +861,7 @@ class ViewsPdfTemplate extends FPDI {
         // ajust the page format (only for the first template)
         if ($format == FALSE) {
 
-          $dim = $this->getTemplateSize($index);
+          $dim       = $this->getTemplateSize($index);
           $format[0] = $dim['w'];
           $format[1] = $dim['h'];
           //$this->setPageFormat($format);
@@ -887,10 +893,10 @@ class ViewsPdfTemplate extends FPDI {
    */
   public function setHeaderFooter($record, $options, $view) {
     //if ($this->getPage() > 0 && !isset($this->headerFooterData[$this->getPage()])) {
-      $this->headerFooterData[$this->getPage()] = $record;
+    $this->headerFooterData[$this->getPage()] = $record;
     //}
     $this->headerFooterOptions = $options;
-    $this->view =& $view;
+    $this->view                =& $view;
   }
 
   /**
@@ -907,9 +913,9 @@ class ViewsPdfTemplate extends FPDI {
         if (is_array($this->headerFooterOptions['formats'])) {
           foreach ($this->headerFooterOptions['formats'] as $id => $options) {
             if ($options['position']['object'] == 'header_footer') {
-              $fieldOptions = $options;
+              $fieldOptions                       = $options;
               $fieldOptions['position']['object'] = 'page';
-              $this->InFooter = TRUE;
+              $this->InFooter                     = TRUE;
 
               // backup margins
               $ml = $this->lMargin;
@@ -941,9 +947,9 @@ class ViewsPdfTemplate extends FPDI {
       return self::$templateList;
     }
 
-    $files_path = drupal_realpath('public://');
-    $template_dir = variable_get('views_pdf_template_path', 'views_pdf_templates');
-    $dir = $files_path . '/' . $template_dir;
+    $files_path     = drupal_realpath('public://');
+    $template_dir   = variable_get('views_pdf_template_path', 'views_pdf_templates');
+    $dir            = $files_path . '/' . $template_dir;
     $templatesFiles = file_scan_directory($dir, '/.pdf$/', array('nomask' => '/(\.\.?|CVS)$/'), 1);
 
     $templates = array();
@@ -971,6 +977,7 @@ class ViewsPdfTemplate extends FPDI {
     }
 
     $template_dir = variable_get('views_pdf_template_stream', 'public://views_pdf_templates');
+
     return drupal_realpath($template_dir . '/' . $template);
   }
 
@@ -983,7 +990,9 @@ class ViewsPdfTemplate extends FPDI {
     }
 
     // Get all pdf files with the font list: K_PATH_FONTS
-    $fonts = file_scan_directory(K_PATH_FONTS, '/.php$/', array('nomask' => '/(\.\.?|CVS)$/', 'recurse' => FALSE), 1);
+    $fonts = file_scan_directory(K_PATH_FONTS, '/.php$/', array('nomask'  => '/(\.\.?|CVS)$/',
+                                                                'recurse' => FALSE
+      ), 1);
     $cache = cache_get('views_pdf_cached_fonts');
 
     $cached_font_mapping = NULL;
@@ -1000,10 +1009,10 @@ class ViewsPdfTemplate extends FPDI {
     }
 
     foreach ($fonts as $font) {
-        $name = self::getFontNameByFileName($font->uri);
-        if (isset($name)) {
-          $font_mapping[$font->name] = $name;
-        }
+      $name = self::getFontNameByFileName($font->uri);
+      if (isset($name)) {
+        $font_mapping[$font->name] = $name;
+      }
     }
 
     asort($font_mapping);
@@ -1036,9 +1045,9 @@ class ViewsPdfTemplate extends FPDI {
     foreach ($clean as $key => $font) {
 
       // Unset bold, italic, italic/bold fonts
-      unset($clean[ ($key . 'b') ]);
-      unset($clean[ ($key . 'bi') ]);
-      unset($clean[ ($key . 'i') ]);
+      unset($clean[($key . 'b')]);
+      unset($clean[($key . 'bi')]);
+      unset($clean[($key . 'i')]);
 
     }
 

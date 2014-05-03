@@ -107,6 +107,7 @@ class Page extends views_plugin_display_page {
 
     $orientation     = $this->get_option('default_page_orientation'); // P or L
     $unit            = $this->get_option('unit');
+    /*
     $this->view->pdf = new Drupal\views_pdf\ViewsPdfTemplate($orientation, $unit, $format);
 
     // Set margins: top, left, right
@@ -146,6 +147,7 @@ class Page extends views_plugin_display_page {
     else {
       return $this->view->pdf->Output($path_to_store_pdf, $destination);
     }
+    */
   }
 
   /**

@@ -27,11 +27,12 @@ function views_pdf_views_api() {
 function views_pdf_libraries_info() {
   $libraries = array();
 
+  // PSR-0 Load, and vendor tcpdf
+  // To complete the full install you need to run `composer install`.
   $libraries['fpdi_tcpdf'] = array(
     'name'              => 'FPDI library',
     'vendor url'        => 'https://github.com/onigoetz/fpdi_tcpdf',
     'download url'      => 'https://github.com/onigoetz/fpdi_tcpdf/archive/master.zip',
-    'path'              => 'src/fpdi',
     'version arguments' => array(
       'file'    => 'src/fpdi/FPDI.php',
       'pattern' => '@Version\s+([0-9a-zA-Z\.-]+)@',
@@ -39,8 +40,7 @@ function views_pdf_libraries_info() {
     ),
     'files'             => array(
       'php' => array(
-        'FPDI.php',
-        'FPDF.inc',
+        'vendor/tecnick.com/tcpdf/tcpdf.php',
       ),
     ),
     'xautoload' => function($api) {
@@ -48,10 +48,27 @@ function views_pdf_libraries_info() {
     }
   );
 
+  $libraries['fpdi'] = array(
+    'name'              => 'FPDI library',
+    'vendor url'        => 'http://www.setasign.com/products/fpdi/about/',
+    'download url'      => 'http://www.setasign.com/products/fpdi/downloads/',
+    'version arguments' => array(
+      'file'    => 'fpdi.php',
+      'pattern' => '@Version\s+([0-9a-zA-Z\.-]+)@',
+      'lines'   => 3,
+    ),
+    'files'             => array(
+      'php' => array(
+        'fpdi.php',
+      ),
+    ),
+  );
+
   $libraries['tcpdf'] = array(
     'name'              => 'TCPDF library',
     'vendor url'        => 'http://www.tcpdf.org/',
     'download url'      => 'http://sourceforge.net/projects/tcpdf/files/',
+    'path'              => 'src',
     'version arguments' => array(
       'file'    => 'tcpdf.php',
       'pattern' => '@Version\s+:\s+([0-9a-zA-Z\.-]+)@',
@@ -62,6 +79,9 @@ function views_pdf_libraries_info() {
         'tcpdf.php',
       ),
     ),
+    'xautoload' => function($api) {
+      $api->namespaceRoot('tcpdf', 'src');
+    }
   );
 
   $libraries['MPDF57'] = array(
