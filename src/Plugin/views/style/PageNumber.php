@@ -5,15 +5,14 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\PageNumber.
  */
 
-// In Drupal 7 can't use namespace with views;
-// namespace Drupal\views_pdf\Plugin\views\style;
+namespace Drupal\views_pdf\Plugin\views\style;
 
 /**
  * Class that holds the functionality for the page number in a PDF display.
  *
  * @ingroup views_field_handler
  */
-class PageNumber extends views_handler_field {
+class PageNumber extends \views_handler_field {
 
   /**
    * This method  is used to query data. In our case we want that no data is queried.

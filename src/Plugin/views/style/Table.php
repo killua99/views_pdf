@@ -5,15 +5,16 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\Table.
  */
 
-// In Drupal 7 can't use namespace with views;
-// namespace Drupal\views_pdf\Plugin\views\style;
+namespace Drupal\views_pdf\Plugin\views\style;
+
+use Drupal\views_pdf\ViewsPdfBase;
 
 /**
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
  */
-class Table extends views_plugin_style {
+class Table extends \views_plugin_style {
 
   /**
    * Render the style.
@@ -67,7 +68,7 @@ class Table extends views_plugin_style {
       array(
         'default' => t('-- Default --')
       ),
-      Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList());
+      ViewsPdfBase::getAvailableFontsCleanList());
 
     $font_styles = array(
       'b' => t('Bold'),
@@ -89,7 +90,7 @@ class Table extends views_plugin_style {
     );
     $hyphenate = array_merge(
       $hyphenate,
-      Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+      ViewsPdfBase::getAvailableHyphenatePatterns()
     );
 
     foreach ($columns as $field => $column) {

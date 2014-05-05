@@ -5,15 +5,16 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\Unformatted.
  */
 
-// In Drupal 7 can't use namespace with views;
-// namespace Drupal\views_pdf\Plugin\views\style;
+namespace Drupal\views_pdf\Plugin\views\style;
+
+use Drupal\views_pdf\ViewsPdfBase;
 
 /**
  * This class holds all the funtionality used for the unformatted style plugin.
  *
  * @ingroup views_style_plugins
  */
-class Unformatted extends views_plugin_style {
+class Unformatted extends \views_plugin_style {
 
   /**
    * Render the grouping sets.

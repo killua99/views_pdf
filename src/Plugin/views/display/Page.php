@@ -5,15 +5,17 @@
  * Contains \Drupal\views_pdf\Plugin\views\display\Page.
  */
 
-// In Drupal 7 can't use namespace with views;
-// namespace Drupal\views_pdf\Plugin\views\display;
+namespace Drupal\views_pdf\Plugin\views\display;
+
+use Drupal\views_pdf\ViewsPdfBase;
+use Drupal\views_pdf\ViewsPdfTemplate;
 
 /**
  * This class contains all the functionality of the PDF display.
  *
  * @ingroup views_display_plugins
  */
-class Page extends views_plugin_display_page {
+class Page extends \views_plugin_display_page {
 
   /**
    * Define the display type.
@@ -76,6 +78,7 @@ class Page extends views_plugin_display_page {
     // Defines external configuration for TCPDF library.
     $tcpdf_path = drupal_realpath(libraries_get_path('tcpdf'));
     $cache_path = 'public://views_pdf_cache/';
+
     if (file_prepare_directory($cache_path, FILE_CREATE_DIRECTORY) === TRUE) {
       global $base_url;
       define('K_TCPDF_EXTERNAL_CONFIG', TRUE);
@@ -105,10 +108,11 @@ class Page extends views_plugin_display_page {
       $format = $this->get_option('default_page_format');
     }
 
-    $orientation     = $this->get_option('default_page_orientation'); // P or L
-    $unit            = $this->get_option('unit');
-    /*
-    $this->view->pdf = new Drupal\views_pdf\ViewsPdfTemplate($orientation, $unit, $format);
+    $orientation = $this->get_option('default_page_orientation'); // P or L
+    $unit        = $this->get_option('unit');
+
+    // TODO: Here is where the PDF start building.
+    $this->view->pdf = new ViewsPdfTemplate($orientation, $unit, $format);
 
     // Set margins: top, left, right
     $this->view->pdf->SetMargins($this->get_option('margin_left'), $this->get_option('margin_top'), $this->get_option('margin_right'), TRUE);
@@ -147,7 +151,7 @@ class Page extends views_plugin_display_page {
     else {
       return $this->view->pdf->Output($path_to_store_pdf, $destination);
     }
-    */
+
   }
 
   /**
@@ -298,7 +302,7 @@ class Page extends views_plugin_display_page {
         );
         break;
       case 'pdf_fonts':
-        $fonts       = Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList();
+        $fonts       = $this->getAvailableFontsCleanList();
         $font_styles = array(
           'b' => t('Bold'),
           'i' => t('Italic'),
@@ -320,7 +324,7 @@ class Page extends views_plugin_display_page {
         );
         $hyphenate = array_merge(
           $hyphenate,
-          Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+          $this->getAvailableHyphenatePatterns()
         );
 
         $form['#title'] .= t('PDF Default Font Options');
@@ -333,7 +337,7 @@ class Page extends views_plugin_display_page {
           '#type'          => 'textfield',
           '#title'         => t('Font Size'),
           '#size'          => 10,
-          '#default_value' => $this->get_option('default_font_size'),
+          '#default_value' => ViewsPdfBase::get_option('default_font_size'),
         );
         $form['default_font_family']    = array(
           '#type'          => 'select',
@@ -375,11 +379,11 @@ class Page extends views_plugin_display_page {
       case 'pdf_template':
         $form['#title'] .= t('PDF Templates');
 
-        $templates                = array_merge(
+        $templates = array_merge(
           array(
             t('-- None --')
           ),
-          Drupal\views_pdf\ViewsPdfTemplate::getAvailableTemplates());
+          ViewsPdfBase::getAvailableTemplates());
 
         $form['leading_template'] = array(
           '#type'          => 'select',
@@ -447,7 +451,8 @@ class Page extends views_plugin_display_page {
   function options_summary(&$categories, &$options) {
     parent::options_summary($categories, $options);
 
-    $fonts = Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList();
+    // $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
+    $fonts = ViewsPdfBase::getAvailableFontsCleanList();
 
     // Change Page title:
     $categories['page'] = array(

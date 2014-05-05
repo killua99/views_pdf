@@ -5,15 +5,16 @@
  * Contains \Drupal\views_pdf\Plugin\views\row\Fields.
  */
 
-// In Drupal 7 can't use namespace with views;
-// namespace Drupal\views_pdf\Plugin\views\row;
+namespace Drupal\views_pdf\Plugin\views\row;
+
+use Drupal\views_pdf\ViewsPdfBase;
 
 /**
  * This class contains all the functionality of the field PDF style.
  *
  * @ingroup views_row_plugins
  */
-class Fields extends views_plugin_row {
+class Fields extends \views_plugin_row {
 
   /**
    * Renders the rows.
@@ -82,7 +83,7 @@ class Fields extends views_plugin_row {
       array(
         'default' => t('-- Default --')
       ),
-      Drupal\views_pdf\ViewsPdfTemplate::getAvailableFontsCleanList());
+      ViewsPdfBase::getAvailableFontsCleanList());
 
     $font_styles = array(
       'b' => t('Bold'),
@@ -95,7 +96,7 @@ class Fields extends views_plugin_row {
       array(
         t('-- None --')
       ),
-      Drupal\views_pdf\ViewsPdfTemplate::getAvailableTemplates());
+      ViewsPdfBase::getAvailableTemplates());
 
     $file_fields = array();
 
@@ -129,7 +130,7 @@ class Fields extends views_plugin_row {
     );
     $hyphenate = array_merge(
       $hyphenate,
-      Drupal\views_pdf\ViewsPdfTemplate::getAvailableHyphenatePatterns()
+      ViewsPdfBase::getAvailableHyphenatePatterns()
     );
 
 
