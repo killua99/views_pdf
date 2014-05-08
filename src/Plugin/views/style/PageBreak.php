@@ -5,7 +5,8 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\PageBreak.
  */
 
-namespace Drupal\views_pdf\Plugin\views\style;
+// We can't use name space in views 7.x-x.x
+// namespace Drupal\views_pdf\Plugin\views\style;
 
 /**
  * Class that holds the functionality for the page break in a PDF display.
@@ -14,7 +15,7 @@ namespace Drupal\views_pdf\Plugin\views\style;
  *
  * @ingroup views_field_handler
  */
-class PageBreak extends \views_handler_field {
+class PageBreak extends views_handler_field {
 
   protected $countRecords = 0;
 

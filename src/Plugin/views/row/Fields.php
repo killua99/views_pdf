@@ -5,16 +5,17 @@
  * Contains \Drupal\views_pdf\Plugin\views\row\Fields.
  */
 
-namespace Drupal\views_pdf\Plugin\views\row;
+// We can't use name space in views 7.x-x.x
+// namespace Drupal\views_pdf\Plugin\views\row;
 
-use Drupal\views_pdf\ViewsPdfBase;
+// use Drupal\views_pdf\ViewsPdfBase;
 
 /**
  * This class contains all the functionality of the field PDF style.
  *
  * @ingroup views_row_plugins
  */
-class Fields extends \views_plugin_row {
+class Fields extends views_plugin_row {
 
   /**
    * Renders the rows.

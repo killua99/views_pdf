@@ -5,17 +5,18 @@
  * Contains \Drupal\views_pdf\Plugin\views\display\Page.
  */
 
-namespace Drupal\views_pdf\Plugin\views\display;
+// We can't use name space in views 7.x-x.x
+// namespace Drupal\views_pdf\Plugin\views\display;
 
-use Drupal\views_pdf\ViewsPdfBase;
-use Drupal\views_pdf\ViewsPdfTemplate;
+// use Drupal\views_pdf\ViewsPdfBase;
+// use Drupal\views_pdf\ViewsPdfTemplate;
 
 /**
  * This class contains all the functionality of the PDF display.
  *
  * @ingroup views_display_plugins
  */
-class Page extends \views_plugin_display_page {
+class Page extends views_plugin_display_page {
 
   /**
    * Define the display type.

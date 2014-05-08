@@ -5,16 +5,17 @@
  * Contains \Drupal\views_pdf\Plugin\views\style\Table.
  */
 
-namespace Drupal\views_pdf\Plugin\views\style;
+// We can't use name space in views 7.x-x.x
+// namespace Drupal\views_pdf\Plugin\views\style;
 
-use Drupal\views_pdf\ViewsPdfBase;
+// use Drupal\views_pdf\ViewsPdfBase;
 
 /**
  * Style plugin to render each item as a row in a table.
  *
  * @ingroup views_style_plugins
  */
-class Table extends \views_plugin_style {
+class Table extends views_plugin_style {
 
   /**
    * Render the style.
