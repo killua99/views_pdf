@@ -1,0 +1,834 @@
+CHANGELOG: Views PDF Display
+-----------------------------
+
+[7.x-2.x xxxx-xx-xx] (Dev branch)
+
+ - Deleting or renaming ViewsPdfTemplate to ViewsPdfBase
+ - Refactoring coding, tuning back without namespace in views classes. Really
+   hard using namespacing with views
+ - Using namespace and trying to get a better way to pick the library
+ - Stage unstable
+ - Removing use of views_pdf_get_hyphenations and the whole function
+ - Removing use of views_pdf_get_pdf_templates and the whole function
+ - Removing use of views_pdf_get_font_list and the whole function
+ - Deleting views_pdf_get_new_pdf_instance function from .module
+ - Now they are loading with xautoload and new path. Next, clean the old
+   functions from .module
+ - Moving all the functions to PSR-4 and template to a php file and namespace
+ - Adding the rest of autoloading Plugin system, start test it
+ - Start to using xautoload to implement D8 DX
+ - Formating Drupal CS
+ - Install setup with the new requirements
+ - Full libraries description included
+ - Save point. Starting the libraries use.
+ - Start the real work, refactoring and make a new librarie option.
+ - Point of control, modifications and extras
+ - Removing strict warning notice from the addPage function
+ - fixing the gitignore
+ - Adding gitignore for dev PHPStorm stuff
+ - Miniors changes, Drupal CS, basic setup
+ - Saving the state, multiples modifications, minior changes.
+ - Reorder the views files and .info file
+ - First work, fixing Drupal CS
+ - New version, new way. Adding libraries dependencies, and start the Drupal
+   CS in the whole module
+ - Issue #2040739: PHP eval not working well
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Issue #2040603 by killua99 | Kingdutch: Fixed jQuery Update not as
+   dependency in .info file.
+ - HOTFIX: We have to check if  if different than NULL and miss code in the
+   patch
+ - Issue #1910156 by garphy: Fixed User of php_eval() instead of eval()
+   prevent variable manipulation.
+ - Issue #1313404 by lame, guillaumev | ampiche: Fixed Grouping field doesn't
+   work in the PDF.
+ - Issue #1972158 by guillaumev, teknocat: Added Page Break field needs to
+   allow break after x rows.
+ - Issue #1886066 by guillaumev | gillarf: Print views header and footer in
+   PDF.
+ - Issue #2032863 by guillaumev: Added Hide fields if they are empty.
+ - Issue #1960540 by waylandbill, killua99: Fixed More reasonable defaults for
+   position needed.
+ - Issue #1421532 by Peacog | kmare: Fixed include view selecting master
+   display only.
+ - Issue #1432916 by jibize, killua99 | cybermache: Fixed Should margins be
+   default for PDF table position?.
+ - Issue #1513490 by farald, firebird, idflood, Simon Georges, psicomante,
+   killua99 | drupadawan: Fixed  Fatal error: Call to undefined function
+   php_eval().
+ - Issue #1999562 by rhclayto, killua99: Fixed  PHP Fatal error: Call to
+   undefined method PdfTemplate::getHyphenPatternsFromTEX().
+ - Issue #1270606 by laura.johnson, Simon Georges | velpan: Fixed Unaffected
+   writing position in case of empty fields.
+ - Issue #1960526 by waylandbill: font_size and color come as empty string
+ - Issue #1986120 by Peacog: Replacement patterns for included view's
+   arguments not shown
+ - Issue #1220408 by LPCA, agnese.stelce: tcpdf is trying to write in
+   /sites/all/libraries/tcpdf/cache
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1270346 by velpan, Cottser: collapsable should be collapsible
+ - Remove useless packaging informations from .info files
+ - Issue #1878274 by zealny: Support MEMO page format
+ - --author=squarecandy <squarecandy@437412.no-reply.drupal.org>
+ - Issue #1485892 by emicoma, farald: TCPDF ERROR: Some data has already been
+   output, can't send PDF file
+ - Issue #1508820 by njcheng: PDF Table format generates headers but no table
+   data
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.3 - 2013-11-19]
+
+ - Issue #2042927 by Peacog, elsteff1385, guillaumev, UJF-DiSI-Drupal, Alex
+   Arnaud: Notices in style unformatted.
+ - Issue 2130391# by crowdcg: Ability to use Decimal Values in Custom Page
+   Format.
+ - Issue #1288782 by jbiechele, tstaylor7, Peacog, mikran: Declaration of
+   PdfTemplate::addPage() should be compatible with TCPDF::AddPage.
+ - Issue #2134937 by mikran: Multiple pdf displays per page load are causing
+   "Notice: Constant K_TCPDF_EXTERNAL_CONFIG already defined ... " notices.
+ - Issue #1722492 by killua99 | krios: Added Changing output filename - append
+   a field value.
+ - Issue #1313404 by guillaumev, killua99, lame | ampiche: Fixed Grouping
+   field doesn't work in the PDF.
+ - Issue #2042927 by guillaumev | elsteff1385: Fixed notices in style
+   unformatted.
+ - Issue #2058887 by vegansupreme: Fixed PHP eval after not working.
+ - Issue #2040739: PHP eval not working well
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Issue #2040603 by killua99 | Kingdutch: Fixed jQuery Update not as
+   dependency in .info file.
+ - HOTFIX: We have to check if  if different than NULL and miss code in the
+   patch
+ - Issue #1910156 by garphy: Fixed User of php_eval() instead of eval()
+   prevent variable manipulation.
+ - Issue #1313404 by lame, guillaumev | ampiche: Fixed Grouping field doesn't
+   work in the PDF.
+ - Issue #1972158 by guillaumev, teknocat: Added Page Break field needs to
+   allow break after x rows.
+ - Issue #1886066 by guillaumev | gillarf: Print views header and footer in
+   PDF.
+ - Issue #2032863 by guillaumev: Added Hide fields if they are empty.
+ - Issue #1960540 by waylandbill, killua99: Fixed More reasonable defaults for
+   position needed.
+ - Issue #1421532 by Peacog | kmare: Fixed include view selecting master
+   display only.
+ - Issue #1432916 by jibize, killua99 | cybermache: Fixed Should margins be
+   default for PDF table position?.
+ - Issue #1513490 by farald, firebird, idflood, Simon Georges, psicomante,
+   killua99 | drupadawan: Fixed  Fatal error: Call to undefined function
+   php_eval().
+ - Issue #1999562 by rhclayto, killua99: Fixed  PHP Fatal error: Call to
+   undefined method PdfTemplate::getHyphenPatternsFromTEX().
+ - Issue #1270606 by laura.johnson, Simon Georges | velpan: Fixed Unaffected
+   writing position in case of empty fields.
+ - Issue #1960526 by waylandbill: font_size and color come as empty string
+ - Issue #1986120 by Peacog: Replacement patterns for included view's
+   arguments not shown
+ - Issue #1220408 by LPCA, agnese.stelce: tcpdf is trying to write in
+   /sites/all/libraries/tcpdf/cache
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1270346 by velpan, Cottser: collapsable should be collapsible
+ - Remove useless packaging informations from .info files
+ - Issue #1878274 by zealny: Support MEMO page format
+ - --author=squarecandy <squarecandy@437412.no-reply.drupal.org>
+ - Issue #1485892 by emicoma, farald: TCPDF ERROR: Some data has already been
+   output, can't send PDF file
+ - Issue #1508820 by njcheng: PDF Table format generates headers but no table
+   data
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.1.1 - 2013-11-19]
+
+ - Issue 2130391# by crowdcg: Ability to use Decimal Values in Custom Page
+   Format.
+ - Issue #1288782 by jbiechele, tstaylor7, Peacog, mikran: Declaration of
+   PdfTemplate::addPage() should be compatible with TCPDF::AddPage.
+ - Issue #2134937 by mikran: Multiple pdf displays per page load are causing
+   "Notice: Constant K_TCPDF_EXTERNAL_CONFIG already defined ... " notices.
+ - Issue #1722492 by killua99 | krios: Added Changing output filename - append
+   a field value.
+ - Issue #1313404 by guillaumev, killua99, lame | ampiche: Fixed Grouping
+   field doesn't work in the PDF.
+ - Issue #2042927 by guillaumev | elsteff1385: Fixed notices in style
+   unformatted.
+ - Issue #2058887 by vegansupreme: Fixed PHP eval after not working.
+ - Issue #2040739: PHP eval not working well
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Issue #2040603 by killua99 | Kingdutch: Fixed jQuery Update not as
+   dependency in .info file.
+ - HOTFIX: We have to check if  if different than NULL and miss code in the
+   patch
+ - Issue #1910156 by garphy: Fixed User of php_eval() instead of eval()
+   prevent variable manipulation.
+ - Issue #1313404 by lame, guillaumev | ampiche: Fixed Grouping field doesn't
+   work in the PDF.
+ - Issue #1972158 by guillaumev, teknocat: Added Page Break field needs to
+   allow break after x rows.
+ - Issue #1886066 by guillaumev | gillarf: Print views header and footer in
+   PDF.
+ - Issue #2032863 by guillaumev: Added Hide fields if they are empty.
+ - Issue #1960540 by waylandbill, killua99: Fixed More reasonable defaults for
+   position needed.
+ - Issue #1421532 by Peacog | kmare: Fixed include view selecting master
+   display only.
+ - Issue #1432916 by jibize, killua99 | cybermache: Fixed Should margins be
+   default for PDF table position?.
+ - Issue #1513490 by farald, firebird, idflood, Simon Georges, psicomante,
+   killua99 | drupadawan: Fixed  Fatal error: Call to undefined function
+   php_eval().
+ - Issue #1999562 by rhclayto, killua99: Fixed  PHP Fatal error: Call to
+   undefined method PdfTemplate::getHyphenPatternsFromTEX().
+ - Issue #1270606 by laura.johnson, Simon Georges | velpan: Fixed Unaffected
+   writing position in case of empty fields.
+ - Issue #1960526 by waylandbill: font_size and color come as empty string
+ - Issue #1986120 by Peacog: Replacement patterns for included view's
+   arguments not shown
+ - Issue #1220408 by LPCA, agnese.stelce: tcpdf is trying to write in
+   /sites/all/libraries/tcpdf/cache
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1270346 by velpan, Cottser: collapsable should be collapsible
+ - Remove useless packaging informations from .info files
+ - Issue #1878274 by zealny: Support MEMO page format
+ - --author=squarecandy <squarecandy@437412.no-reply.drupal.org>
+ - Issue #1485892 by emicoma, farald: TCPDF ERROR: Some data has already been
+   output, can't send PDF file
+ - Issue #1508820 by njcheng: PDF Table format generates headers but no table
+   data
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.2 - 2013-11-19]
+
+ - Issue 2130391# by crowdcg: Ability to use Decimal Values in Custom Page
+   Format.
+ - Issue #1288782 by jbiechele, tstaylor7, Peacog, mikran: Declaration of
+   PdfTemplate::addPage() should be compatible with TCPDF::AddPage.
+ - Issue #2134937 by mikran: Multiple pdf displays per page load are causing
+   "Notice: Constant K_TCPDF_EXTERNAL_CONFIG already defined ... " notices.
+ - Issue #1722492 by killua99 | krios: Added Changing output filename - append
+   a field value.
+ - Issue #1313404 by guillaumev, killua99, lame | ampiche: Fixed Grouping
+   field doesn't work in the PDF.
+ - Issue #2042927 by guillaumev | elsteff1385: Fixed notices in style
+   unformatted.
+ - Issue #2058887 by vegansupreme: Fixed PHP eval after not working.
+ - Issue #2040739: PHP eval not working well
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Issue #2040603 by killua99 | Kingdutch: Fixed jQuery Update not as
+   dependency in .info file.
+ - HOTFIX: We have to check if  if different than NULL and miss code in the
+   patch
+ - Issue #1910156 by garphy: Fixed User of php_eval() instead of eval()
+   prevent variable manipulation.
+ - Issue #1313404 by lame, guillaumev | ampiche: Fixed Grouping field doesn't
+   work in the PDF.
+ - Issue #1972158 by guillaumev, teknocat: Added Page Break field needs to
+   allow break after x rows.
+ - Issue #1886066 by guillaumev | gillarf: Print views header and footer in
+   PDF.
+ - Issue #2032863 by guillaumev: Added Hide fields if they are empty.
+ - Issue #1960540 by waylandbill, killua99: Fixed More reasonable defaults for
+   position needed.
+ - Issue #1421532 by Peacog | kmare: Fixed include view selecting master
+   display only.
+ - Issue #1432916 by jibize, killua99 | cybermache: Fixed Should margins be
+   default for PDF table position?.
+ - Issue #1513490 by farald, firebird, idflood, Simon Georges, psicomante,
+   killua99 | drupadawan: Fixed  Fatal error: Call to undefined function
+   php_eval().
+ - Issue #1999562 by rhclayto, killua99: Fixed  PHP Fatal error: Call to
+   undefined method PdfTemplate::getHyphenPatternsFromTEX().
+ - Issue #1270606 by laura.johnson, Simon Georges | velpan: Fixed Unaffected
+   writing position in case of empty fields.
+ - Issue #1960526 by waylandbill: font_size and color come as empty string
+ - Issue #1986120 by Peacog: Replacement patterns for included view's
+   arguments not shown
+ - Issue #1220408 by LPCA, agnese.stelce: tcpdf is trying to write in
+   /sites/all/libraries/tcpdf/cache
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1270346 by velpan, Cottser: collapsable should be collapsible
+ - Remove useless packaging informations from .info files
+ - Issue #1878274 by zealny: Support MEMO page format
+ - --author=squarecandy <squarecandy@437412.no-reply.drupal.org>
+ - Issue #1485892 by emicoma, farald: TCPDF ERROR: Some data has already been
+   output, can't send PDF file
+ - Issue #1508820 by njcheng: PDF Table format generates headers but no table
+   data
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.1 - 2013-07-24]
+
+ - Issue #2040739: PHP eval not working well
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Start the updating fixing code, this will help to the next versions and
+   port the module to D8
+ - Issue #2040603 by killua99 | Kingdutch: Fixed jQuery Update not as
+   dependency in .info file.
+ - HOTFIX: We have to check if  if different than NULL and miss code in the
+   patch
+ - Issue #1910156 by garphy: Fixed User of php_eval() instead of eval()
+   prevent variable manipulation.
+ - Issue #1313404 by lame, guillaumev | ampiche: Fixed Grouping field doesn't
+   work in the PDF.
+ - Issue #1972158 by guillaumev, teknocat: Added Page Break field needs to
+   allow break after x rows.
+ - Issue #1886066 by guillaumev | gillarf: Print views header and footer in
+   PDF.
+ - Issue #2032863 by guillaumev: Added Hide fields if they are empty.
+ - Issue #1960540 by waylandbill, killua99: Fixed More reasonable defaults for
+   position needed.
+ - Issue #1421532 by Peacog | kmare: Fixed include view selecting master
+   display only.
+ - Issue #1432916 by jibize, killua99 | cybermache: Fixed Should margins be
+   default for PDF table position?.
+ - Issue #1513490 by farald, firebird, idflood, Simon Georges, psicomante,
+   killua99 | drupadawan: Fixed  Fatal error: Call to undefined function
+   php_eval().
+ - Issue #1999562 by rhclayto, killua99: Fixed  PHP Fatal error: Call to
+   undefined method PdfTemplate::getHyphenPatternsFromTEX().
+ - Issue #1270606 by laura.johnson, Simon Georges | velpan: Fixed Unaffected
+   writing position in case of empty fields.
+ - Issue #1960526 by waylandbill: font_size and color come as empty string
+ - Issue #1986120 by Peacog: Replacement patterns for included view's
+   arguments not shown
+ - Issue #1220408 by LPCA, agnese.stelce: tcpdf is trying to write in
+   /sites/all/libraries/tcpdf/cache
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1270346 by velpan, Cottser: collapsable should be collapsible
+ - Remove useless packaging informations from .info files
+ - Issue #1878274 by zealny: Support MEMO page format
+ - --author=squarecandy <squarecandy@437412.no-reply.drupal.org>
+ - Issue #1485892 by emicoma, farald: TCPDF ERROR: Some data has already been
+   output, can't send PDF file
+ - Issue #1508820 by njcheng: PDF Table format generates headers but no table
+   data
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.1 - 2013-03-07]
+
+ - Issue #1267364 by velpan: minimal space resets to default value
+ - Issue #1148570 by berliner: Fatal error: Call to a member function theme()
+   on a non-object
+ - Issue #1270606 by velpan, lollypic: Unaffected writing position in case of
+   empty fields
+ - Issue #1230098 by Kyle Jaster, FatherShawn: views_pdf templates
+   disappearing from directory
+ - Issue #1270346 by velpan, Cottser, hanoii: collapsable should be
+   collapsible
+ - Issue #1228036: Fix the missing theme files.
+ - Issue #1127376: Update the README.txt
+ - Issue #1207630: The redirection was blocked by some output. So the header
+   redirection fails.
+ - Resolve a bug with the file extention.
+ - Issue #1191562: Add the file extention if it is missing. (Branch 6.x)
+ - Issue #1197366: Move out the Views PDF Mime Mail to a separate project.
+ - Issue #1180078: Resolve issue with the table style and the row width. The
+   width was ignored.
+ - Bug fix for printing HTML content to the PDF.
+ - Issues #1169942, #1177710, #1151822, #1131528 and #1175234: Resolve
+   problems consering the positioning, page break and add some new
+   features, such as hyphenation and rule based saving of PDF views.
+ - Issue #1151822: Resolve the page break on table view.
+ - Issue #1151822: Resolve many page break problems with relative positioning.
+ - Issue #1148570: Resolve the bug in table with excluded fields.
+ - Issue #1168974 and Issue #1159562: Change return type of the display
+   execution method. Remove the '&' from the function in the mimemail
+   integration to prevent warings.
+ - Issue #1151822 and #1151808 by hunziker: Fixing table row height and
+   relative position on a page break.
+ - Ensure that no content is print out after PDF creation. (see #1146622)
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.0 - 2012-02-09]
+
+ - Issue #1432854 by ajaysolutions: fifes undefined variable x and y
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.0-beta1 - 2012-02-07]
+
+ - removing whitespaces
+ - All files checked with the Coder Module. Removing trailing spaces,
+   formatting Constants and other stuff what was in the way of drupal
+   coding standarts.
+ - Issue #1280394 by Zuzuesque: fixed by applying the patch
+   http://drupal.org/node/1280394#comment-5434618
+ - Issue #1235906 blank page by SnackBucket: fixed with applying the patch
+   http://drupal.org/node/1235906#comment-5307016
+ - #1362058: Fix for views_pdf templates disappearing from directory
+ - Change form field description for store path
+   http://drupal.org/node/1169942#comment-4792226
+ - Issue #1252660 by bocaj,  Zuzuesque, arrested: Don't repeat labels in table
+   view, applied patch http://drupal.org/node/1252660#comment-5049206
+ - Fixed several errors: Including Page Break, Hyphenation, CSS Support.
+ - Changing line break limit to 80 chars per line
+ - Issue #1190244: Remove redundant code.
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[7.x-1.0-rc1 - 2011-07-10]
+
+ - Issue #1169942: Rules integration added.
+ - Issue #1127376: Update the README.txt.
+ - Issue #1206334: Variable was not defined because, it was not passed by the
+   function.
+ - Issue #1191562: Add the file extention if it is missing.
+ - Issue #1200624: Removed the other not used theme things. This resolves the
+   problem.
+ - Resolve a problem with the default $options variable. No issue was open yet
+   for this.
+ - Issue #1190244, #1151822, #1188754, #1187698, #1173896, #1181372 and
+   #1165778: Resolve some know issues from 6.x and port them to the 7.x
+ - Resolve problem by adding of template files. Revolve relative positioning.
+   Resolve the row height in the table style. Correct some code
+   formattings.
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0 - 2011-06-12]
+
+ - Issue #1180078: Resolve issue with the table style and the row width. The
+   width was ignored.
+ - Bug fix for printing HTML content to the PDF.
+ - Issues #1169942, #1177710, #1151822, #1131528 and #1175234: Resolve
+   problems consering the positioning, page break and add some new
+   features, such as hyphenation and rule based saving of PDF views.
+ - Issue #1151822: Resolve the page break on table view.
+ - Issue #1151822: Resolve many page break problems with relative positioning.
+ - Issue #1148570: Resolve the bug in table with excluded fields.
+ - Issue #1168974 and Issue #1159562: Change return type of the display
+   execution method. Remove the '&' from the function in the mimemail
+   integration to prevent warings.
+ - Issue #1151822 and #1151808 by hunziker: Fixing table row height and
+   relative position on a page break.
+ - Ensure that no content is print out after PDF creation. (see #1146622)
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-rc1 - 2011-06-12]
+
+ - Issue #1180078: Resolve issue with the table style and the row width. The
+   width was ignored.
+ - Bug fix for printing HTML content to the PDF.
+ - Issues #1169942, #1177710, #1151822, #1131528 and #1175234: Resolve
+   problems consering the positioning, page break and add some new
+   features, such as hyphenation and rule based saving of PDF views.
+ - Issue #1151822: Resolve the page break on table view.
+ - Issue #1151822: Resolve many page break problems with relative positioning.
+ - Issue #1148570: Resolve the bug in table with excluded fields.
+ - Issue #1168974 and Issue #1159562: Change return type of the display
+   execution method. Remove the '&' from the function in the mimemail
+   integration to prevent warings.
+ - Issue #1151822 and #1151808 by hunziker: Fixing table row height and
+   relative position on a page break.
+ - Ensure that no content is print out after PDF creation. (see #1146622)
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-beta5 - 2011-06-04]
+
+ - Issues #1169942, #1177710, #1151822, #1131528 and #1175234: Resolve
+   problems consering the positioning, page break and add some new
+   features, such as hyphenation and rule based saving of PDF views.
+ - Issue #1151822: Resolve the page break on table view.
+ - Issue #1151822: Resolve many page break problems with relative positioning.
+ - Issue #1148570: Resolve the bug in table with excluded fields.
+ - Issue #1168974 and Issue #1159562: Change return type of the display
+   execution method. Remove the '&' from the function in the mimemail
+   integration to prevent warings.
+ - Issue #1151822 and #1151808 by hunziker: Fixing table row height and
+   relative position on a page break.
+ - Ensure that no content is print out after PDF creation. (see #1146622)
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-beta4 - 2011-05-14]
+
+ - Issue #1151822 and #1151808 by hunziker: Fixing table row height and
+   relative position on a page break.
+ - Ensure that no content is print out after PDF creation. (see #1146622)
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-beta3 - 2011-05-05]
+
+ - Resolve some problems with the table style and update the view_include sub
+   module.
+ - Add missing handlers to the info file. (see #1147358)
+ - Bring the current 6.x version to 7.x and update the append / include module
+   to 7.x.
+ - Create new branch with a basic working version for Drupal 7
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-beta2 - 2011-04-22]
+
+ - Resolve upload problem (see #1124852)
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
+
+[6.x-1.0-beta1 - 2011-04-18]
+
+ - Add CMYK colors. see #1130606
+ - Add feature from #1127376. (using hook_requirements for checking lib
+   locations)
+ - Update readme. see #1127370
+ - Change lib paths, set the default style and row plugins, update the
+   documentation, improve the coding standards. See [#1088152].
+ - Add submodule for interacting with mime mail
+ - Add posibility to download the PDF in the display plugin.
+ - Add attache to feature.
+ - Add readme
+ - Add comments to the code
+ - Add appending and include module.
+ - Apply Drupal code styles
+ - Initial Files added
+ - Initial commit.
