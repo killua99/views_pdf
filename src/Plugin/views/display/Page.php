@@ -76,6 +76,8 @@ class Page extends views_plugin_display_page {
    */
   function execute($path_to_store_pdf = '', $destination = 'I') {
 
+    return "Ha! don't want to use any library";
+
     // Defines external configuration for TCPDF library.
     $tcpdf_path = drupal_realpath(libraries_get_path('tcpdf'));
     $cache_path = 'public://views_pdf_cache/';
@@ -113,7 +115,7 @@ class Page extends views_plugin_display_page {
     $unit        = $this->get_option('unit');
 
     // TODO: Here is where the PDF start building.
-    $this->view->pdf = new ViewsPdfTemplate($orientation, $unit, $format);
+    $this->view->pdf = new Drupal\views_pdf\ViewsPdfBase($orientation, $unit, $format);
 
     // Set margins: top, left, right
     $this->view->pdf->SetMargins($this->get_option('margin_left'), $this->get_option('margin_top'), $this->get_option('margin_right'), TRUE);
@@ -338,7 +340,7 @@ class Page extends views_plugin_display_page {
           '#type'          => 'textfield',
           '#title'         => t('Font Size'),
           '#size'          => 10,
-          '#default_value' => ViewsPdfBase::get_option('default_font_size'),
+          '#default_value' => Drupal\views_pdf\ViewsPdfBase::get_option('default_font_size'),
         );
         $form['default_font_family']    = array(
           '#type'          => 'select',
@@ -384,7 +386,7 @@ class Page extends views_plugin_display_page {
           array(
             t('-- None --')
           ),
-          ViewsPdfBase::getAvailableTemplates());
+          Drupal\views_pdf\ViewsPdfBase::getAvailableTemplates());
 
         $form['leading_template'] = array(
           '#type'          => 'select',
@@ -453,7 +455,7 @@ class Page extends views_plugin_display_page {
     parent::options_summary($categories, $options);
 
     // $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
-    $fonts = ViewsPdfBase::getAvailableFontsCleanList();
+    $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
 
     // Change Page title:
     $categories['page'] = array(

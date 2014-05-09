@@ -8,7 +8,7 @@
  */
 
 xautoload()->registerModulePsr4(__FILE__, 'src');
-// _xautoload_register_drupal();
+_xautoload_register_drupal();
 
 use Drupal\views_pdf\ViewsPdfTemplate;
 
@@ -40,11 +40,14 @@ function views_pdf_libraries_info() {
     ),
     'files'             => array(
       'php' => array(
+        'src/fpdi_tcpdf/FPDI.php',
+        'src/fpdi_tcpdf/FPDF.php',
         'vendor/tecnick.com/tcpdf/tcpdf.php',
       ),
     ),
     'xautoload' => function($api) {
-      $api->namespaceRoot('fpdi', 'src');
+      $api->addPsr4('fpdi', 'src');
+      $api->composerDir('vendor/composer');
     }
   );
 
@@ -79,9 +82,6 @@ function views_pdf_libraries_info() {
         'tcpdf.php',
       ),
     ),
-    'xautoload' => function($api) {
-      $api->namespaceRoot('tcpdf', 'src');
-    }
   );
 
   $libraries['MPDF57'] = array(
