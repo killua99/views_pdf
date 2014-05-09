@@ -7,11 +7,7 @@
 
 namespace Drupal\views_pdf;
 
-// $library = libraries_load('fpdi_tcpdf');
-// libraries_load_files($library);
-
 use fpdi\FPDI;
-// use tcpdf\TCPDF;
 
 /**
  * The main class to generate the PDF.
