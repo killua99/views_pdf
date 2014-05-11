@@ -19,25 +19,28 @@
 class Page extends views_plugin_display_page {
 
   /**
-   * Define the display type.
+   * {@inheritdoc}
    */
   function get_style_type() {
     return 'pdf';
   }
 
   /**
-   * Disable the breadcrumb.
+   * {@inheritdoc}
    */
   function uses_breadcrumb() {
     return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function has_path() {
     return TRUE;
   }
 
   /**
-   * Render the display.
+   * {@inheritdoc}
    */
   function render() {
     // Generall document layout.
@@ -63,16 +66,14 @@ class Page extends views_plugin_display_page {
   }
 
   /**
-   * Provide the preview.
-   *
-   * Because PDF cannot be embedded good in HTML, we do not provide a preview.
+   * {@inheritdoc}
    */
   function preview() {
     return t('The PDF display does not provide a preview.');
   }
 
   /**
-   * This function executes the PDF display.
+   * {@inheritdoc}
    */
   function execute($path_to_store_pdf = '', $destination = 'I') {
 
@@ -156,8 +157,7 @@ class Page extends views_plugin_display_page {
   }
 
   /**
-   * This method defines the default sections and the appropriated values.
-   *
+   * {@inheritdoc}
    */
   function defaultable_sections($section = NULL) {
     if (in_array($section, array(
@@ -184,7 +184,7 @@ class Page extends views_plugin_display_page {
   }
 
   /**
-   * The option definition.
+   * {@inheritdoc}
    */
   function option_definition() {
     $options = parent::option_definition();
@@ -231,7 +231,103 @@ class Page extends views_plugin_display_page {
   }
 
   /**
-   * Option form
+   * {@inheritdoc}
+   */
+  function options_summary(&$categories, &$options) {
+    parent::options_summary($categories, $options);
+
+    // $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
+    $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
+
+    // Change Page title:
+    $categories['page'] = array(
+      'title'  => t('PDF settings'),
+      'column' => 'second',
+      'build'  => array(
+        '#weight' => -10,
+      ),
+    );
+
+    // Add for attach the display to others:
+    $displays = array_filter($this->get_option('displays'));
+    if (count($displays) > 1) {
+      $attach_to = t('Multiple displays');
+    }
+    elseif (count($displays) == 1) {
+      $display = array_shift($displays);
+      if (!empty($this->view->display[$display])) {
+        $attach_to = check_plain($this->view->display[$display]->display_title);
+      }
+    }
+
+    if (!isset($attach_to)) {
+      $attach_to = t('None');
+    }
+
+    $options['displays'] = array(
+      'category' => 'page',
+      'title'    => t('Attach to'),
+      'value'    => $attach_to,
+    );
+
+    // Add for pdf page settings
+    $options['pdf_page'] = array(
+      'category' => 'page',
+      'title'    => t('PDF Page Settings'),
+      'value'    => $this->get_option('default_page_format'),
+      'desc'     => t('Define some PDF specific settings.'),
+    );
+
+    // Add for pdf font settings
+    $options['pdf_fonts'] = array(
+      'category' => 'page',
+      'title'    => t('PDF Fonts Settings'),
+      'value'    => t('!family at !size pt', array(
+        '!family' => $fonts[$this->get_option('default_font_family')],
+        '!size'   => $this->get_option('default_font_size')
+      )),
+      'desc'     => t('Define some PDF specific settings.'),
+    );
+
+    // add for pdf template settings
+    if ($this->get_option('leading_template') != '' || $this->get_option('template') != '' || $this->get_option('succeed_template') != '') {
+      $isAnyTemplate = t('Yes');
+    }
+    else {
+      $isAnyTemplate = t('No');
+    }
+
+    $options['pdf_template'] = array(
+      'category' => 'page',
+      'title'    => t('PDF Template Settings'),
+      'value'    => $isAnyTemplate,
+      'desc'     => t('Define some PDF specific settings.'),
+    );
+
+    if ($this->get_option('css_file') == '') {
+      $css_file = t('None');
+    }
+    else {
+      $css_file = $this->get_option('css_file');
+    }
+
+    $options['css'] = array(
+      'category' => 'page',
+      'title'    => t('CSS File'),
+      'value'    => $css_file,
+      'desc'     => t('Define a CSS file attached to all HTML output.'),
+    );
+
+    $options['pdf_library'] = array(
+      'category' => 'other',
+      'title' => t('Chose PDF library'),
+      'desc' => t('PDF library'),
+      'value' => $this->get_option('pdf_library') ? $this->get_option('pdf_library') : 'fpdi_tcpdf',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
    */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
@@ -443,101 +539,36 @@ class Page extends views_plugin_display_page {
           '#default_value' => $this->get_option('css_file'),
         );
         break;
+
+      case 'pdf_library':
+
+        $base_library = array(
+          'fpdi_tcpdf',
+          'fpdi'.
+          'MPDF57',
+        );
+
+        $raw_libraries = array_keys(libraries_get_libraries());
+        $raw_libraries = array_intersect($raw_libraries, $base_library);
+
+        foreach ($raw_libraries as $machine_name) {
+          $library = libraries_info($machine_name);
+          $libraries[$machine_name] = $library['name'];
+        }
+
+        $form['pdf_library'] = array(
+          '#description'   => t('Libraries register allowed to use.'),
+          '#type'          => 'radios',
+          '#options'       => $libraries,
+          '#default_value' => $this->get_option('pdf_library') ? $this->get_option('pdf_library') : $libraries['pdif_tcpdf'],
+        );
+
+        break;
     }
   }
 
   /**
-   * Provide a summary of the options.
-   */
-  function options_summary(&$categories, &$options) {
-    parent::options_summary($categories, $options);
-
-    // $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
-    $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
-
-    // Change Page title:
-    $categories['page'] = array(
-      'title'  => t('PDF settings'),
-      'column' => 'second',
-      'build'  => array(
-        '#weight' => -10,
-      ),
-    );
-
-    // Add for attach the display to others:
-    $displays = array_filter($this->get_option('displays'));
-    if (count($displays) > 1) {
-      $attach_to = t('Multiple displays');
-    }
-    elseif (count($displays) == 1) {
-      $display = array_shift($displays);
-      if (!empty($this->view->display[$display])) {
-        $attach_to = check_plain($this->view->display[$display]->display_title);
-      }
-    }
-
-    if (!isset($attach_to)) {
-      $attach_to = t('None');
-    }
-
-    $options['displays'] = array(
-      'category' => 'page',
-      'title'    => t('Attach to'),
-      'value'    => $attach_to,
-    );
-
-    // Add for pdf page settings
-    $options['pdf_page'] = array(
-      'category' => 'page',
-      'title'    => t('PDF Page Settings'),
-      'value'    => $this->get_option('default_page_format'),
-      'desc'     => t('Define some PDF specific settings.'),
-    );
-
-    // Add for pdf font settings
-    $options['pdf_fonts'] = array(
-      'category' => 'page',
-      'title'    => t('PDF Fonts Settings'),
-      'value'    => t('!family at !size pt', array(
-        '!family' => $fonts[$this->get_option('default_font_family')],
-        '!size'   => $this->get_option('default_font_size')
-      )),
-      'desc'     => t('Define some PDF specific settings.'),
-    );
-
-    // add for pdf template settings
-    if ($this->get_option('leading_template') != '' || $this->get_option('template') != '' || $this->get_option('succeed_template') != '') {
-      $isAnyTemplate = t('Yes');
-    }
-    else {
-      $isAnyTemplate = t('No');
-    }
-
-    $options['pdf_template'] = array(
-      'category' => 'page',
-      'title'    => t('PDF Template Settings'),
-      'value'    => $isAnyTemplate,
-      'desc'     => t('Define some PDF specific settings.'),
-    );
-
-    if ($this->get_option('css_file') == '') {
-      $css_file = t('None');
-    }
-    else {
-      $css_file = $this->get_option('css_file');
-    }
-
-    $options['css'] = array(
-      'category' => 'page',
-      'title'    => t('CSS File'),
-      'value'    => $css_file,
-      'desc'     => t('Define a CSS file attached to all HTML output.'),
-    );
-  }
-
-  /**
-   * Handles the storage of the options.
-   *
+   * {@inheritdoc}
    */
   function options_submit(&$form, &$form_state) {
     // It is very important to call the parent function here:
@@ -594,11 +625,15 @@ class Page extends views_plugin_display_page {
       case 'css':
         $this->set_option('css_file', $form_state['values']['css_file']);
         break;
+
+      case 'pdf_library':
+        $this->set_option('pdf_library', $form_state['values']['pdf_library']);
+        break;
     }
   }
 
   /**
-   * Attach to another view.
+   * {@inheritdoc}
    */
   function attach_to($display_id) {
     $displays = $this->get_option('displays');
@@ -616,6 +651,4 @@ class Page extends views_plugin_display_page {
       $plugin->attach_to($display_id, $this->get_path(), $clone->get_title());
     }
   }
-
-
 }

@@ -30,7 +30,7 @@ function views_pdf_libraries_info() {
   // PSR-0 Load, and vendor tcpdf
   // To complete the full install you need to run `composer install`.
   $libraries['fpdi_tcpdf'] = array(
-    'name'              => 'FPDI library',
+    'name'              => 'FPDI_TCPDF library',
     'vendor url'        => 'https://github.com/onigoetz/fpdi_tcpdf',
     'download url'      => 'https://github.com/onigoetz/fpdi_tcpdf/archive/master.zip',
     'version arguments' => array(
