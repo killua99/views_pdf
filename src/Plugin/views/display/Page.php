@@ -26,6 +26,16 @@ class Page extends views_plugin_display_page {
   }
 
   /**
+   * List with the supported libraries.
+   *
+   * @return array
+   *   PDF libraries allowed
+   */
+  protected function get_pdf_library() {
+    return array('fpdi_tcpdf', 'fpdi' . 'MPDF57');
+  }
+
+  /**
    * {@inheritdoc}
    */
   function uses_breadcrumb() {
@@ -42,43 +52,11 @@ class Page extends views_plugin_display_page {
   /**
    * {@inheritdoc}
    */
-  function render() {
+  function render($path_to_store_pdf = '', $destination = 'I') {
     // Generall document layout.
 
-    // Set default code.
-    $this->view->pdf->SetFont('');
-
-    // Add leading pages.
-    $path = $this->view->pdf->getTemplatePath($this->get_option('leading_template'));
-    $this->view->pdf->addPdfDocument($path);
-
-    // Set the default background template.
-    $path = $this->view->pdf->getTemplatePath($this->get_option('template'));
-    $this->view->pdf->setDefaultPageTemplate($path, 'main');
-
-    // Render the items.
-    $this->view->style_plugin->render();
-
-    // Add succeed pages.
-    $path = $this->view->pdf->getTemplatePath($this->get_option('succeed_template'));
-    $this->view->pdf->addPdfDocument($path);
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function preview() {
-    return t('The PDF display does not provide a preview.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  function execute($path_to_store_pdf = '', $destination = 'I') {
-
     // Defines external configuration for TCPDF library.
-    $tcpdf_path = drupal_realpath(libraries_get_path('tcpdf'));
+    $tcpdf_path = drupal_realpath(libraries_get_path('fpdi_tcpdf'));
     $cache_path = 'public://views_pdf_cache/';
 
     if (file_prepare_directory($cache_path, FILE_CREATE_DIRECTORY) === TRUE) {
@@ -86,7 +64,7 @@ class Page extends views_plugin_display_page {
       define('K_TCPDF_EXTERNAL_CONFIG', TRUE);
       define('K_PATH_MAIN', dirname($_SERVER['SCRIPT_FILENAME']));
       define('K_PATH_URL', $base_url);
-      define('K_PATH_FONTS', $tcpdf_path . '/fonts/');
+      define('K_PATH_FONTS', $tcpdf_path . '/vendor/tecnick.com/tcpdf/fonts/');
       define('K_PATH_CACHE', drupal_realpath($cache_path));
       define('K_PATH_IMAGES', '');
       define('K_BLANK_IMAGE', $tcpdf_path . '/images/_blank.png');
@@ -131,11 +109,23 @@ class Page extends views_plugin_display_page {
     $this->view->pdf->setViewsHeader($this->view->display_handler->render_header());
     $this->view->pdf->setViewsFooter($this->view->display_handler->render_footer());
 
-    $html = $this->view->render($this->display->id);
+    // Set default code.
+    $this->view->pdf->SetFont('');
 
-    if (!empty($html)) {
-      echo $html;
-    }
+    // Add leading pages.
+    $path = $this->view->pdf->getTemplatePath($this->get_option('leading_template'));
+    $this->view->pdf->addPdfDocument($path);
+
+    // Set the default background template.
+    $path = $this->view->pdf->getTemplatePath($this->get_option('template'));
+    $this->view->pdf->setDefaultPageTemplate($path, 'main');
+
+    // Render the items.
+    $this->view->style_plugin->render();
+
+    // Add succeed pages.
+    $path = $this->view->pdf->getTemplatePath($this->get_option('succeed_template'));
+    $this->view->pdf->addPdfDocument($path);
 
     if (empty($path_to_store_pdf)) {
       $path_to_store_pdf = $this->view->name;
@@ -145,15 +135,46 @@ class Page extends views_plugin_display_page {
       $path_to_store_pdf .= '.pdf';
     }
 
-    ob_clean();
-    if ($destination == 'I') {
-      echo $this->view->pdf->Output($path_to_store_pdf, $destination);
-      exit();
-    }
-    else {
-      return $this->view->pdf->Output($path_to_store_pdf, $destination);
+    return $this->view->pdf;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function preview() {
+    if (!$this->get_option('render_preview')) {
+      return t('The PDF display will not show a preview. Use the force preview to see it.');
     }
 
+    $permanen = file_default_scheme() . '://views_pdf_test.pdf';
+    $real_path = drupal_realpath($permanen);
+
+    $pdf = $this->view->render();
+    $pdf->Output($real_path, 'F');
+
+    $pdf_file = file_create_url($permanen);
+
+    $size_from_format = \TCPDF_STATIC::getPageSizeFromFormat($this->get_option('default_page_format'));
+
+    $size_mm = 'width: ' . $size_from_format[0] . 'px; height: ' . $size_from_format[1] . 'px;';
+
+    $output = '';
+
+    $output .= '<iframe style="' . $size_mm . '" src="' . $pdf_file . '"></iframe>';
+
+    return $output;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function execute() {
+
+    // ob_clean();
+
+    $pdf = $this->view->render();
+
+    $pdf->Output('none', 'I');
   }
 
   /**
@@ -225,7 +246,11 @@ class Page extends views_plugin_display_page {
     $options['default_font_color']     = array('default' => '000000');
     $options['default_text_hyphenate'] = array('default' => 'none');
 
-    $options['css_file'] = array('default' => '');
+    $options['css_file']    = array('default' => '');
+
+    $options['pdf_library'] = array('default' => 'fpdi_tcpdf');
+
+    $options['rende_preview'] = array('default' => FALSE);
 
     return $options;
   }
@@ -236,7 +261,6 @@ class Page extends views_plugin_display_page {
   function options_summary(&$categories, &$options) {
     parent::options_summary($categories, $options);
 
-    // $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
     $fonts = \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList();
 
     // Change Page title:
@@ -320,9 +344,16 @@ class Page extends views_plugin_display_page {
 
     $options['pdf_library'] = array(
       'category' => 'other',
-      'title' => t('Chose PDF library'),
-      'desc' => t('PDF library'),
-      'value' => $this->get_option('pdf_library') ? $this->get_option('pdf_library') : 'fpdi_tcpdf',
+      'title'    => t('Chose PDF library'),
+      'desc'     => t('PDF library'),
+      'value'    => $this->get_option('pdf_library') ? $this->get_option('pdf_library') : 'fpdi_tcpdf',
+    );
+
+    $options['render_preview'] = array(
+      'category' => 'other',
+      'title'    => t('Force preview'),
+      'desc'     => t('Force the render preview, 1 page will be rendered.'),
+      'value'    => $this->get_option('render_preview') ? t('Yes') : t('No'),
     );
   }
 
@@ -334,22 +365,26 @@ class Page extends views_plugin_display_page {
 
     switch ($form_state['section']) {
       case 'pdf_page':
+
         $form['#title'] .= t('PDF Page Options');
-        $form['default_page_format']        = array(
+
+        $form['default_page_format'] = array(
           '#type'          => 'select',
           '#title'         => t('Default Page Format'),
           '#required'      => TRUE,
-          '#options'       => views_pdf_get_page_formats(),
+          '#options'       => \Drupal\views_pdf\ViewsPdfBase::getPageFormat(),
           '#description'   => t('This is the default page format. If you specifiy a different format in the template section, this settings will be override.'),
           '#default_value' => $this->get_option('default_page_format'),
         );
+
         $form['default_page_format_custom'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Custom Page Format'),
           '#description'   => t('Here you can specifiy a custom page format. The schema is "[width]x[height]".'),
           '#default_value' => $this->get_option('default_page_format_custom'),
         );
-        $form['default_page_orientation']   = array(
+
+        $form['default_page_orientation'] = array(
           '#type'          => 'radios',
           '#title'         => t('Default Page Orientation'),
           '#required'      => TRUE,
@@ -360,7 +395,8 @@ class Page extends views_plugin_display_page {
           '#description'   => t('This is the default page orientation.'),
           '#default_value' => $this->get_option('default_page_orientation'),
         );
-        $form['unit']                       = array(
+
+        $form['unit'] = array(
           '#type'          => 'select',
           '#title'         => t('Unit'),
           '#required'      => TRUE,
@@ -373,31 +409,37 @@ class Page extends views_plugin_display_page {
           '#description'   => t('This is the unit for the entered unit data. If you change this option all defined units were changed, but not converted.'),
           '#default_value' => $this->get_option('unit'),
         );
-        $form['margin_left']                = array(
+
+        $form['margin_left'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Margin: Left'),
           '#required'      => TRUE,
           '#default_value' => $this->get_option('margin_left'),
         );
-        $form['margin_right']               = array(
+
+        $form['margin_right'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Margin: Right'),
           '#required'      => TRUE,
           '#default_value' => $this->get_option('margin_right'),
         );
-        $form['margin_top']                 = array(
+
+        $form['margin_top'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Margin: Top'),
           '#required'      => TRUE,
           '#default_value' => $this->get_option('margin_top'),
         );
-        $form['margin_bottom']              = array(
+
+        $form['margin_bottom'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Margin: Bottom'),
           '#required'      => TRUE,
           '#default_value' => $this->get_option('margin_bottom'),
         );
+
         break;
+
       case 'pdf_fonts':
         $fonts       = $this->getAvailableFontsCleanList();
         $font_styles = array(
@@ -425,36 +467,42 @@ class Page extends views_plugin_display_page {
         );
 
         $form['#title'] .= t('PDF Default Font Options');
-        $form['description']            = array(
+
+        $form['description'] = array(
           '#prefix' => '<div class="description form-item">',
           '#suffix' => '</div>',
           '#value'  => t('Here you specify a the default font settings for the document.'),
         );
-        $form['default_font_size']      = array(
+
+        $form['default_font_size'] = array(
           '#type'          => 'textfield',
           '#title'         => t('Font Size'),
           '#size'          => 10,
           '#default_value' => Drupal\views_pdf\ViewsPdfBase::get_option('default_font_size'),
         );
-        $form['default_font_family']    = array(
+
+        $form['default_font_family'] = array(
           '#type'          => 'select',
           '#title'         => t('Font Family'),
           '#options'       => $fonts,
           '#size'          => 5,
           '#default_value' => $this->get_option('default_font_family'),
         );
-        $form['default_font_style']     = array(
+
+        $form['default_font_style'] = array(
           '#type'          => 'checkboxes',
           '#title'         => t('Font Style'),
           '#options'       => $font_styles,
           '#default_value' => $this->get_option('default_font_style'),
         );
-        $form['default_text_align']     = array(
+
+        $form['default_text_align'] = array(
           '#type'          => 'radios',
           '#title'         => t('Text Alignment'),
           '#options'       => $align,
           '#default_value' => $this->get_option('default_text_align'),
         );
+
         $form['default_text_hyphenate'] = array(
           '#type'          => 'select',
           '#title'         => t('Text Hyphenation'),
@@ -516,51 +564,69 @@ class Page extends views_plugin_display_page {
         break;
 
       case 'displays':
+
         $form['#title'] .= t('Attach to');
+
         $displays = array();
+
         foreach ($this->view->display as $display_id => $display) {
           if (!empty($display->handler) && $display->handler->accept_attachments()) {
             $displays[$display_id] = $display->display_title;
           }
         }
+
         $form['displays'] = array(
           '#type'          => 'checkboxes',
           '#description'   => t('The feed icon will be available only to the selected displays.'),
           '#options'       => $displays,
           '#default_value' => $this->get_option('displays'),
         );
+
         break;
 
       case 'css':
+
         $form['#title'] .= t('CSS File');
+
         $form['css_file'] = array(
           '#type'          => 'textfield',
           '#description'   => t('URL to a CSS file. This file is attached to all fields, rendered as HTML.'),
           '#default_value' => $this->get_option('css_file'),
         );
+
         break;
 
       case 'pdf_library':
 
-        $base_library = array(
-          'fpdi_tcpdf',
-          'fpdi'.
-          'MPDF57',
-        );
-
         $raw_libraries = array_keys(libraries_get_libraries());
-        $raw_libraries = array_intersect($raw_libraries, $base_library);
+        $raw_libraries = array_intersect($raw_libraries, $this->get_pdf_library());
 
         foreach ($raw_libraries as $machine_name) {
-          $library = libraries_info($machine_name);
+          $library                  = libraries_info($machine_name);
           $libraries[$machine_name] = $library['name'];
         }
+
+        $pdf_library = $this->get_option('pdf_library');
+
+        $form['#title'] .= t('PDF Library');
 
         $form['pdf_library'] = array(
           '#description'   => t('Libraries register allowed to use.'),
           '#type'          => 'radios',
           '#options'       => $libraries,
-          '#default_value' => $this->get_option('pdf_library') ? $this->get_option('pdf_library') : $libraries['pdif_tcpdf'],
+          '#default_value' => !empty($pdf_library) ? $pdf_library : 'fpdi_tcpdf',
+        );
+
+        break;
+
+      case 'render_preview':
+
+        $form['#title'] .= t('Force preview');
+
+        $form['render_preview'] = array(
+          '#title' => t('Force the render preview, the preview will only render 1 page.'),
+          '#type' => 'checkbox',
+          '#default_value' => $this->get_option('render_preview'),
         );
 
         break;
@@ -571,8 +637,8 @@ class Page extends views_plugin_display_page {
    * {@inheritdoc}
    */
   function options_submit(&$form, &$form_state) {
-    // It is very important to call the parent function here:
     parent::options_submit($form, $form_state);
+
     switch ($form_state['section']) {
       case 'pdf_page':
         $this->set_option('default_page_format', $form_state['values']['default_page_format']);
@@ -628,6 +694,10 @@ class Page extends views_plugin_display_page {
 
       case 'pdf_library':
         $this->set_option('pdf_library', $form_state['values']['pdf_library']);
+        break;
+
+      case 'render_preview':
+        $this->set_option('render_preview', $form_state['values']['render_preview']);
         break;
     }
   }
