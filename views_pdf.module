@@ -10,8 +10,6 @@
 xautoload()->registerModulePsr4(__FILE__, 'src');
 _xautoload_register_drupal();
 
-use Drupal\views_pdf\ViewsPdfTemplate;
-
 /**
  * Implements hook_views_api().
  */

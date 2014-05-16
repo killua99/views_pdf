@@ -84,7 +84,7 @@ class Fields extends views_plugin_row {
       array(
         'default' => t('-- Default --')
       ),
-      ViewsPdfBase::getAvailableFontsCleanList());
+      \Drupal\views_pdf\ViewsPdfBase::getAvailableFontsCleanList());
 
     $font_styles = array(
       'b' => t('Bold'),
@@ -97,7 +97,7 @@ class Fields extends views_plugin_row {
       array(
         t('-- None --')
       ),
-      ViewsPdfBase::getAvailableTemplates());
+      \Drupal\views_pdf\ViewsPdfBase::getAvailableTemplates());
 
     $file_fields = array();
 
@@ -131,7 +131,7 @@ class Fields extends views_plugin_row {
     );
     $hyphenate = array_merge(
       $hyphenate,
-      ViewsPdfBase::getAvailableHyphenatePatterns()
+      \Drupal\views_pdf\ViewsPdfBase::getAvailableHyphenatePatterns()
     );
 
 
@@ -343,6 +343,16 @@ class Fields extends views_plugin_row {
       '#type'  => 'file',
       '#title' => t('Upload New Template File'),
     );
+
+    $form['template_upload'] = array(
+      '#type' => 'submit',
+      '#value' => t('Upload'),
+      '#ajax' => array(
+        'callback' => 'function_callback',
+        'wrapper' => 'mywrappp',
+      ),
+    );
+
 
 
   }
