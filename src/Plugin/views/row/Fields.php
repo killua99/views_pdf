@@ -80,7 +80,7 @@ class Fields extends views_plugin_row {
     $options = $this->display->handler->get_field_labels();
     $fields  = $this->display->handler->get_option('fields');
 
-    $fonts       = array_merge(
+    $fonts = array_merge(
       array(
         'default' => t('-- Default --')
       ),
@@ -343,17 +343,6 @@ class Fields extends views_plugin_row {
       '#type'  => 'file',
       '#title' => t('Upload New Template File'),
     );
-
-    $form['template_upload'] = array(
-      '#type' => 'submit',
-      '#value' => t('Upload'),
-      '#ajax' => array(
-        'callback' => 'function_callback',
-        'wrapper' => 'mywrappp',
-      ),
-    );
-
-
 
   }
 
