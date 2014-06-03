@@ -127,13 +127,6 @@ class Page extends views_plugin_display_page {
     $path = $this->view->pdf->getTemplatePath($this->get_option('succeed_template'));
     $this->view->pdf->addPdfDocument($path);
 
-    if (empty($path_to_store_pdf)) {
-      $path_to_store_pdf = $this->view->name;
-    }
-
-    if (!preg_match('/\.pdf$/', $path_to_store_pdf)) {
-      $path_to_store_pdf .= '.pdf';
-    }
 
     return $this->view->pdf;
   }
@@ -146,19 +139,25 @@ class Page extends views_plugin_display_page {
       return t('The PDF display will not show a preview. Use the force preview to see it.');
     }
 
+    $output = '';
+
     $permanen = file_default_scheme() . '://views_pdf_test.pdf';
     $real_path = drupal_realpath($permanen);
 
-    $pdf = $this->view->render();
-    $pdf->Output($real_path, 'F');
-
     $pdf_file = file_create_url($permanen);
+
+    $pdf = $this->view->render();
+
+    // Trim the output to 1 page or custom.
+    if ($pdf->getNumPages() > 1 ) {
+
+    }
+
+    $pdf->Output($real_path, 'F');
 
     $size_from_format = \TCPDF_STATIC::getPageSizeFromFormat($this->get_option('default_page_format'));
 
     $size_mm = 'width: ' . $size_from_format[0] . 'px; height: ' . $size_from_format[1] . 'px;';
-
-    $output = '';
 
     $output .= '<iframe style="' . $size_mm . '" src="' . $pdf_file . '"></iframe>';
 
@@ -171,6 +170,13 @@ class Page extends views_plugin_display_page {
   function execute() {
 
     // ob_clean();
+    if (empty($path_to_store_pdf)) {
+      $path_to_store_pdf = $this->view->name;
+    }
+
+    if (!preg_match('/\.pdf$/', $path_to_store_pdf)) {
+      $path_to_store_pdf .= '.pdf';
+    }
 
     $pdf = $this->view->render();
 
