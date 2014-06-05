@@ -15,24 +15,26 @@ are:
       ument can be problematic.
     * You are limited by HTML's capabilities.
 
-
-
 Installation instructions:
 --------------------------
    1. Download the module or checkout the module.
    2. Upload the module to your Drupal instance.
    3. Download the one of the supported libraries.
-      3.1. The recommended library fpdi_tcpdf and must be installed via
-           composer. Must have composer installed then run the follow command:
+      3.1. fpdi_tcpdf (recommended): To complete the installation you'll need
+           composer:
              Place you at /sites/all/libraries
              git clone https://github.com/onigoetz/fpdi_tcpdf.git
              cd fpdi_tcpdf
              composer install
-      3.2. Download TCPDF and FPDI. Copy the files to the lib directory in the
+
+      3.2. TCPDF and FPDI: Copy the files to the lib directory in the
            module directory. The path must be so:
            "sites/all/libraries/tcpdf/tcpdf.php" respectively
            "sites/all/libraries/fpdi/fpdi.php". If you are using the Libraries
-            API then put them into the libraries folder.
+           API then put them into the libraries folder.
+
+      3.3. mPDF: TODO: document
+
    4. Check under reports if you setup everything correct.
    5. Setup a view with a PDF display.
    6. Use it.
@@ -58,4 +60,3 @@ Basic Usage
       page number. Important for positioning the field in the header or footer,
       you need to set the relative position in the field settings to
       "In header / footer".
-
