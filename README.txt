@@ -27,7 +27,7 @@ Installation instructions:
              Place you at /sites/all/libraries
              git clone https://github.com/onigoetz/fpdi_tcpdf.git
              cd fpdi_tcpdf
-             composer install
+             drush composer install
       3.2. Download TCPDF and FPDI. Copy the files to the lib directory in the
            module directory. The path must be so:
            "sites/all/libraries/tcpdf/tcpdf.php" respectively
