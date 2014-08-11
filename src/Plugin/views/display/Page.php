@@ -72,7 +72,7 @@ class Page extends views_plugin_display_page {
       define('K_SMALL_RATIO', 2 / 3);
     }
 
-    if ($this->get_option('default_page_format') == 'custom') {
+    if ($this->get_option('default_page_format') === 'custom') {
       if (preg_match('/([0-9]+)x([0-9]+)/', $this->get_option('default_page_format_custom'), $result)) {
         // Width.
         $format[0] = $result[1];
@@ -148,9 +148,9 @@ class Page extends views_plugin_display_page {
 
     $pdf = $this->view->render();
 
-    // Trim the output to 1 page or custom.
-    if ($pdf->getNumPages() > 1 ) {
-
+    while ($pdf->getNumPages() > (int) $this->get_option('render_preview_num')) {
+      $loop[$pdf->getNumPages()] = $pdf->getNumPages();
+      $pdf->deletePage((int) $this->get_option('render_preview_num') + 1);
     }
 
     $pdf->Output($real_path, 'F');
@@ -257,6 +257,7 @@ class Page extends views_plugin_display_page {
     $options['pdf_library'] = array('default' => 'fpdi_tcpdf');
 
     $options['rende_preview'] = array('default' => FALSE);
+    $options['rende_preview_num'] = array('default' => 1);
 
     return $options;
   }
@@ -360,6 +361,13 @@ class Page extends views_plugin_display_page {
       'title'    => t('Force preview'),
       'desc'     => t('Force the render preview, 1 page will be rendered.'),
       'value'    => $this->get_option('render_preview') ? t('Yes') : t('No'),
+    );
+
+    $options['render_preview_num'] = array(
+      'category' => 'other',
+      'title'    => t('Force preview Pages'),
+      'desc'     => t('Write how many pages do you want to preview it.'),
+      'value'    => $this->get_option('render_preview_num') ? $this->get_option('render_preview_num') : 1,
     );
   }
 
@@ -627,12 +635,22 @@ class Page extends views_plugin_display_page {
 
       case 'render_preview':
 
+
         $form['#title'] .= t('Force preview');
 
         $form['render_preview'] = array(
           '#title' => t('Force the render preview, the preview will only render 1 page.'),
           '#type' => 'checkbox',
           '#default_value' => $this->get_option('render_preview'),
+        );
+
+        break;
+
+      case 'render_preview_num':
+        $form['render_preview_num'] = array(
+          '#title' => t('Select how many pages do you want preview.'),
+          '#type' => 'textfield',
+          '#default_value' => $this->get_option('render_preview_num'),
         );
 
         break;
@@ -704,6 +722,10 @@ class Page extends views_plugin_display_page {
 
       case 'render_preview':
         $this->set_option('render_preview', $form_state['values']['render_preview']);
+        break;
+
+      case 'render_preview_num':
+        $this->set_option('render_preview_num', $form_state['values']['render_preview_num']);
         break;
     }
   }
