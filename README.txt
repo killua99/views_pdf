@@ -1,3 +1,11 @@
+Views PDF v2
+
+About the process of development and class name:
+
+This version was thinking in Drupal 8 and to be an easy port to it. The class
+names and the process how load the views and libraries is with the PSD-4
+standart. At the bottom more information for developers.
+
 With the Views PDF module you can output a view as a PDF document. Each field of
 the view can be placed on the PDF page directly in the administration interface.
 Therefore a new display called "PDF" is added.
@@ -25,7 +33,7 @@ Installation instructions:
              Place you at /sites/all/libraries
              git clone https://github.com/onigoetz/fpdi_tcpdf.git
              cd fpdi_tcpdf
-             composer install
+             drush composer install
 
       3.2. TCPDF and FPDI: Copy the files to the lib directory in the
            module directory. The path must be so:
@@ -60,3 +68,16 @@ Basic Usage
       page number. Important for positioning the field in the header or footer,
       you need to set the relative position in the field settings to
       "In header / footer".
+
+Developer guide
+---------------
+
+   1. Class name; In Drupal 8 we use name space allowing use same class name
+      over the whole code, but with Drupal 7 we can't work in the exactly the
+      same way. So class name start with the module name ViewsPdf and then the
+      class name the result eg. ViewsPdfTable
+   2. The code is organaized as Drupal 8 will be, this mean we use PSR-4 load
+      convencio under src folder, the contrib module xautoload help us to
+      achive this autoload method.
+   3. As we use xautoload the views_pdf.info use a better sysntax to include
+      files.
