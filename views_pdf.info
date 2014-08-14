@@ -4,7 +4,7 @@ package = Views
 core = 7.x
 php = 5.3
 
-dependencies[] = views
+dependencies[] = views (>= 7.x-3.7)
 dependencies[] = libraries (>= 7.x-2.0)
 dependencies[] = xautoload (>= 7.x-4.0)
 
