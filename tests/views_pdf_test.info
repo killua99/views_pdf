@@ -1,0 +1,8 @@
+name = Views PDF Test
+description = Test module for Views PDF.
+package = Views
+core = 7.x
+dependencies[] = views_pdf
+hidden = TRUE
+
+

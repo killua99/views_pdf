@@ -20,7 +20,7 @@ Installation instructions:
    1. Download the module or checkout the module.
    2. Upload the module to your Drupal instance.
    3. Download the one of the supported libraries.
-      3.1. fpdi_tcpdf (recommended): To complete the installation you'll need
+      3.1. fpdi_tcpdf (recommended manually): To complete the installation you'll need
            composer:
              Place you at /sites/all/libraries
              git clone https://github.com/onigoetz/fpdi_tcpdf.git

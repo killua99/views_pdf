@@ -48,7 +48,7 @@ function views_pdf_requirements($phase) {
       );
     }
 
-    if (!$fpdi_tcpdf['installed'] || (!$fpdi['installed'] && !$tcpdf['installed']) && !$mpdf['installed']) {
+    if (!$fpdi_tcpdf['installed'] && (!$fpdi['installed'] && !$tcpdf['installed']) && !$mpdf['installed']) {
       $requirements['views_pdf_fpdi_tcpdf_mpdf'] = array(
         'title'       => $t('Views pdf: libraries'),
         'severity'    => REQUIREMENT_ERROR,
