@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\views_pdf\Tests\Display\ViewsPdfDisplayTests.
+ */
+
+/*
+namespace Drupal\views_pdf\Tests\Display;
+*/
+
+class ViewsPdfDisplayTests extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+	function setUp() {
+		// Enable views_ui.
+		parent::setUp('views_ui');
+
+		parent::setUp('views_pdf');
+
+		// Create and log in a user with administer views permission.
+		$views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view revisions'));
+		$this->drupalLogin($views_admin);
+	}
+}
+
+/**
+ * Tests creating views with the wizard and viewing them on the listing page.
+ */
+class ViewsUIWizardBasicTestCase extends ViewsUIWizardHelper {
+	public static function getInfo() {
+		return array(
+			'name'        => 'Views UI wizard basic functionality',
+			'description' => 'Test creating basic views with the wizard and viewing them on the listing page.',
+			'group'       => 'Views UI',
+		);
+	}
+
+
+}
