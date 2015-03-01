@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\views_pdf\Tests\Display\ViewsPdfDisplayTests.
+ */
+
+/*
+namespace Drupal\views_pdf\Tests\Display;
+*/
+
+class ViewsPdfPageDisplayTests extends DrupalWebTestCase {
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function getInfo() {
+		return array(
+			'name'        => 'Views PDF Page',
+			'description' => 'Test creating basic views PDF page.',
+			'group'       => 'Views PDF',
+		);
+	}
+
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function setUp() {
+
+		// Support for Simpletest Turbo module.
+		if (module_exists('simpletest_turbo')) {
+
+			$id = simpletest_turbo_id('views_pdf_turbo_page');
+
+			if (db_table_exists('fasttest' . $id . 'node')) {
+				$this->prepareDatabasePrefix();
+				$this->prepareEnvironment();
+				$this->changeDatabasePrefix();
+				simpletest_turbo_copy_tables('fasttest' . $id, $this->databasePrefix);
+				variable_set('file_public_path', $this->public_files_directory);
+				variable_set('file_private_path', $this->private_files_directory);
+				variable_set('file_temporary_path', $this->temp_files_directory);
+				$this->setup = TRUE;
+			}
+			else {
+				parent::setUp();
+				// Remember all tables.
+				simpletest_turbo_copy_tables($this->databasePrefix, 'fasttest' . $id);
+			}
+		}
+		else {
+			// Enable views_ui.
+			parent::setUp('views_ui');
+
+			parent::setUp('views_pdf');
+
+			// Create and log in a user with administer views permission.
+			$views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view revisions'));
+			$this->drupalLogin($views_admin);
+		}
+	}
+}

@@ -26,4 +26,3 @@ function views_pdf_test_views_api() {
     'api' => 3,
   );
 }
-

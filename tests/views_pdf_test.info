@@ -4,5 +4,3 @@ package = Views
 core = 7.x
 dependencies[] = views_pdf
 hidden = TRUE
-
-
