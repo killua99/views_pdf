@@ -46,7 +46,7 @@ function views_pdf_libraries_info() {
     'xautoload' => function($api) {
       $api->addPsr4('fpdi', 'src');
       $api->composerDir('vendor/composer');
-    }
+    },
   );
 
   $libraries['fpdi'] = array(
@@ -132,11 +132,13 @@ function theme_views_pdf_icon($vars) {
   $image      = theme('image', array(
       'path'  => $image_path,
       'title' => $title,
-      'alt'   => $title
+      'alt'   => $title,
     )
   );
 
   if ($image) {
     return l($image, $path, $options);
   }
+
+	return FALSE;
 }

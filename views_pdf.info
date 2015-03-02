@@ -8,4 +8,5 @@ dependencies[] = views
 dependencies[] = libraries (>= 7.x-2.0)
 dependencies[] = xautoload (>= 7.x-4.0)
 
-files[] = src/Plugin/views/*/*.php
+files[] = src/**/*.php
+files[] = tests/**/*.test

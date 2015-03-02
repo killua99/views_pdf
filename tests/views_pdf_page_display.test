@@ -5,7 +5,7 @@
  * Contains \Drupal\views_pdf\Tests\Display\ViewsPdfDisplayTests.
  */
 
-class ViewsPdfPageDisplayTests extends DrupalWebTestCase {
+class ViewsPdfPageDisplayTest extends DrupalWebTestCase {
 
   /**
    * {@inheritdoc}
@@ -23,10 +23,9 @@ class ViewsPdfPageDisplayTests extends DrupalWebTestCase {
    */
   public function setUp() {
 
-    // Support for Simpletest Turbo module.
     if (module_exists('simpletest_turbo')) {
 
-      $id = simpletest_turbo_id('views_pdf_turbo_page');
+      $id = simpletest_turbo_id('views_pdf_page_display');
 
       if (db_table_exists('fasttest' . $id . 'node')) {
         $this->prepareDatabasePrefix();
@@ -39,21 +38,42 @@ class ViewsPdfPageDisplayTests extends DrupalWebTestCase {
         $this->setup = TRUE;
       }
       else {
-        parent::setUp();
+
+        // Enable views_ui, views_pdf.
+        parent::setUp(array('views_ui', 'views_pdf'));
+
+
+        // Create and log in a user with administer views permission.
+        $views_admin = $this->drupalCreateUser(array(
+          'administer views',
+          'administer blocks',
+          'bypass node access',
+          'access user profiles',
+          'view revisions',
+        ));
+
         // Remember all tables.
+        $this->drupalLogin($views_admin);
         simpletest_turbo_copy_tables($this->databasePrefix, 'fasttest' . $id);
       }
     }
     else {
-      // Enable views_ui.
-      parent::setUp('views_ui');
 
-      parent::setUp('views_pdf');
+      // Enable views_ui, views_pdf.
+      parent::setUp(array('views_ui', 'views_pdf'));
 
       // Create and log in a user with administer views permission.
-      $views_admin = $this->drupalCreateUser(array('administer views', 'administer blocks', 'bypass node access', 'access user profiles', 'view revisions'));
+      $views_admin = $this->drupalCreateUser(array(
+        'administer views',
+        'administer blocks',
+        'bypass node access',
+        'access user profiles',
+        'view revisions',
+      ));
+
       $this->drupalLogin($views_admin);
     }
+
   }
 
   /**
@@ -61,17 +81,24 @@ class ViewsPdfPageDisplayTests extends DrupalWebTestCase {
    *
    * @see http://drupal.org/node/652712
    */
-  public function testStorePagerSettings() {
+  public function testCreatePagePdf() {
+
+    // Create nodes.
+    for ($i = 0; $i < 11; $i++) {
+      $this->drupalCreateNode();
+    }
+
     $admin_user = $this->drupalCreateUser(array(
       'administer views',
-      'administer site configuration'
+      'administer site configuration',
     ));
+
     $this->drupalLogin($admin_user);
 
-    $this->drupalGet('admin/structure/views/view/frontpage/edit');
+    $this->drupalGet('admin/structure/views/add');
 
     $edit = array(
-      'pager_options[items_per_page]' => 5,
+      'page[create]' => 0,
     );
     $this->drupalPost('admin/structure/views/nojs/display/frontpage/default/pager_options', $edit, t('Apply'));
     $this->assertText('5 items');
