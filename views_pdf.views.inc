@@ -83,6 +83,16 @@ function views_pdf_views_plugins() {
         'uses options'    => TRUE,
         'type'            => 'pdf',
       ),
+      'pdf_threecolumn' => array(
+        'title'           => t('PDF three column'),
+        'help'            => t('Display the view in a 3 column grid.'),
+        'handler'         => 'ThreeColumn',
+        'parent'          => 'default',
+        'uses row plugin' => TRUE,
+        'uses fields'     => TRUE,
+        'uses options'    => TRUE,
+        'type'            => 'pdf',
+      ),
     ),
     'row'     => array(
       'pdf_fields' => array(
