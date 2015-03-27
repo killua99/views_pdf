@@ -321,6 +321,7 @@ class ViewsPdfBase extends FPDI {
     );
 
     $options['render'] += array(
+      'minimal_space' => '',
       'eval_before'        => '',
       'eval_after'         => '',
       'bypass_eval_before' => FALSE,
