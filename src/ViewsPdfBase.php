@@ -322,10 +322,7 @@ class ViewsPdfBase extends FPDI {
 
     $options['render'] += array(
       'minimal_space'      => '',
-      'eval_before'        => '',
-      'eval_after'         => '',
-      'bypass_eval_before' => FALSE,
-      'bypass_eval_after'  => FALSE,
+      'custom_layout'      => FALSE,
     );
 
     $x = $y = 0;
@@ -572,12 +569,19 @@ class ViewsPdfBase extends FPDI {
     $valign      = 'T';
     $fitcell     = FALSE;
 
-    // Run eval before.
-    if ($options['render']['bypass_eval_before'] && !empty($options['render']['eval_before'])) {
-      eval($options['render']['eval_before']);
-    }
-    elseif (!empty($options['render']['eval_before'])) {
-      $content = php_eval($options['render']['eval_before']);
+    // Pre-render.
+    if ($options['render']['custom_layout']) {
+      // Custom layout hook.
+      $layout_data = array (
+          'x'        => &$x,
+          'y'        => &$y,
+          'h'        => &$h,
+          'w'        => &$w,
+          'content'  => &$content,
+          'key'      => &$key,
+          'view'     => &$view
+        );
+        drupal_alter('views_pdf_custom_layout', $layout_data);
     }
 
     // Add css if there is a css file set and stripHTML is not active.
@@ -607,12 +611,12 @@ class ViewsPdfBase extends FPDI {
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
     // Run eval after.
-    if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
-      eval($options['render']['eval_after']);
-    }
-    elseif (!empty($options['render']['eval_alter'])) {
-      $content = php_eval($options['render']['eval_after']);
-    }
+//     if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
+//       eval($options['render']['eval_after']);
+//     }
+//     elseif (!empty($options['render']['eval_alter'])) {
+//       $content = php_eval($options['render']['eval_after']);
+//     }
 
     // Write Coordinates of element.
     $this->elements[$key] = array(
