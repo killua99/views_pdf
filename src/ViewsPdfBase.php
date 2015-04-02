@@ -611,12 +611,6 @@ class ViewsPdfBase extends FPDI {
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
     // Run eval after.
-//     if ($options['render']['bypass_eval_after'] && !empty($options['render']['eval_alter'])) {
-//       eval($options['render']['eval_after']);
-//     }
-//     elseif (!empty($options['render']['eval_alter'])) {
-//       $content = php_eval($options['render']['eval_after']);
-//     }
 
     // Write Coordinates of element.
     $this->elements[$key] = array(
@@ -731,8 +725,7 @@ class ViewsPdfBase extends FPDI {
       );
 
       $options['info'][$id]['header_style']['text'] += array(
-        'eval_before' => '',
-        'eval_after'  => '',
+        'custom_layout' => '',
       );
 
       $options['info'][$id]['body_style'] += array(
@@ -756,8 +749,7 @@ class ViewsPdfBase extends FPDI {
       );
 
       $options['info'][$id]['body_style']['text'] += array(
-        'eval_before' => '',
-        'eval_after'  => '',
+        'custom_layout'  => '',
       );
 
       $headerOptions = $options['info'][$id]['header_style'];
