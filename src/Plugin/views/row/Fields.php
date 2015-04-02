@@ -282,6 +282,12 @@ class Fields extends views_plugin_row {
         '#description' => t("Allow a custom module to alter the layout of this field."),
         '#default_value' => !empty($this->options['formats'][$field]['render']['custom_layout']) ? $this->options['formats'][$field]['render']['custom_layout'] : FALSE,
       );
+      $form['formats'][$field]['render']['custom_post'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable custom post render hook.'),
+        '#description' => t("Allow a custom module hook to be executed after the rendering of this field."),
+        '#default_value' => !empty($this->options['formats'][$field]['render']['custom_post']) ? $this->options['formats'][$field]['render']['custom_post'] : FALSE,
+      );
 
 
       $form['formats'][$field]['render']['minimal_space'] = array(

@@ -323,6 +323,7 @@ class ViewsPdfBase extends FPDI {
     $options['render'] += array(
       'minimal_space'      => '',
       'custom_layout'      => FALSE,
+      'custom_post'        => FALSE,
     );
 
     $x = $y = 0;
@@ -610,7 +611,10 @@ class ViewsPdfBase extends FPDI {
     // Reset font to default.
     $this->SetFont($this->defaultFontFamily, implode('', $this->defaultFontStyle), $this->defaultFontSize);
 
-    // Run eval after.
+    // Post render.
+    if ($options['render']['custom_post']) {
+      drupal_alter('views_pdf_custom_post', &$view);
+    }
 
     // Write Coordinates of element.
     $this->elements[$key] = array(
@@ -725,7 +729,8 @@ class ViewsPdfBase extends FPDI {
       );
 
       $options['info'][$id]['header_style']['text'] += array(
-        'custom_layout' => '',
+        'custom_layout' => FALSE,
+        'custom_post'   => FALSE,
       );
 
       $options['info'][$id]['body_style'] += array(
@@ -749,7 +754,8 @@ class ViewsPdfBase extends FPDI {
       );
 
       $options['info'][$id]['body_style']['text'] += array(
-        'custom_layout'  => '',
+        'custom_layout'  => FALSE,
+        'custom_post'    => FALSE,
       );
 
       $headerOptions = $options['info'][$id]['header_style'];
