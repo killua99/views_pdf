@@ -613,7 +613,7 @@ class ViewsPdfBase extends FPDI {
 
     // Post render.
     if ($options['render']['custom_post']) {
-      drupal_alter('views_pdf_custom_post', &$view);
+      drupal_alter('views_pdf_custom_post', $view);
     }
 
     // Write Coordinates of element.
