@@ -276,36 +276,19 @@ class Fields extends views_plugin_row {
         '#title'         => t('Render As HTML'),
         '#default_value' => isset($this->options['formats'][$field]['render']['is_html']) ? $this->options['formats'][$field]['render']['is_html'] : 1,
       );
+      $form['formats'][$field]['render']['custom_layout'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Enable custom layout hook.'),
+        '#description' => t("Allow a custom module to alter the layout of this field."),
+        '#default_value' => !empty($this->options['formats'][$field]['render']['custom_layout']) ? $this->options['formats'][$field]['render']['custom_layout'] : FALSE,
+      );
+
 
       $form['formats'][$field]['render']['minimal_space'] = array(
         '#type'          => 'textfield',
         '#title'         => t('Minimal Space'),
         '#description'   => t('Specify here the minimal space, which is needed on the page, that the content is placed on the page.'),
         '#default_value' => isset($this->options['formats'][$field]['render']['minimal_space']) ? $this->options['formats'][$field]['render']['minimal_space'] : 0,
-      );
-
-      $form['formats'][$field]['render']['eval_before']        = array(
-        '#type'          => 'textarea',
-        '#title'         => t('PHP Code Before Output'),
-        '#default_value' => isset($this->options['formats'][$field]['render']['eval_before']) ? $this->options['formats'][$field]['render']['eval_before'] : '',
-      );
-      $form['formats'][$field]['render']['bypass_eval_before'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Use the PHP eval function instead php_eval.'),
-        '#description'   => t("WARNING: If you don't know the risk of using eval leave as it."),
-        '#default_value' => !empty($this->options['formats'][$field]['render']['bypass_eval_before']) ? $this->options['formats'][$field]['render']['bypass_eval_before'] : FALSE,
-      );
-
-      $form['formats'][$field]['render']['eval_after']        = array(
-        '#type'          => 'textarea',
-        '#title'         => t('PHP Code After Output'),
-        '#default_value' => isset($this->options['formats'][$field]['render']['eval_after']) ? $this->options['formats'][$field]['render']['eval_after'] : '',
-      );
-      $form['formats'][$field]['render']['bypass_eval_after'] = array(
-        '#type'          => 'checkbox',
-        '#title'         => t('Use the PHP eval function instead php_eval.'),
-        '#description'   => t("WARNING: If you don't know the risk of using eval leave as it."),
-        '#default_value' => !empty($this->options['formats'][$field]['render']['bypass_eval_after']) ? $this->options['formats'][$field]['render']['bypass_eval_after'] : FALSE,
       );
 
     }
