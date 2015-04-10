@@ -580,7 +580,8 @@ class ViewsPdfBase extends FPDI {
           'w'        => &$w,
           'content'  => &$content,
           'key'      => &$key,
-          'view'     => &$view
+          'view'     => &$view,
+          'this'     => &$this,
         );
         drupal_alter('views_pdf_custom_layout', $layout_data);
     }
