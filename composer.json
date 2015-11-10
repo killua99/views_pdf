@@ -1,0 +1,13 @@
+{
+  "name": "drupal/views_pdf",
+  "type": "drupal-module",
+  "description": "Views plugin to export a views as a PDF file.",
+  "homepage": "https://www.drupal.org/project/views_pdf",
+  "license": "GPL-2.0+",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/views_pdf"
+  },
+  "require": {
+    "setasign/fpdi-tcpdf": "1.6.*"
+  }
+}

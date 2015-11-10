@@ -1,0 +1,7 @@
+name: 'Views PDF Display'
+type: module
+description: 'Views plugin to export a views as a PDF file.'
+package: Views
+core: 8.x
+dependencies:
+  - views
