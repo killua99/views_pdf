@@ -1,4 +1,4 @@
-name: 'Views PDF Display'
+name: Views PDF
 type: module
 description: 'Views plugin to export a views as a PDF file.'
 package: Views
