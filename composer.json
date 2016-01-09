@@ -4,10 +4,22 @@
   "description": "Views plugin to export a views as a PDF file.",
   "homepage": "https://www.drupal.org/project/views_pdf",
   "license": "GPL-2.0+",
+  "keywords": ["php", "views_pdf", "drupal", "pdf", "views"],
+  "homepage": "https://www.drupal.org/project/views_pdf",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Luigi Guevara",
+      "homepage": "https://www.drupal.org/u/killua99",
+      "role": "Maintainer"
+    }
+  ],
   "support": {
-    "issues": "https://www.drupal.org/project/issues/views_pdf"
+    "issues": "https://www.drupal.org/project/issues/views_pdf",
+    "irc": "irc://irc.freenode.org/drupal-contribute",
+    "source": "http://git.drupal.org/project/views_pdf.git"
   },
   "require": {
-    "setasign/fpdi-tcpdf": "1.6.*"
+    "setasign/fpdi-tcpdf": "^1.6.0"
   }
 }
