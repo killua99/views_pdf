@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
- * Install the views module
+ * Install the views module.
  */
-
 
 use FPDI;
 use TCPDF;
@@ -15,34 +15,38 @@ function views_pdf_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'runtime') {
-    // Ensure translations don't break at install time.
-    $t = get_t();
 
+    $fpdi_installed = FALSE;
+    $tcpdf_installed = FALSE;
     $fpdi = FPDI::VERSION;
     $tcpdf = new TCPDF();
 
     if ((int) str_replace('.', '', $fpdi) >= 160) {
       $requirements['views_pdf_fpdi'] = array(
-        'title'    => $t('Views pdf: FPDI library'),
+        'title'    => t('Views pdf: FPDI library'),
         'severity' => REQUIREMENT_OK,
-        'value'    => $fpdi['version'],
+        'value'    => t('Ok current version: @version', array('@version' => $fpdi)),
       );
+
+      $fpdi_installed = TRUE;
     }
 
     if (!empty($tcpdf)) {
       $requirements['views_pdf_tcpdf'] = array(
-        'title'    => $t('Views pdf: TCPDF library'),
+        'title'    => t('Views pdf: TCPDF library'),
         'severity' => REQUIREMENT_OK,
-        'value'    => $tcpdf['version'],
+        'value'    => t('Ok'),
       );
+
+      $tcpdf_installed = TRUE;
     }
 
-    if (!$fpdi_tcpdf['installed'] || (!$fpdi['installed'] && !$tcpdf['installed']) && !$mpdf['installed']) {
+    if (!$fpdi_installed || !$tcpdf_installed) {
       $requirements['views_pdf_fpdi_tcpdf_mpdf'] = array(
-        'title'       => $t('Views pdf: libraries'),
+        'title'       => t('Views pdf: libraries'),
         'severity'    => REQUIREMENT_ERROR,
-        'description' => $t(
-          'Some library it is needed. Views PDF support this libraries <a href=":fpdi_tcpdf_url" title="FPDI_TCPDF">FPDI_TCPDF</a>, <a href="@fpdi_url" title="FPDI">FPDI</a>, <a href="@tcpdf_url" title="TCPDF">TCPDF</a>, <a href="@mpdf_url" title="mPDF">mPDF</a> (if you plan to use TCPDF you also need to install FPDI)',
+        'description' => t(
+          'Some library it is needed. Views PDF support this libraries <a href=":fpdi_tcpdf_url" title="FPDI_TCPDF">FPDI_TCPDF</a>, <a href="@fpdi_url" title="FPDI">FPDI</a>',
           array(
             ':fpdi_tcpdf_url' => 'https://github.com/Setasign/FPDI-TCPDF/zipball/1.6.1',
             ':tcpdf_url'      => 'https://github.com/tecnickcom/TCPDF/zipball/6.2.12',
