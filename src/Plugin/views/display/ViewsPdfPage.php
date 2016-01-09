@@ -8,7 +8,10 @@
 namespace Drupal\views_pdf\Plugin\views\display;
 
 use \Drupal\views\Plugin\views\display\Page;
-// use Drupal\views_pdf\ViewsPdfTemplate;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\State\StateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * The plugin that handles a Views PDF Page.
@@ -50,7 +53,7 @@ class ViewsPdfPage extends Page {
   }
 
   /**
-   * {@inheritdoc}
+   * {@inheritdoc}Page.
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
@@ -123,6 +126,9 @@ class ViewsPdfPage extends Page {
    */
   public function execute() {
     parent::execute();
+
+    // And now render the view.
+    $render = $this->view->render();
 
     return $render;
   }
