@@ -7,7 +7,7 @@
 
 namespace Drupal\views_pdf\Plugin\views\display;
 
-use \Drupal\views\Plugin\views\display\Page;
+use Drupal\views\Plugin\views\display\Page;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -30,27 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class ViewsPdfPage extends Page {
-
-  /**
-   * Constructs a ViewsPdfPage object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state key value store.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $menu_storage
-   *   The menu storage.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $route_provider, StateInterface $state, EntityStorageInterface $menu_storage) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
-    $this->menuStorage = $menu_storage;
-  }
 
   /**
    * {@inheritdoc}Page.
