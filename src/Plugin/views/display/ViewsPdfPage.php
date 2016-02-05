@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views_pdf\Plugin\views\display\Page.
+ * Contains \Drupal\views_pdf\Plugin\views\display\ViewsPdfPage.
  */
 
 namespace Drupal\views_pdf\Plugin\views\display;
@@ -11,7 +11,6 @@ use Drupal\views\Plugin\views\display\Page;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 
 /**
  * The plugin that handles a Views PDF Page.
@@ -32,7 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ViewsPdfPage extends Page {
 
   /**
-   * {@inheritdoc}Page.
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
